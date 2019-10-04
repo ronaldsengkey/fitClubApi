@@ -1,0 +1,558 @@
+---
+swagger: "2.0"
+info:
+  description: ""
+  version: "1.0.0"
+  title: "FC Api"
+  termsOfService: "http://swagger.io/terms/"
+  contact:
+    email: "agnetiuslee@gmail.com"
+  license:
+    name: "Apache 2.0"
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+host: "petstore.swagger.io"
+basePath: "/ronaldSengkey/fitClub/api/v1"
+tags:
+- name: "account"
+  description: "Fitclub account"
+- name: "member"
+  description: "Fitclub member"
+- name: "coach"
+  description: "Fitclub coach"
+- name: "class"
+  description: "Fitclub class"
+- name: "activity"
+  description: "Fitclub member adn coach activity"
+- name: "place"
+  description: "Fitclub place"
+schemes:
+- "https"
+- "http"
+
+paths:
+  /login:
+    post:
+      tags:
+      - "account"
+      summary: "Login account"
+      description: ""
+      operationId: "loginAccess"
+      consumes:
+      - "multipart/form-data"
+      - "application/x-www-form-urlencoded"
+      - "application/json"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "data credential guest"
+        required: true
+        schema:
+          $ref: "#/definitions/loginParam"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/notifSuccess"
+        400:
+          description: "Invalid status value"
+      x-swagger-router-controller: "account"
+
+  /otp:
+    put:
+      tags:
+      - "account"
+      summary: "otp confirmation"
+      operationId: "confirmation"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "data credential guest"
+        required: true
+        schema:
+          $ref: "#/definitions/otpConfirmationSchema"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/notifSuccess"
+        400:
+          description: "Invalid status value"
+      x-swagger-router-controller: "account"    
+
+  /register:
+    post:
+      tags:
+      - "account"
+      summary: "Add new account"
+      operationId: "addAccount"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "data credential guest"
+        required: true
+        schema:
+          $ref: "#/definitions/addAccountParam"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/notifSuccess"
+        400:
+          description: "Invalid status value"
+      x-swagger-router-controller: "account"
+
+  /member/join:
+    post:
+      tags:
+      - "member"
+      summary: "join membership"
+      description: ""
+      operationId: "joinMember"
+      consumes:
+      - "multipart/form-data"
+      - "application/x-www-form-urlencoded"
+      - "application/json"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "data credential guest"
+        required: true
+        schema:
+          $ref: "#/definitions/joinMemberParam"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/apiResponse"
+        400:
+          description: "Invalid status value"
+      x-swagger-router-controller: "member"
+
+  /member/fee/{token}:
+    get:
+      tags:
+      - "member"
+      summary: "fee of membership"
+      description: ""
+      operationId: "memberFee"
+      consumes:
+      - "multipart/form-data"
+      - "application/x-www-form-urlencoded"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - name: "token"
+        in: "path"
+        description: "token of member device"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/apiResponse"
+        400:
+          description: "Invalid status value"
+      security:
+      - petstore_auth:
+        - "write:pets"
+        - "read:pets"
+      x-swagger-router-controller: "member"
+
+  /member/act:
+    post:
+      tags:
+      - "member"
+      summary: "fee of membership"
+      description: ""
+      operationId: "memberActivity"
+      consumes:
+      - "multipart/form-data"
+      - "application/x-www-form-urlencoded"
+      - "application/json"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "data credential guest"
+        required: true
+        schema:
+          $ref: "#/definitions/memberActivityParam"
+      responses:
+        200:
+          description: "Success"
+        500:
+          description: "Internal error"
+        401:
+          description: "Unauthorize"
+      security:
+      - petstore_auth:
+        - "write:pets"
+        - "read:pets"
+      x-swagger-router-controller: "member"
+  
+  /member/personalRecord:
+    post:
+      tags:
+      - "member"
+      summary: "Personal record"
+      description: ""
+      operationId: "personalRecord"
+      consumes:
+      - "multipart/form-data"
+      - "application/x-www-form-urlencoded"
+      - "application/json"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "data credential guest"
+        required: true
+        schema:
+          $ref: "#/definitions/personalRecordParam"
+      responses:
+        200:
+          description: "Success"
+        500:
+          description: "Internal error"
+        401:
+          description: "Unauthorize"
+      security:
+      - petstore_auth:
+        - "write:pets"
+        - "read:pets"
+      x-swagger-router-controller: "member"
+
+  /coach/schedule:
+    post:
+      tags:
+      - "coach"
+      summary: "Registration access"
+      description: ""
+      operationId: "createSchedule"
+      consumes:
+      - "multipart/form-data"
+      - "application/x-www-form-urlencoded"
+      - "application/json"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "data credential guest"
+        required: true
+        schema:
+          $ref: "#/definitions/createSchedule"
+      responses:
+        200:
+          description: "Success"
+        500:
+          description: "Internal error"
+        401:
+          description: "Unauthorize"
+        404:
+          description: "Data not found"
+          
+      x-swagger-router-controller: "coach"
+  
+  /class/{token}:
+    get:
+      tags:
+      - "coach"
+      summary: "Registration access"
+      description: ""
+      operationId: "classList"
+      consumes:
+      - "multipart/form-data"
+      - "application/x-www-form-urlencoded"
+      - "application/json"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - name: "token"
+        in: "path"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "Success"
+        500:
+          description: "Internal error"
+        401:
+          description: "Unauthorize"
+        404:
+          description: "Data not found"
+      x-swagger-router-controller: "class"
+
+    post:
+      tags:
+      - "coach"
+      summary: "Registration access"
+      description: ""
+      operationId: "createClass"
+      consumes:
+      - "multipart/form-data"
+      - "application/x-www-form-urlencoded"
+      - "application/json"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - name: "token"
+        in: "path"
+        required: true
+        type: "string"
+      - in: "body"
+        name: "body"
+        description: "data credential guest"
+        required: true
+        schema:
+          $ref: "#/definitions/createClassParam"
+      responses:
+        200:
+          description: "Success"
+        500:
+          description: "Internal error"
+        401:
+          description: "Unauthorize"
+        404:
+          description: "Data not found"
+      x-swagger-router-controller: "class"
+
+
+  /class/memberClass/{token}:
+    get:
+      tags:
+      - "coach"
+      summary: "Registration access"
+      description: ""
+      operationId: "memberClass"
+      consumes:
+      - "multipart/form-data"
+      - "application/x-www-form-urlencoded"
+      - "application/json"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - name: "token"
+        in: "path"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "Success"
+        500:
+          description: "Internal error"
+        401:
+          description: "Unauthorize"
+        404:
+          description: "Data not found"
+      x-swagger-router-controller: "class"
+
+  /class/detail/{token}/{classId}:
+      get:
+        tags:
+        - "coach"
+        summary: "Registration access"
+        description: ""
+        operationId: "classDetail"
+        consumes:
+        - "multipart/form-data"
+        - "application/x-www-form-urlencoded"
+        - "application/json"
+        produces:
+        - "application/xml"
+        - "application/json"
+        parameters:
+        - name: "token"
+          in: "path"
+          required: true
+          type: "string"
+        - name: "classId"
+          in: "path"
+          required: true
+          type: "integer"
+          format: "int8"
+        responses:
+          200:
+            description: "Success"
+          500:
+            description: "Internal error"
+          401:
+            description: "Unauthorize"
+          404:
+            description: "Data not found"
+        x-swagger-router-controller: "class"
+
+
+securityDefinitions:
+  petstore_auth:
+    type: "oauth2"
+    authorizationUrl: "http://petstore.swagger.io/oauth/dialog"
+    flow: "implicit"
+    scopes:
+      write:pets: "modify pets in your account"
+      read:pets: "read your pets"
+  api_key:
+    type: "apiKey"
+    name: "api_key"
+    in: "header"
+
+definitions:
+  
+  createClassParam:
+    type: "object"
+    properties:
+      className:
+        type: "string"
+      description:
+        type: "string"
+
+  otpConfirmationSchema:
+    type: "object"
+    properties:
+      otpCode:
+        type: "string"
+      phone:
+        type: "string"
+      email:
+        type: "string"
+
+  # memberClassParam:
+  #   type: "object"
+  #   properties:
+  #     token:
+  #       type: "string"
+
+  joinMemberParam:
+    type: "object"
+    properties:
+      token:
+        type: "string"
+      memberCat:
+        type: "string"
+
+  addAccountParam:
+    type: "object"
+    properties:
+      name:
+        type: "string"
+      gender:
+        type: "string"
+      phone:
+        type: "string"
+      address:
+        type: "string"
+      email:
+        type: "string"
+      password:
+        type: "string"
+      filter:
+        type: "string"
+
+  memberActivityParam:
+    type: "object"
+    properties:
+      token:
+        type: "string"
+      classId:
+        type: "string"
+
+  loginParam:
+    type: "object"
+    properties:
+      email:
+        type: "string"
+      password:
+        type: "string"
+
+  personalRecordParam:
+    type: "object"
+    properties:
+      token:
+        type: "string"
+      prCat:
+        type: "string"
+      dataValue:
+        type: "string"
+
+  createSchedule:
+    type: "object"
+    properties:
+      token:
+        type: "string"
+      classId:
+        type: "integer"
+      startDate:
+        type: "string"
+      endDate:
+        type: "string"
+      startTime:
+        type: "string"
+      endTime:
+        type: "string"
+  
+
+
+  notifSuccess:
+    type: "object"
+    properties:
+      message:
+        type: "string"
+      data:
+        type: "string"
+    example:
+      message: "Success"
+      data: "data all customer"
+  apiResponse:
+    type: "object"
+    properties:
+      code:
+        type: "integer"
+        format: "int32"
+      type:
+        type: "string"
+      message:
+        type: "string"
+      data:
+        type: "object"
+        properties: {}
+    example:
+      code: 0
+      type: "type"
+      message: "message"
+      data:
+        token: "ABCDEFGHIJKLMNOPQ2344222"
+externalDocs:
+  description: "Find out more about Swagger"
+  url: "http://swagger.io"
