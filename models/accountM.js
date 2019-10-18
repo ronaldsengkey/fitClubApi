@@ -76,7 +76,6 @@ exports.confirmation = function confirmation(data) {
 
 async function updateToken(param){
     try{
-        console.log(param)
         let query = `UPDATE user
         SET accessToken = ?
         WHERE id = ? AND email = ? AND phone = ?`;
@@ -86,7 +85,6 @@ async function updateToken(param){
              console.log(err)
              return process.env.ERRORINTERNAL_RESPONSE;
          }else{
-             console.log(res)
              return process.env.SUCCESS_RESPONSE;
          }
         }
@@ -104,7 +102,12 @@ exports.loginAccess = function loginAccess(data) {
             if(ev.responseCode == process.env.SUCCESS_RESPONSE){
                 let c = await pswdHashing.verify(ev.data.password, data.password);
                 if(c){
+                    if(ev.data.memberId == null){
+                        ev.data.memberId == 0;
+                    }
                     let param = {id:ev.data.id,name:ev.data.name,gender:ev.data.gender,
+                        memberCat:ev.data.memberCat,memberId:ev.data.memberId,memberCode:ev.data.memberCode,
+                        joinMemberDate:ev.data.joinDate,endMemberDate:ev.data.endDate,
                         phone:ev.data.phone, address:ev.data.address, email:ev.data.email
                     }
                     let d = await generateToken(param);
@@ -211,8 +214,8 @@ exports.addAccount = function addAccount(data) {
                 // const pswd = sha1(data.password);                
                 let code = await generateCode();
 				data.verificationCode = code;
+                data.password = pswd;
 				let token = await generateToken(data);
-				console.log("check token =>", token);
                 let newAccount = {name:data.name, phone:data.phone,email:data.email, password:pswd, verificationCode:code,  accessToken:token, onlineStatus:"online"};
                 query = 'insert into user set ? ';
                 await db.query(query,newAccount,async function(err,res){

@@ -14,3 +14,4 @@
 127.0.0.1 - - [04/Oct/2019:02:29:25 +0000] "GET /ronaldSengkey/fitClub/api/v1/ HTTP/1.1" 404 101 "http://192.168.0.7:3000/classHistory.html" "Mozilla/5.0 (Linux; Android 5.0; SM-G900P Build/LRX21T) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3865.90 Mobile Safari/537.36"
 127.0.0.1 - - [04/Oct/2019:02:29:26 +0000] "GET /ronaldSengkey/fitClub/api/v1/ HTTP/1.1" 404 101 "http://192.168.0.7:3000/classHistory.html" "Mozilla/5.0 (Linux; Android 5.0; SM-G900P Build/LRX21T) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3865.90 Mobile Safari/537.36"
 127.0.0.1 - - [04/Oct/2019:05:11:30 +0000] "GET /ronaldSengkey/fitClub/api/v1/ HTTP/1.1" 404 101 "http://192.168.0.7:3000/classHistory.html" "Mozilla/5.0 (Linux; Android 5.0; SM-G900P Build/LRX21T) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3865.90 Mobile Safari/537.36"
+127.0.0.1 - - [18/Oct/2019:18:37:27 +0000] "PUT //ronaldSengkey/fitClub/api/v1/otp HTTP/1.1" 404 105 "-" "PostmanRuntime/7.18.0"

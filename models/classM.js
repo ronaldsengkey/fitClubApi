@@ -42,7 +42,6 @@ exports.classList = function (data) {
 exports.memberClass = function (data) {
     return new Promise(async function (resolve, reject) {
         try {
-            console.log(data);
             let query = "SELECT * FROM classmember cm JOIN classschedule cs ON cs.class = cm.classId JOIN classlist cl ON cl.id = cs.class JOIN coach c ON c.id = cs.coach JOIN user u ON u.id = c.userId WHERE cm.membercat = ?";
             await db.query(query,[data.profile.memberCat], (err, result) => {
                 if (err) {

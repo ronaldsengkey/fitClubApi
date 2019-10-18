@@ -48,9 +48,10 @@ module.exports.classList = function classList(req, res, next) {
 
 
 module.exports.memberClass = function memberClass(req, res, next) {
-  let body = req.swagger.params['body'].value;
-  if (body.token !== null) {
-    jwt.verify(body.token, process.env.KREDENTIAL_KEY, function (err, callback) {
+  let token = req.swagger.params['token'].value;
+  let body = {};
+  if (token !== null) {
+    jwt.verify(token, publicKEY, signOptions, function (err, callback) {
       if (err) {
         console.log("not valid");
         response = {
@@ -59,8 +60,7 @@ module.exports.memberClass = function memberClass(req, res, next) {
         }
         utils.writeJson(res, response);
       } else {
-        console.log("valid");
-        body.profile = callback.profile;
+        body.profile = callback;
         model.memberClass(body)
           .then(function (response) {
             utils.writeJson(res, response);
