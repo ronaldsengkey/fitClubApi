@@ -53,7 +53,7 @@ module.exports.memberClass = function memberClass(req, res, next) {
   if (token !== null) {
     jwt.verify(token, publicKEY, signOptions, function (err, callback) {
       if (err) {
-        console.log("not valid");
+        console.log("not valid" , err);
         response = {
           "responseCode": process.env.UNAUTHORIZED_RESPONSE,
           "responseMessage": process.env.UNAUTH_MESSAGE

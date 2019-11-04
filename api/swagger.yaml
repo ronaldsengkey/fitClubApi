@@ -256,7 +256,7 @@ paths:
       - "coach"
       summary: "Registration access"
       description: ""
-      operationId: "createSchedule"
+      operationId: "createSchedule" 
       consumes:
       - "multipart/form-data"
       - "application/x-www-form-urlencoded"

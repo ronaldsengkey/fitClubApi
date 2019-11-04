@@ -181,7 +181,7 @@ async function generateToken(data){
 		 issuer:  i,
 		 subject:  s,
 		 audience:  a,
-		 expiresIn:  "1h",
+		 expiresIn:  "5h",
 		 algorithm:  "RS256"
 		};
 		let token = jwt.sign(payload, privateKEY, signOptions);
