@@ -6,17 +6,19 @@ exports.sendSms = function sendSms(data) {
 	return new Promise(async function (resolve, reject) {
 		try{
 			let transporter = nodeMail.createTransport(smtpTransport({
-				service: 'gmail',
-				host: 'smtp.gmail.com',
+				// service: 'gmail',
+				host: 'smtp-relay.sendinblue.com',
+				// host: 'smtp.gmail.com',
 				port: 587,
 				secure: false, // true for 465, false for other ports
 				// ignoreTLS: true,
 				auth: {
-					user: 'networkfitclub@gmail.com', // generated ethereal user
-					pass: 'buny2tampilbeda' // generated ethereal password
-				},tls: {
-					rejectUnauthorized: false
+					user: 'charlie@usahakreatif.co.id', //networkfitclub@gmail.com generated ethereal user
+					pass: 'jJWkfa1GgU0Pq6wA' //buny2tampilbeda generated ethereal password
 				}
+				// ,tls: {
+				// 	rejectUnauthorized: false
+				// }
 			}));
 			let info = await transporter.sendMail({
 				from: '"Fit Club Membership 👻" <member@networkfitclub.com>', // sender address
