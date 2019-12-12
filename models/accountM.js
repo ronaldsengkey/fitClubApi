@@ -216,14 +216,14 @@ exports.addAccount = function addAccount(data) {
 				data.verificationCode = code;
                 data.password = pswd;
 				let token = await generateToken(data);
-                let newAccount = {name:data.name, gender:data.gender, phone:data.phone, address:data.address, imgProfile:'none',  email:data.email, password:pswd, verificationCode:code,  accessToken:token, onlineStatus:"online"};
+                let newAccount = {name:data.name, gender:data.gender, phone:data.phone, address:data.address, imgProfile:'none', email:data.email, password:pswd, verificationCode:code,  accessToken:token, onlineStatus:"online", accountStatus:0};
                 query = 'insert into user set ? ';
                 await db.query(query,newAccount,async function(err,res){
                     if(err){
 						console.log(err);
                         message = {
                             "responseCode":process.env.ERRORINTERNAL_RESPONSE,
-                            "responseMessage":err
+                            "responseMessage":err.sqlMessage
                         }
                         resolve(message);
                     }else{
