@@ -216,7 +216,7 @@ exports.addAccount = function addAccount(data) {
 				data.verificationCode = code;
                 data.password = pswd;
 				let token = await generateToken(data);
-                let newAccount = {name:data.name, phone:data.phone,email:data.email, password:pswd, verificationCode:code,  accessToken:token, onlineStatus:"online"};
+                let newAccount = {name:data.name, gender:data.gender, phone:data.phone,email:data.email, password:pswd, verificationCode:code,  accessToken:token, onlineStatus:"online"};
                 query = 'insert into user set ? ';
                 await db.query(query,newAccount,async function(err,res){
                     if(err){
