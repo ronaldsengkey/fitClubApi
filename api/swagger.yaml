@@ -68,6 +68,10 @@ paths:
       - "account"
       summary: "otp confirmation"
       operationId: "confirmation"
+      consumes:
+      - "multipart/form-data"
+      - "application/x-www-form-urlencoded"
+      - "application/json"
       produces:
       - "application/xml"
       - "application/json"
@@ -95,6 +99,10 @@ paths:
       - "account"
       summary: "Add new account"
       operationId: "addAccount"
+      consumes:
+      - "multipart/form-data"
+      - "application/x-www-form-urlencoded"
+      - "application/json"
       produces:
       - "application/xml"
       - "application/json"
@@ -468,7 +476,8 @@ definitions:
       name:
         type: "string"
       gender:
-        type: "string"
+        type: "integer"
+        format: "int32"
       phone:
         type: "string"
       address:

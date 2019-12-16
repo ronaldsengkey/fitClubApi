@@ -231,51 +231,45 @@ exports.addAccount = function addAccount(data) {
                 let code = await generateCode();
                 data.verificationCode = code;
                 data.password = pswd;
-                let token = await generateToken(data);
-                let newAccount = {
-                    name: data.name,
-                    gender: data.gender,
-                    phone: data.phone,
-                    email: data.email,
-                    password: pswd,
-                    verificationCode: code,
-                    accessToken: token,
-                    onlineStatus: "online"
-                };
-                query = 'insert into user set ?';
-                await db.query(query, newAccount, async function (err, res) {
-                    if (err) {
-                        console.log(err);
-                        resolve(process.env.ERRORINTERNAL_RESPONSE);
-                    } else {
-                        if (res.affectedRows > 0) {
-                            if (data.filter == 'coach') {
+				let token = await generateToken(data);
+                let newAccount = {name:data.name, gender:data.gender, phone:data.phone, address:data.address, imgProfile:'none', email:data.email, password:pswd, verificationCode:code,  accessToken:token, onlineStatus:"online", accountStatus:0};
+                query = 'insert into user set ? ';
+                await db.query(query,newAccount,async function(err,res){
+                    if(err){
+						console.log(err);
+                        message = {
+                            "responseCode":process.env.ERRORINTERNAL_RESPONSE,
+                            "responseMessage":err.sqlMessage
+                        }
+                        resolve(message);
+                    }else{
+                        if(res.affectedRows > 0){
+                            if(data.filter == 'coach'){
                                 const ac = await addCoach(res.insertId);
-                                if (ac == process.env.SUCCESS_RESPONSE) {
-                                    message = {
-                                        "responseCode": process.env.SUCCESS_RESPONSE,
-                                        "responseMessage": "Registration Success Please Verify Your Email Address",
-                                        data: {
-                                            phone: newAccount.phone,
-                                            email: newAccount.email
+                                if(ac == process.env.SUCCESS_RESPONSE){
+                                        message = {
+                                            "responseCode":process.env.SUCCESS_RESPONSE,
+                                            "responseMessage":"Registration Success Please Verify Your Email Adress",
+                                            data:{phone:newAccount.phone, email:newAccount.email}
                                         }
-                                    }
-                                    resolve(message);
+                                        resolve(message);
                                 }
-                            } else {
-                                let a = await sm.sendSms(data);
-                                switch (a) {
-                                    case process.env.ERRORINTERNAL_RESPONSE:
-                                        console.log('error send email', err);
+                            }else{
+                                console.log()
+								let a = await sm.sendSms(data);
+								switch(a){
+									case process.env.ERRORINTERNAL_RESPONSE:
+										console.log('error send email', err);
+										break;
+									default:
+										console.log('send email success', a);
+                                        message = {
+                                            "responseCode":process.env.SUCCESS_RESPONSE,
+                                            "responseMessage":"Registration Success Please Verify Your Email Adress"
+                                        }
+                                        resolve(message);
                                         break;
-                                    default:
-                                        console.log('send email success', a);
-                                }
-                                message = {
-                                    "responseCode": process.env.SUCCESS_RESPONSE,
-                                    "responseMessage": "Registration Success Please Verify Your Email Adress"
-                                }
-                                resolve(message);
+								}
                             }
                         } else {
                             console.log("failed add account");
@@ -288,7 +282,8 @@ exports.addAccount = function addAccount(data) {
                     }
                 });
             }
-        } catch (err) {
+        }catch(err){
+            reject(err);
             console.log(err);
         }
     })
