@@ -224,6 +224,39 @@ paths:
         - "read:pets"
       x-swagger-router-controller: "member"
   
+  /member/personalRecord/{token}:
+    get:
+      tags:
+      - "member"
+      summary: "Personal record"
+      description: ""
+      operationId: "getPersonalRecord"
+      consumes:
+      - "multipart/form-data"
+      - "application/x-www-form-urlencoded"
+      - "application/json"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - name: "token"
+        in: "path"
+        description: "token of member device"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "Success"
+        500:
+          description: "Internal error"
+        401:
+          description: "Unauthorize"
+      security:
+      - petstore_auth:
+        - "write:pets"
+        - "read:pets"
+      x-swagger-router-controller: "member"
+
   /member/personalRecord:
     post:
       tags:
@@ -258,6 +291,37 @@ paths:
         - "read:pets"
       x-swagger-router-controller: "member"
 
+  /coach/schedule/{token}:
+    get:
+      tags:
+      - "coach"
+      summary: "Registration access"
+      description: ""
+      operationId: "getSchedule" 
+      consumes:
+      - "multipart/form-data"
+      - "application/x-www-form-urlencoded"
+      - "application/json"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - name: "token"
+        in: "path"
+        description: "token of member device"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "Success"
+        500:
+          description: "Internal error"
+        401:
+          description: "Unauthorize"
+        404:
+          description: "Data not found"
+      x-swagger-router-controller: "coach"
+
   /coach/schedule:
     post:
       tags:
@@ -288,7 +352,6 @@ paths:
           description: "Unauthorize"
         404:
           description: "Data not found"
-          
       x-swagger-router-controller: "coach"
   
   /class/{token}:

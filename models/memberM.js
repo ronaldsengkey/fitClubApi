@@ -9,6 +9,7 @@ function generateOtp() {
 exports.joinMember = function (data) {
     return new Promise(async function (resolve, reject) {
         try {
+            console.log('data join member => ', data)
             const jm = "INSERT INTO member SET ?";
             const otp = generateOtp();
             let endDate = new Date();
@@ -18,17 +19,17 @@ exports.joinMember = function (data) {
             let expYear = day.getFullYear();
             con.query(jm, {
                 "userId": parseInt(data.profile.id),
-                "code":otp,
+                "code": otp,
                 "memberCat": parseInt(data.memberCat),
-                "endDate":expYear+'-'+expMonth+'-'+expDay,
+                "endDate": expYear + '-' + expMonth + '-' + expDay,
                 "status": 0
             }, (err, result) => {
                 if (!err) {
                     if (result.affectedRows > 0) {
+                        console.log('result => ',result.insertId)
                         message = {
                             "responseCode": process.env.SUCCESS_RESPONSE,
-                            "responseMessage": process.env.SUCCESS_MESSAGE,
-                            "data":result.insertId
+                            "responseMessage": process.env.SUCCESS_MESSAGE
                         }
                         resolve(message)
                     } else {
@@ -93,12 +94,12 @@ exports.memberFee = function (data) {
                         message = {
                             "responseCode": process.env.SUCCESS_RESPONSE,
                             "responseMessage": process.env.SUCCESS_MESSAGE,
-                            "data":result
+                            "data": result
                         }
                         resolve(message);
                     } else {
                         message = {
-                            "responseCode": process.env.NONOTFOUND_RESPONSE,
+                            "responseCode": process.env.NOTFOUND_RESPONSE,
                             "responseMessage": process.env.DATANOTFOUND_MESSAGE
                         }
                         resolve(message);
@@ -145,6 +146,46 @@ exports.personalRecord = function (data) {
                     }
                     resolve(message)
                     console.log("created schedule error", err);
+                }
+            });
+        } catch (err) {
+            console.log("error create schedule", err);
+            message = {
+                "responseCode": process.env.ERRORINTERNAL_RESPONSE,
+                "responseMessage": process.env.INTERNALERROR_MESSAGE
+            }
+            resolve(message);
+        }
+    })
+}
+
+exports.getPersonalRecord = function (data) {
+    return new Promise(async function (resolve, reject) {
+        try {
+            const pr = "SELECT * FROM personalrecord pr INNER JOIN member m ON pr.memberId = m.id INNER JOIN user u ON u.id = m.userId INNER JOIN personalrecordcategory prc ON prc.id = pr.prCat";
+            await con.query(pr, (err, result) => {
+                if (!err) {
+                    if (result.length > 0) {
+                        message = {
+                            "responseCode": process.env.SUCCESS_RESPONSE,
+                            "responseMessage": process.env.SUCCESS_MESSAGE,
+                            "data": result
+                        }
+                        resolve(message)
+                    } else {
+                        message = {
+                            "responseCode": process.env.NOTFOUND_RESPONSE,
+                            "responseMessage": process.env.DATANOTFOUND_MESSAGE
+                        }
+                        resolve(message)
+                    }
+                } else {
+                    console.log("created schedule error", err);
+                    message = {
+                        "responseCode": process.env.ERRORINTERNAL_RESPONSE,
+                        "responseMessage": process.env.INTERNALERROR_MESSAGE
+                    }
+                    resolve(message)
                 }
             });
         } catch (err) {

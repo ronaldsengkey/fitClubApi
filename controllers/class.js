@@ -1,25 +1,26 @@
 var utils = require('../utils/writer.js');
 var model = require('../models/classM');
-const fs   = require('fs');
+const fs = require('fs');
 var jwt = require('jsonwebtoken');
 
-let privateKEY  = fs.readFileSync('./private.key', 'utf8');
-let publicKEY  = fs.readFileSync('./public.key', 'utf8');
-let i  = 'FitClub Network';          // Issuer 
-let s  = 'agnetiuslee@gmail.com';        // Subject 
-let a  = 'http://fitclub.id'; // Audience
+let privateKEY = fs.readFileSync('./private.key', 'utf8');
+let publicKEY = fs.readFileSync('./public.key', 'utf8');
+let i = 'FitClub Network'; // Issuer 
+let s = 'agnetiuslee@gmail.com'; // Subject 
+let a = 'http://fitclub.id'; // Audience
 
 // SIGNING OPTIONS
 let signOptions = {
-  issuer:  i,
-  subject:  s,
-  audience:  a,
-  expiresIn:  "1h",
-  algorithm:  "RS256"
+  issuer: i,
+  subject: s,
+  audience: a,
+  expiresIn: "1h",
+  algorithm: "RS256"
 };
 
 module.exports.classList = function classList(req, res, next) {
   let token = req.swagger.params['token'].value;
+  console.log('TOKEN => ', token)
   let body = {};
   body.token = token;
   if (token !== null) {
@@ -53,7 +54,7 @@ module.exports.memberClass = function memberClass(req, res, next) {
   if (token !== null) {
     jwt.verify(token, publicKEY, signOptions, function (err, callback) {
       if (err) {
-        console.log("not valid" , err);
+        console.log("not valid", err);
         response = {
           "responseCode": process.env.UNAUTHORIZED_RESPONSE,
           "responseMessage": process.env.UNAUTH_MESSAGE
@@ -83,7 +84,7 @@ module.exports.classDetail = function classDetail(req, res, next) {
   if (token !== null) {
     jwt.verify(token, publicKEY, signOptions, function (err, callback) {
       if (err) {
-        console.log("not valid" , err);
+        console.log("not valid", err);
         response = {
           "responseCode": process.env.UNAUTHORIZED_RESPONSE,
           "responseMessage": process.env.UNAUTH_MESSAGE
