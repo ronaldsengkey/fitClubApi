@@ -7,25 +7,25 @@ exports.sendSms = function sendSms(data) {
 		try{
 			let transporter = nodeMail.createTransport(smtpTransport({
 				// service: 'gmail',
-				host: 'smtp-relay.sendinblue.com',
+				host: 'srv63.niagahoster.com',
 				// host: 'smtp.gmail.com',
-				port: 587,
-				secure: false, // true for 465, false for other ports
+				port: 465,
+				secure: true, // true for 465, false for other ports
 				// ignoreTLS: true,
 				auth: {
-					user: 'charlie@usahakreatif.co.id', //networkfitclub@gmail.com generated ethereal user
-					pass: 'jJWkfa1GgU0Pq6wA' //buny2tampilbeda generated ethereal password
+					user: 'welcome@fitclubtech.com', //networkfitclub@gmail.com generated ethereal user
+					pass: 'Buny2tampilbeda!' //buny2tampilbeda generated ethereal password
 				}
 				// ,tls: {
 				// 	rejectUnauthorized: false
 				// }
 			}));
 			let info = await transporter.sendMail({
-				from: '"Fit Club Membership 👻" <member@networkfitclub.com>', // sender address
+				from: '"Fit Club Membership 👻" <welcome@fitclubtech.com>', // sender address
 				to: data.email, // list of receivers
 				subject: 'Hello ✔', // Subject line
-				text: 'Hello world?', // plain text body
-				html: '<p>Wellcome, <b>'+data.name+'</b>.<br> this is your verification code '+data.verificationCode+'</p>' // html body
+				text: 'Hello'+data.name, // plain text body
+				html: '<p>Wellcome, <b>'+data.name+'</b>.<br> this is your verification code '+data.verificationCode+'<br>For more information please call +62 858 5422 3422</p>' // html body
 			});
 			resolve(process.env.SUCCESS_RESPONSE);
 		}catch(err){
