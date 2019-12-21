@@ -56,7 +56,8 @@ exports.activity = function (data) {
             const query = "INSERT INTO memberactivity SET ?";
             con.query(query, {
                 "memberId": parseInt(data.profile.memberId),
-                "classId": parseInt(data.classId)
+                "scheduleId": data.scheduleId,
+                "action": data.actiion
             }, (err, result) => {
                 if (!err) {
                     if (result.affectedRows > 0) {

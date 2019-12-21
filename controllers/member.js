@@ -70,7 +70,7 @@ module.exports.getPersonalRecord = async function getPersonalRecord(req, res, ne
 
 module.exports.memberActivity = function memberActivity(req, res, next) {
   var body = req.swagger.params['body'].value;
-  ct.checkToken(body).then(function (response) {
+  ct.checkToken(body.token).then(function (response) {
     if (response == process.env.UNAUTHORIZED_RESPONSE) {
       utils.writeJson(res, response);
     } else {

@@ -449,6 +449,7 @@ paths:
         404:
           description: "Data not found"
       x-swagger-router-controller: "class"
+    
 
   /class/detail/{token}/{classId}:
       get:
@@ -557,7 +558,10 @@ definitions:
     properties:
       token:
         type: "string"
-      classId:
+      scheduleId:
+        type: "integer"
+        format: "int32"
+      action:
         type: "string"
 
   loginParam:
