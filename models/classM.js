@@ -82,8 +82,9 @@ exports.memberClassHistory = function (data) {
 exports.memberClass = function (data) {
     return new Promise(async function (resolve, reject) {
         try {
-            let query = "SELECT * FROM classmember ma JOIN classschedule cs ON cs.id = ma.scheduleId JOIN classlist cl ON cl.id = cs.class JOIN coach c ON c.id = cs.coach JOIN user u ON u.id = c.userId WHERE ma.memberId = ?";
-            await db.query(query,[data.profile.memberCat], (err, result) => {
+            let query = "SELECT ma.*, cs.class as classId, cs.coach as coachId, u1.name as coachName, cs.startTime, cs.endTime, cs.startDate, cs.endDate, c.name as className from memberactivity ma JOIN classschedule cs ON cs.id = ma.scheduleId JOIN classlist c ON c.id = cs.class JOIN coach co ON co.id = cs.coach JOIN user u1 ON u1.id = co.userId JOIN member m ON m.id = ma.memberId JOIN user u2 ON u2.id = ma.memberId WHERE u2.id = ? AND m.userid = ?";
+            console.log(data);
+            await db.query(query,[data.profile.id, data.profile.id], (err, result) => {
                 if (err) {
                     console.log("error get member class", err)
                         message = {
