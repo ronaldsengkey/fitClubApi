@@ -23,7 +23,7 @@ let signOptions = {
 
 module.exports.joinMember = function joinMember(req, res, next) {
   var body = req.swagger.params['body'].value;
-  console.log('TOKEN ' ,body.token)
+  console.log('TOKEN ', body.token)
   ct.checkToken(body.token).then(function (response) {
     if (response.responseCode == process.env.UNAUTHORIZED_RESPONSE) {
       utils.writeJson(res, response);
@@ -44,6 +44,7 @@ module.exports.joinMember = function joinMember(req, res, next) {
 
 module.exports.getPersonalRecord = async function getPersonalRecord(req, res, next) {
   var token = req.swagger.params['token'].value;
+  // var body = req.swagger.params['body'].value;
   let body = {};
   let response = {};
   await jwt.verify(token, publicKEY, signOptions, function (err, callback) {
@@ -68,10 +69,37 @@ module.exports.getPersonalRecord = async function getPersonalRecord(req, res, ne
   })
 };
 
+module.exports.getPersonalRecordCategory = async function getPersonalRecordCategory(req, res, next) {
+  var token = req.swagger.params['token'].value;
+  // var body = req.swagger.params['body'].value;
+  let body = {};
+  let response = {};
+  await jwt.verify(token, publicKEY, signOptions, function (err, callback) {
+    if (err) {
+      console.log("not valid", err);
+      response = {
+        "responseCode": process.env.UNAUTHORIZED_RESPONSE,
+        "responseMessage": process.env.UNAUTH_MESSAGE
+      }
+      utils.writeJson(res, response);
+    } else {
+      console.log("valid => ", callback);
+      body.profile = callback.profile;
+      Member.getPersonalRecordCategory(body)
+        .then(function (response) {
+          utils.writeJson(res, response);
+        })
+        .catch(function (response) {
+          utils.writeJson(res, response);
+        });
+    }
+  })
+};
+
 module.exports.memberActivity = function memberActivity(req, res, next) {
   var body = req.swagger.params['body'].value;
   ct.checkToken(body.token).then(function (response) {
-    if (response == process.env.UNAUTHORIZED_RESPONSE) {
+    if (response.responseCode == process.env.UNAUTHORIZED_RESPONSE) {
       utils.writeJson(res, response);
     } else {
       body.profile = response.profile;
@@ -90,10 +118,11 @@ module.exports.memberActivity = function memberActivity(req, res, next) {
 
 module.exports.memberFee = function memberFee(req, res, next) {
   var token = req.swagger.params['token'].value;
-  let body = {
-    "token": token
-  };
-  ct.checkToken(body).then(function (response) {
+  // let body = {
+  //   "token": token
+  // };
+  let body = {};
+  ct.checkToken(token).then(function (response) {
     if (response.responseCode == process.env.UNAUTHORIZED_RESPONSE) {
       utils.writeJson(res, response);
     } else {
@@ -111,8 +140,9 @@ module.exports.memberFee = function memberFee(req, res, next) {
 
 
 module.exports.personalRecord = function personalRecord(req, res, next) {
+  var token = req.swagger.params['token'].value;
   var body = req.swagger.params['body'].value;
-  ct.checkToken(body).then(function (response) {
+  ct.checkToken(token).then(function (response) {
     if (response.responseCode == process.env.UNAUTHORIZED_RESPONSE) {
       utils.writeJson(res, response);
     } else {

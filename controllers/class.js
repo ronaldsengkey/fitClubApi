@@ -34,7 +34,7 @@ module.exports.memberClassHistory = function memberClassHistory(req, res, next) 
         utils.writeJson(res, response);
       } else {
         console.log("valid");
-        body.profile = callback.profile;
+        body.profile = callback;
         model.memberClassHistory(body)
           .then(function (response) {
             utils.writeJson(res, response);

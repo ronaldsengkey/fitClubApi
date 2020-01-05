@@ -22,6 +22,7 @@ let signOptions = {
 exports.checkToken = function (data) {
   return new Promise(async function (resolve, reject) {
     try {
+      console.log('IN CHECKING TOKEN')
       let res = {};
       await jwt.verify(data.toString(), publicKEY, signOptions, function (err, callback) {
         if (err) {

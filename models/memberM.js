@@ -26,7 +26,7 @@ exports.joinMember = function (data) {
             }, (err, result) => {
                 if (!err) {
                     if (result.affectedRows > 0) {
-                        console.log('result => ',result.insertId)
+                        console.log('result => ', result.insertId)
                         message = {
                             "responseCode": process.env.SUCCESS_RESPONSE,
                             "responseMessage": process.env.SUCCESS_MESSAGE
@@ -61,12 +61,14 @@ exports.activity = function (data) {
             }, (err, result) => {
                 if (!err) {
                     if (result.affectedRows > 0) {
+                        console.log('success join activity');
                         message = {
                             "responseCode": process.env.SUCCESS_RESPONSE,
                             "responseMessage": process.env.SUCCESS_MESSAGE
                         }
                         resolve(message)
                     } else {
+                        console.log('Something problem when join activity')
                         message = {
                             "responseCode": process.env.ERRORINTERNAL_RESPONSE,
                             "responseMessage": process.env.ERRORSCHEDULE_MESSAGE
@@ -88,10 +90,11 @@ exports.activity = function (data) {
 exports.memberFee = function (data) {
     return new Promise(async function (resolve, reject) {
         try {
-            const memberFee = "SELECT mf.id, mc.categoryName as category, mf.memberCat as catId, mf.fee, mf.timePeriode  FROM memberfee mf JOIN membercategory mc ON mc.id = mf.memberCat ";
+            const memberFee = "SELECT mf.id, mc.categoryName as category, mf.memberCat as catId, mf.fee, mf.timePeriode FROM memberfee mf JOIN membercategory mc ON mc.id = mf.memberCat";
             await con.query(memberFee, (err, result) => {
                 if (!err) {
                     if (result.length > 0) {
+                        console.log('Success get member fee');
                         message = {
                             "responseCode": process.env.SUCCESS_RESPONSE,
                             "responseMessage": process.env.SUCCESS_MESSAGE,
@@ -99,6 +102,7 @@ exports.memberFee = function (data) {
                         }
                         resolve(message);
                     } else {
+                        console.log('Member fee is not found')
                         message = {
                             "responseCode": process.env.NOTFOUND_RESPONSE,
                             "responseMessage": process.env.DATANOTFOUND_MESSAGE
@@ -127,7 +131,8 @@ exports.personalRecord = function (data) {
                 "value": data.dataValue
             }, (err, result) => {
                 if (!err) {
-                    if (result.length > 0) {
+                    if (result.affectedRows > 0) {
+                        console.log('Success create personal record');
                         message = {
                             "responseCode": process.env.SUCCESS_RESPONSE,
                             "responseMessage": process.env.SUCCESS_MESSAGE
@@ -141,12 +146,12 @@ exports.personalRecord = function (data) {
                         resolve(message)
                     }
                 } else {
+                    console.log("created schedule error", err);
                     message = {
                         "responseCode": process.env.ERRORINTERNAL_RESPONSE,
                         "responseMessage": process.env.INTERNALERROR_MESSAGE
                     }
                     resolve(message)
-                    console.log("created schedule error", err);
                 }
             });
         } catch (err) {
@@ -167,6 +172,7 @@ exports.getPersonalRecord = function (data) {
             await con.query(pr, (err, result) => {
                 if (!err) {
                     if (result.length > 0) {
+                        console.log("Success get personal record")
                         message = {
                             "responseCode": process.env.SUCCESS_RESPONSE,
                             "responseMessage": process.env.SUCCESS_MESSAGE,
@@ -174,6 +180,48 @@ exports.getPersonalRecord = function (data) {
                         }
                         resolve(message)
                     } else {
+                        message = {
+                            "responseCode": process.env.NOTFOUND_RESPONSE,
+                            "responseMessage": process.env.DATANOTFOUND_MESSAGE
+                        }
+                        resolve(message)
+                    }
+                } else {
+                    console.log("created schedule error", err);
+                    message = {
+                        "responseCode": process.env.ERRORINTERNAL_RESPONSE,
+                        "responseMessage": process.env.INTERNALERROR_MESSAGE
+                    }
+                    resolve(message)
+                }
+            });
+        } catch (err) {
+            console.log("error create schedule", err);
+            message = {
+                "responseCode": process.env.ERRORINTERNAL_RESPONSE,
+                "responseMessage": process.env.INTERNALERROR_MESSAGE
+            }
+            resolve(message);
+        }
+    })
+}
+
+exports.getPersonalRecordCategory = function (data) {
+    return new Promise(async function (resolve, reject) {
+        try {
+            const pr = "SELECT * FROM personalrecordcategory";
+            await con.query(pr, (err, result) => {
+                if (!err) {
+                    if (result.length > 0) {
+                        console.log("Success get personal record category")
+                        message = {
+                            "responseCode": process.env.SUCCESS_RESPONSE,
+                            "responseMessage": process.env.SUCCESS_MESSAGE,
+                            "data": result
+                        }
+                        resolve(message)
+                    } else {
+                        console.log('Get personal record category is not found')
                         message = {
                             "responseCode": process.env.NOTFOUND_RESPONSE,
                             "responseMessage": process.env.DATANOTFOUND_MESSAGE
