@@ -20,7 +20,6 @@ let signOptions = {
 
 module.exports.memberClassHistory = function memberClassHistory(req, res, next) {
   let token = req.swagger.params['token'].value;
-  console.log('TOKEN => ', token)
   let body = {};
   body.token = token;
   if (token !== null) {
@@ -49,7 +48,6 @@ module.exports.memberClassHistory = function memberClassHistory(req, res, next) 
 
 module.exports.classList = function classList(req, res, next) {
   let token = req.swagger.params['token'].value;
-  console.log('TOKEN => ', token)
   let body = {};
   body.token = token;
   if (token !== null) {
