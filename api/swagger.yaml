@@ -317,6 +317,11 @@ paths:
         description: "token of member device"
         required: true
         type: "string"
+      - name: "param" # all / {"prCat":""}
+        in: "header"
+        description: "token of member device"
+        required: true
+        type: "string"
       responses:
         200:
           description: "Success"
@@ -592,6 +597,42 @@ paths:
             description: "Data not found"
         x-swagger-router-controller: "class"
 
+  /member/payment/{token}:
+      post:
+        tags:
+        - "coach"
+        summary: "Registration access"
+        description: ""
+        operationId: "memberPayment"
+        consumes:
+        - "multipart/form-data"
+        - "application/x-www-form-urlencoded"
+        - "application/json"
+        produces:
+        - "application/xml"
+        - "application/json"
+        parameters:
+        - name: "token"
+          in: "path"
+          required: true
+          type: "string"
+        - in: "body"
+          name: "body"
+          description: "data credential guest"
+          required: true
+          schema:
+            $ref: "#/definitions/paymentParam"
+        responses:
+          200:
+            description: "Success"
+          500:
+            description: "Internal error"
+          401:
+            description: "Unauthorize"
+          404:
+            description: "Data not found"
+        x-swagger-router-controller: "transaction"
+
 
 securityDefinitions:
   petstore_auth:
@@ -639,6 +680,21 @@ definitions:
         type: "string"
       memberCat:
         type: "string"
+
+  paymentParam:
+    type: "object"
+    properties:
+      nominal:
+        type: "string"
+      memberCategory: #cateogry member gold / silver / platinum
+        type: "string"
+      placeId: #id tempat mendaftar
+        type: "string"
+      paymentType: #cash / transfer
+        type: "string"
+      description: #keterangan
+        type: "string"
+      
 
   addAccountParam:
     type: "object"

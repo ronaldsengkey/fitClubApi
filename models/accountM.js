@@ -135,7 +135,7 @@ exports.loginAccess = function loginAccess(data) {
                             resolve(message);
                             break;
                         default:
-                        console.log('Success login')
+                            console.log('Success login')
                             message = {
                                 "responseCode": process.env.SUCCESS_RESPONSE,
                                 "responseMessage": "Login success",

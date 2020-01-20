@@ -44,7 +44,7 @@ module.exports.joinMember = function joinMember(req, res, next) {
 
 module.exports.getPersonalRecord = async function getPersonalRecord(req, res, next) {
   var token = req.swagger.params['token'].value;
-  // var body = req.swagger.params['body'].value;
+  var param = req.swagger.params['param'].value;
   let body = {};
   let response = {};
   await jwt.verify(token, publicKEY, signOptions, function (err, callback) {
@@ -57,7 +57,8 @@ module.exports.getPersonalRecord = async function getPersonalRecord(req, res, ne
       utils.writeJson(res, response);
     } else {
       console.log("valid => ", callback);
-      body.profile = callback.profile;
+      body.profile = callback;
+      body.param = param;
       Member.getPersonalRecord(body)
         .then(function (response) {
           utils.writeJson(res, response);

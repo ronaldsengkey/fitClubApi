@@ -168,33 +168,65 @@ exports.personalRecord = function (data) {
 exports.getPersonalRecord = function (data) {
     return new Promise(async function (resolve, reject) {
         try {
-            const pr = "SELECT * FROM personalrecord pr INNER JOIN member m ON pr.memberId = m.id INNER JOIN user u ON u.id = m.userId INNER JOIN personalrecordcategory prc ON prc.id = pr.prCat";
-            await con.query(pr, (err, result) => {
-                if (!err) {
-                    if (result.length > 0) {
-                        console.log("Success get personal record")
-                        message = {
-                            "responseCode": process.env.SUCCESS_RESPONSE,
-                            "responseMessage": process.env.SUCCESS_MESSAGE,
-                            "data": result
+            if (data.param == "all") {
+                const pr = "SELECT * FROM personalrecord pr INNER JOIN member m ON pr.memberId = m.id INNER JOIN user u ON u.id = m.userId INNER JOIN personalrecordcategory prc ON prc.id = pr.prCat";
+                await con.query(pr, (err, result) => {
+                    if (!err) {
+                        if (result.length > 0) {
+                            console.log("Success get all personal record")
+                            message = {
+                                "responseCode": process.env.SUCCESS_RESPONSE,
+                                "responseMessage": process.env.SUCCESS_MESSAGE,
+                                "data": result
+                            }
+                            resolve(message)
+                        } else {
+                            message = {
+                                "responseCode": process.env.NOTFOUND_RESPONSE,
+                                "responseMessage": process.env.DATANOTFOUND_MESSAGE
+                            }
+                            resolve(message)
                         }
-                        resolve(message)
                     } else {
+                        console.log("created schedule error", err);
                         message = {
-                            "responseCode": process.env.NOTFOUND_RESPONSE,
-                            "responseMessage": process.env.DATANOTFOUND_MESSAGE
+                            "responseCode": process.env.ERRORINTERNAL_RESPONSE,
+                            "responseMessage": process.env.INTERNALERROR_MESSAGE
                         }
                         resolve(message)
                     }
-                } else {
-                    console.log("created schedule error", err);
-                    message = {
-                        "responseCode": process.env.ERRORINTERNAL_RESPONSE,
-                        "responseMessage": process.env.INTERNALERROR_MESSAGE
+                });
+            } else {
+                let prc = JSON.parse(data.param);
+                console.log('PRC => ', prc)
+                const pr = "SELECT * FROM personalrecord pr INNER JOIN member m ON pr.memberId = m.id INNER JOIN user u ON u.id = m.userId INNER JOIN personalrecordcategory prc ON prc.id = pr.prCat WHERE pr.prCat = ?";
+                await con.query(pr, [prc.prCat], (err, result) => {
+                    if (!err) {
+                        if (result.length > 0) {
+                            console.log("Success get personal record by category")
+                            message = {
+                                "responseCode": process.env.SUCCESS_RESPONSE,
+                                "responseMessage": process.env.SUCCESS_MESSAGE,
+                                "data": result
+                            }
+                            resolve(message)
+                        } else {
+                            message = {
+                                "responseCode": process.env.NOTFOUND_RESPONSE,
+                                "responseMessage": process.env.DATANOTFOUND_MESSAGE
+                            }
+                            resolve(message)
+                        }
+                    } else {
+                        console.log("created schedule error", err);
+                        message = {
+                            "responseCode": process.env.ERRORINTERNAL_RESPONSE,
+                            "responseMessage": process.env.INTERNALERROR_MESSAGE
+                        }
+                        resolve(message)
                     }
-                    resolve(message)
-                }
-            });
+                });
+            }
         } catch (err) {
             console.log("error create schedule", err);
             message = {
