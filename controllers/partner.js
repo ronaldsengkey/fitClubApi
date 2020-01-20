@@ -20,19 +20,25 @@ let signOptions = {
 
 async function checkToken(token){
   try{
-    await jwt.verify(token, publicKEY, signOptions, function (err, callback) {
-      if (err) {
-        console.log("not valid", err);
+    let a = await jwt.verify(token, publicKEY, signOptions);
+    if (a){
+      return a ;
+    }else{
+      return process.env.UNAUTHORIZED_RESPONSE;
+    }
+    // , function (err, callback) {
+      // if (err) {
+      //   console.log("not valid", err);
         // response = {
         //   "responseCode": process.env.UNAUTHORIZED_RESPONSE,
         //   "responseMessage": process.env.UNAUTH_MESSAGE
         // }
-        return process.env.UNAUTHORIZED_RESPONSE;
-      } else {
-        console.log("valid => ", callback);
-        return callback.profile;
-      }
-    })
+    //     return process.env.UNAUTHORIZED_RESPONSE;
+    //   } else {
+    //     console.log("valid => ", callback);
+    //     return callback;
+    //   }
+    // })
   }catch(err){
     console.log("error check token", err);
     return process.env.ERRORINTERNAL_RESPONSE;
@@ -42,7 +48,7 @@ async function checkToken(token){
 module.exports.partnerProfile = async function partnerProfile(req, res, next) {
   var token = req.swagger.params['token'].value;
   let response = {};
-  let body = {};
+  let data = {};
   try {
     if (token !== null) {
       let a = await checkToken(token);
@@ -60,8 +66,8 @@ module.exports.partnerProfile = async function partnerProfile(req, res, next) {
           }
           break
         default:
-          body.profile = a;
-          let b = await model.getSchedule();
+          data.profile = a;
+          let b = await model.getSchedule(data);
           break;
       }
       utils.writeJson(res, response);
