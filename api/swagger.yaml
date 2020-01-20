@@ -25,11 +25,51 @@ tags:
   description: "Fitclub member adn coach activity"
 - name: "place"
   description: "Fitclub place"
+- name: "partner"
+  description: "Fitclub coach"
 schemes:
 - "https"
 - "http"
 
 paths:
+
+  /partner/profile/{token}:
+    get:
+      tags:
+      - "partner"
+      summary: "profile account"
+      description: ""
+      operationId: "partnerProfile"
+      consumes:
+      - "multipart/form-data"
+      - "application/x-www-form-urlencoded"
+      - "application/json"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - name: "token"
+        in: "path"
+        description: "token of member device"
+        required: true
+        type: "string"
+      - in: "body"
+        name: "body"
+        description: "data credential guest"
+        required: true
+        schema:
+          $ref: "#/definitions/loginParam"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/notifSuccess"
+        400:
+          description: "Invalid status value"
+      x-swagger-router-controller: "partner"
+
   /login:
     post:
       tags:
