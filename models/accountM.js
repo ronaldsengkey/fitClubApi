@@ -162,6 +162,25 @@ exports.loginAccess = function loginAccess(data) {
     })
 }
 
+async function addPartner(data) {
+    try {
+        query = 'insert into partner set ? ';
+        const na = {
+            userId: data,
+            status: 0
+        };
+        const ac = await db.query(query, na);
+        console.log('result add coach => ', ac)
+        if (ac) {
+            console.log("check coach =>", ac);
+            return (process.env.SUCCESS_RESPONSE);
+        }
+    } catch (err) {
+        console.log("error add coach =>", err);
+        return (process.env.ERRORINTERNAL_RESPONSE);
+    }
+}
+
 async function addCoach(data) {
     try {
         query = 'insert into coach set ? ';
@@ -259,6 +278,19 @@ exports.addAccount = function addAccount(data) {
                         if (res.affectedRows > 0) {
                             if (data.filter == 'coach') {
                                 const ac = await addCoach(res.insertId);
+                                if (ac == process.env.SUCCESS_RESPONSE) {
+                                    message = {
+                                        "responseCode": process.env.SUCCESS_RESPONSE,
+                                        "responseMessage": "Registration Success Please Verify Your Email Adress",
+                                        data: {
+                                            phone: newAccount.phone,
+                                            email: newAccount.email
+                                        }
+                                    }
+                                    resolve(message);
+                                }
+                            }else if(data.filter == 'partner'){
+                                const ac = await addPartner(res.insertId);
                                 if (ac == process.env.SUCCESS_RESPONSE) {
                                     message = {
                                         "responseCode": process.env.SUCCESS_RESPONSE,

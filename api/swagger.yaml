@@ -33,6 +33,83 @@ schemes:
 
 paths:
 
+  /coach/{token}/{param}:
+    post:
+      tags:
+      - "partner"
+      summary: "Add new place off partner"
+      operationId: "addPlace"
+      consumes:
+      - "multipart/form-data"
+      - "application/x-www-form-urlencoded"
+      - "application/json"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - name: "token"
+        in: "path"
+        description: "token of partner"
+        required: true
+        type: "string"
+      - name: "param"
+        in: "path"
+        description: "token of partner"
+        required: true
+        type: "string"
+      - in: "body"
+        name: "body"
+        description: "data credential guest"
+        required: true
+        schema:
+          $ref: "#/definitions/addPlaceParam"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/notifSuccess"
+        400:
+          description: "Invalid status value"
+      x-swagger-router-controller: "partner"
+
+  /addPlace/{token}:
+    post:
+      tags:
+      - "partner"
+      summary: "Add new place off partner"
+      operationId: "addPlace"
+      consumes:
+      - "multipart/form-data"
+      - "application/x-www-form-urlencoded"
+      - "application/json"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - name: "token"
+        in: "path"
+        description: "token of partner"
+        required: true
+        type: "string"
+      - in: "body"
+        name: "body"
+        description: "data credential guest"
+        required: true
+        schema:
+          $ref: "#/definitions/addPlaceParam"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/notifSuccess"
+        400:
+          description: "Invalid status value"
+      x-swagger-router-controller: "partner"
+
   /partner/profile/{token}:
     get:
       tags:
@@ -649,6 +726,14 @@ securityDefinitions:
 
 definitions:
   
+  addPlaceParam:
+    type: "object"
+    properties:
+      placeName:
+        type: "string"
+      address:
+        type: "string"
+
   createClassParam:
     type: "object"
     properties:
