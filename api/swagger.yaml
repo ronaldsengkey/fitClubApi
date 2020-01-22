@@ -33,12 +33,12 @@ schemes:
 
 paths:
 
-  /coach/{token}/{param}:
-    post:
+  /coach/{param}/{token}:
+    get:
       tags:
-      - "partner"
+      - "coach"
       summary: "Add new place off partner"
-      operationId: "addPlace"
+      operationId: "coachList"
       consumes:
       - "multipart/form-data"
       - "application/x-www-form-urlencoded"
@@ -54,15 +54,9 @@ paths:
         type: "string"
       - name: "param"
         in: "path"
-        description: "token of partner"
+        description: "parameter filter"
         required: true
         type: "string"
-      - in: "body"
-        name: "body"
-        description: "data credential guest"
-        required: true
-        schema:
-          $ref: "#/definitions/addPlaceParam"
       responses:
         200:
           description: "successful operation"
@@ -72,7 +66,7 @@ paths:
               $ref: "#/definitions/notifSuccess"
         400:
           description: "Invalid status value"
-      x-swagger-router-controller: "partner"
+      x-swagger-router-controller: "coach"
 
   /addPlace/{token}:
     post:

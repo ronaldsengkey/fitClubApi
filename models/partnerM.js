@@ -9,12 +9,12 @@ function generateOtp() {
 exports.addPlace = function (data) {
     return new Promise(async function (resolve, reject) {
         try {
-            console.log('data join member => ', data)
+            console.log('data join partner => ', data)
             const qp = "INSERT INTO place SET ?";
             let newData = {
                 "name": data.placeName,
                 "location": data.address,
-                "owner": parseInt(data.profile.id)
+                "partnerId": parseInt(data.profile.partnerId)
             };
             con.query(qp,newData, (err, result) => {
                 if (!err) {
@@ -28,7 +28,7 @@ exports.addPlace = function (data) {
                     } else {
                         message = {
                             "responseCode": process.env.ERRORINTERNAL_RESPONSE,
-                            "responseMessage": process.env.ERRORSCHEDULE_MESSAGE
+                            "responseMessage": process.env.INTERNALERROR_MESSAGE
                         }
                         resolve(message)
                     }
@@ -36,7 +36,7 @@ exports.addPlace = function (data) {
                     console.log("created schedule error", err);
                     message = {
                         "responseCode": process.env.ERRORINTERNAL_RESPONSE,
-                        "responseMessage": process.env.ERRORSCHEDULE_MESSAGE
+                        "responseMessage": process.env.INTERNALERROR_MESSAGE
                     }
                     resolve(message)
                 }

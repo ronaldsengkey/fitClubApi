@@ -1,6 +1,58 @@
 const con = require('../config/dbConfig');
 let query = '',
-    message = '';
+    message 
+
+exports.coachList = function (data) {
+    return new Promise(async function (resolve, reject) {
+        try {
+            let query = '';
+            switch(data.param){
+                case "all":
+                    query = 'SELECT u.name, u.gender, u.phone, u.address, u.email, u.imgProfile, u.accountStatus, u.registerDate, p.name as placeName FROM classschedule cs JOIN coach c ON c.id = cs.coach JOIN user u ON u.id = c.userId JOIN place p ON p.id = cs.placeId WHERE p.partnerId = '+data.profile.partnerId+' GROUP BY u.id'
+                    break;
+                default:
+                    if(data.param.byId){
+                        query = 'SELECT u.name, u.gender, u.phone, u.address, u.email, u.imgProfile, u.accountStatus, u.registerDate, p.name as placeName FROM classschedule cs JOIN coach c ON c.id = cs.coach JOIN user u ON u.id = c.userId JOIN place p ON p.id = cs.placeId WHERE p.partnerId = '+data.profile.partnerId+' AND c.id = '+data.param.byId+' AND cs.coach = '+data.param.byId
+                    }else if(data.param.byPlace){
+                        query = 'SELECT u.name, u.gender, u.phone, u.address, u.email, u.imgProfile, u.accountStatus, u.registerDate, p.name as placeName FROM classschedule cs JOIN coach c ON c.id = cs.coach JOIN user u ON u.id = c.userId JOIN place p ON p.id = cs.placeId WHERE p.partnerId = '+data.profile.partnerId+' AND cs.placeId = '+data.param.byPlace+' GROUP BY u.id';
+                    }
+                    break;
+            }
+            await con.query(query, (err, result) => {
+                if (err) {
+                    console.log("error get data", err)
+                    message = {
+                        "responseCode": process.env.ERRORINTERNAL_RESPONSE,
+                        "responseMessage": process.env.INTERNALERROR_MESSAGE
+                    };
+                    resolve(message);
+                } else {
+                    if (result.length > 0) {
+                        message = {
+                            "responseCode": process.env.SUCCESS_RESPONSE,
+                            "responseMessage": process.env.SUCCESS_MESSAGE,
+                            "data": result
+                        };
+                        resolve(message);
+                    } else {
+                        message = {
+                            "responseCode": process.env.NOTFOUND_RESPONSE,
+                            "responseMessage": process.env.DATANOTFOUND_MESSAGE
+                        };
+                        resolve(message);
+                    }
+                }
+            })
+        }catch(err){
+            console.log("error coach list", err);
+            message = {
+                "responseCode": process.env.NOTFOUND_RESPONSE,
+                "responseMessage": process.env.DATANOTFOUND_MESSAGE
+            };
+            reject(message);
+        }
+    })
+}
 
 exports.createSchedule = function (data) {
     return new Promise(async function (resolve, reject) {

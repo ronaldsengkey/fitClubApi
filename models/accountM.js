@@ -13,7 +13,7 @@ const fs = require('fs');
 function getUserByMail(param) {
     return new Promise(async function (resolve, reject) {
         try {
-            let query = "SELECT u.*, m.id as memberId, m.code, m.memberCat, m.joinDate, m.endDate FROM user u LEFT JOIN member m ON m.userId = u.id WHERE u.email = ?";
+            let query = "SELECT u.*, m.id as memberId, p.id as partnerId, m.code, m.memberCat, m.joinDate, m.endDate FROM user u LEFT JOIN member m ON m.userId = u.id LEFT JOIN partner p ON p.userId = u.id WHERE u.email = ?";
             db.query(query, [param.email], async function (err, res) {
                 try {
                     if (err) {
@@ -110,12 +110,16 @@ exports.loginAccess = function loginAccess(data) {
                     if (ev.data.memberId == null) {
                         ev.data.memberId == 0;
                     }
+                    if (ev.data.partnerId == null) {
+                        ev.data.partnerId == 0;
+                    }
                     let param = {
                         id: ev.data.id,
                         name: ev.data.name,
                         gender: ev.data.gender,
                         memberCat: ev.data.memberCat,
                         memberId: ev.data.memberId,
+                        partnerId: ev.data.partnerId,
                         memberCode: ev.data.memberCode,
                         joinMemberDate: ev.data.joinDate,
                         endMemberDate: ev.data.endDate,
@@ -167,7 +171,7 @@ async function addPartner(data) {
         query = 'insert into partner set ? ';
         const na = {
             userId: data,
-            status: 0
+            status: 1
         };
         const ac = await db.query(query, na);
         console.log('result add coach => ', ac)
