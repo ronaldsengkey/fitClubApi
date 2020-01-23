@@ -2,6 +2,25 @@ const db = require('../config/dbConfig');
 let query = '',
     message = '';
 
+exports.partnerClass = function (data) {
+    return new Promise(async function (resolve, reject) {
+        try {
+            let query = "SELECT * FROM classschedule cs JOIN place p ON p.id = cs.placeId WHERE p.partnerId = ?";
+            await db.query(query,[data.profile.id],(err, result) => {
+                if (err) {
+                    console.log("error get data", err)
+                } else {
+                    if (result.length > 0) {
+                        console.log(result);
+                    }
+                }
+            });
+        }catch(err){
+
+        }
+    }
+}
+
 exports.classList = function (data) {
     return new Promise(async function (resolve, reject) {
         try {
