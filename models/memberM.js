@@ -53,11 +53,12 @@ exports.joinMember = function (data) {
 exports.activity = function (data) {
     return new Promise(async function (resolve, reject) {
         try {
+            console.log("DATA JOIN ACTIVITY => ", data);
             const query = "INSERT INTO memberactivity SET ?";
             con.query(query, {
                 "memberId": parseInt(data.profile.memberId),
                 "scheduleId": data.scheduleId,
-                "action": data.actiion
+                "action": data.action
             }, (err, result) => {
                 if (!err) {
                     if (result.affectedRows > 0) {

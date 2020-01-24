@@ -38,6 +38,41 @@ exports.classList = function (data) {
     })
 }
 
+exports.placeList = function (data) {
+    return new Promise(async function (resolve, reject) {
+        try {
+            let query = "SELECT * FROM place";
+            await db.query(query, (err, result) => {
+                if (err) {
+                    console.log("error get data", err)
+                } else {
+                    if (result.length > 0) {
+                        message = {
+                            "responseCode": process.env.SUCCESS_RESPONSE,
+                            "responseMessage": process.env.SUCCESS_MESSAGE,
+                            "data": result
+                        };
+                        resolve(message);
+                    } else {
+                        message = {
+                            "responseCode": process.env.NOTFOUND_RESPONSE,
+                            "responseMessage": process.env.DATANOTFOUND_MESSAGE
+                        };
+                        resolve(message);
+                    }
+                }
+            })
+        } catch (err) {
+            console.log("error get class", err)
+            message = {
+                "responseCode": process.env.ERRORINTERNAL_RESPONSE,
+                "responseMessage": process.env.INTERNALERROR_MESSAGE
+            };
+            reject(message);
+        }
+    })
+}
+
 
 exports.memberClassHistory = function (data) {
     return new Promise(async function (resolve, reject) {
