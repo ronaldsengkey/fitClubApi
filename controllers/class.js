@@ -122,6 +122,34 @@ module.exports.classList = function classList(req, res, next) {
   }
 };
 
+module.exports.placeList = function placeList(req, res, next) {
+  let token = req.swagger.params['token'].value;
+  let body = {};
+  body.token = token;
+  if (token !== null) {
+    jwt.verify(token, publicKEY, signOptions, function (err, callback) {
+      if (err) {
+        console.log("not valid", err);
+        response = {
+          "responseCode": process.env.UNAUTHORIZED_RESPONSE,
+          "responseMessage": process.env.UNAUTH_MESSAGE
+        }
+        utils.writeJson(res, response);
+      } else {
+        console.log("valid");
+        body.profile = callback.profile;
+        model.placeList(body)
+          .then(function (response) {
+            utils.writeJson(res, response);
+          })
+          .catch(function (response) {
+            utils.writeJson(res, response);
+          });
+      }
+    })
+  }
+};
+
 
 module.exports.memberClass = function memberClass(req, res, next) {
   let token = req.swagger.params['token'].value;

@@ -512,6 +512,42 @@ paths:
           description: "Data not found"
       x-swagger-router-controller: "coach"
 
+  /bank/{token}:
+    get:
+      tags:
+      - "coach"
+      summary: "Registration access"
+      description: ""
+      operationId: "getBank" 
+      consumes:
+      - "multipart/form-data"
+      - "application/x-www-form-urlencoded"
+      - "application/json"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - name: "param"
+        in: "header"
+        description: "token of member device"
+        required: true
+        type: "string"
+      - name: "token"
+        in: "path"
+        description: "token of member device"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "Success"
+        500:
+          description: "Internal error"
+        401:
+          description: "Unauthorize"
+        404:
+          description: "Data not found"
+      x-swagger-router-controller: "transaction"
+
   /coach/schedule:
     post:
       tags:
@@ -544,6 +580,36 @@ paths:
           description: "Data not found"
       x-swagger-router-controller: "coach"
   
+  /place/{token}:
+    get:
+      tags:
+      - "coach"
+      summary: "Registration access"
+      description: ""
+      operationId: "placeList"
+      consumes:
+      - "multipart/form-data"
+      - "application/x-www-form-urlencoded"
+      - "application/json"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - name: "token"
+        in: "path"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "Success"
+        500:
+          description: "Internal error"
+        401:
+          description: "Unauthorize"
+        404:
+          description: "Data not found"
+      x-swagger-router-controller: "class"
+
   /class/{token}:
     get:
       tags:
@@ -739,7 +805,43 @@ paths:
             description: "Data not found"
         x-swagger-router-controller: "transaction"
 
-  /transaction/payment/{token}:
+  /coach/confirmPayment/{token}:
+      post:
+        tags:
+        - "coach"
+        summary: "Registration access"
+        description: ""
+        operationId: "memberPayment"
+        consumes:
+        - "multipart/form-data"
+        - "application/x-www-form-urlencoded"
+        - "application/json"
+        produces:
+        - "application/xml"
+        - "application/json"
+        parameters:
+        - name: "token"
+          in: "path"
+          required: true
+          type: "string"
+        - in: "body"
+          name: "body"
+          description: "data credential guest"
+          required: true
+          schema:
+            $ref: "#/definitions/confirmPaymentCoach"
+        responses:
+          200:
+            description: "Success"
+          500:
+            description: "Internal error"
+          401:
+            description: "Unauthorize"
+          404:
+            description: "Data not found"
+        x-swagger-router-controller: "transaction"
+        
+  /member/payment/{token}:
       post:
         tags:
         - "transaction"
@@ -864,6 +966,24 @@ definitions:
         type: "string"
       filter:
         type: "string"
+
+  confirmPaymentCoach:
+    type: "object"
+    properties:
+      transactionId:
+        type: "string"
+      status:
+        type: "string"
+      nominal:
+        type: "string"
+      memberCategory:
+        type: "string"
+      placeId:
+        type: "string"
+      description:
+        type: "string"
+      
+      
 
   memberActivityParam:
     type: "object"
