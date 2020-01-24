@@ -16,7 +16,7 @@ exports.partnerClass = function (data) {
                 }
             });
         }catch(err){
-
+            console.log(err)
         }
     }
 }
