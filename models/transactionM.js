@@ -8,7 +8,6 @@ async function generateOtp() {
 
 exports.transactionRequest = function (data) {
     return new Promise(async function (resolve, reject) {
-        console.log(data);
         let query = "SELECT * FROM `memberfee` WHERE membercat = ? AND placeId = ?";
         let a = await generateOtp();
         let memberCat =JSON.parse(data.param);

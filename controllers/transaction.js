@@ -119,7 +119,7 @@ module.exports.getBank = async function getBank(req, res, next) {
             console.log("valid => ", callback);
             body.profile = callback.profile;
             body.param = param;
-            transaction.getBank(body)
+            model.getBank(body)
                 .then(function (response) {
                     utils.writeJson(res, response);
                 })
