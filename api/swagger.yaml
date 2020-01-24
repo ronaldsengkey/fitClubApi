@@ -27,6 +27,8 @@ tags:
   description: "Fitclub place"
 - name: "partner"
   description: "Fitclub coach"
+- name: "transaction"
+  description: "Fitclub transaction"
 schemes:
 - "https"
 - "http"
@@ -702,11 +704,45 @@ paths:
           404:
             description: "Data not found"
         x-swagger-router-controller: "class"
+  
+  /transaction/request/{param}/{token}:
+      get:
+        tags:
+        - "transaction"
+        summary: "Registration access"
+        description: ""
+        operationId: "transactionRequest"
+        consumes:
+        - "multipart/form-data"
+        - "application/x-www-form-urlencoded"
+        - "application/json"
+        produces:
+        - "application/xml"
+        - "application/json"
+        parameters:
+        - name: "token"
+          in: "path"
+          required: true
+          type: "string"
+        - name: "param"
+          in: "path"
+          required: true
+          type: "string"
+        responses:
+          200:
+            description: "Success"
+          500:
+            description: "Internal error"
+          401:
+            description: "Unauthorize"
+          404:
+            description: "Data not found"
+        x-swagger-router-controller: "transaction"
 
-  /member/payment/{token}:
+  /transaction/payment/{token}:
       post:
         tags:
-        - "coach"
+        - "transaction"
         summary: "Registration access"
         description: ""
         operationId: "memberPayment"

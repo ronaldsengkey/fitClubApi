@@ -18,7 +18,7 @@ exports.partnerClass = function (data) {
         }catch(err){
 
         }
-    }
+    })
 }
 
 exports.classList = function (data) {
