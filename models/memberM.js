@@ -26,7 +26,6 @@ exports.joinMember = function (data) {
             }, (err, result) => {
                 if (!err) {
                     if (result.affectedRows > 0) {
-                        console.log('result => ', result.insertId)
                         message = {
                             "responseCode": process.env.SUCCESS_RESPONSE,
                             "responseMessage": process.env.SUCCESS_MESSAGE
