@@ -15,6 +15,8 @@ exports.coachList = function (data) {
                         query = 'SELECT u.name, u.gender, u.phone, u.address, u.email, u.imgProfile, u.accountStatus, u.registerDate, p.name as placeName FROM classschedule cs JOIN coach c ON c.id = cs.coach JOIN user u ON u.id = c.userId JOIN place p ON p.id = cs.placeId WHERE p.partnerId = '+data.profile.partnerId+' AND c.id = '+data.param.byId+' AND cs.coach = '+data.param.byId
                     }else if(data.param.byPlace){
                         query = 'SELECT u.name, u.gender, u.phone, u.address, u.email, u.imgProfile, u.accountStatus, u.registerDate, p.name as placeName FROM classschedule cs JOIN coach c ON c.id = cs.coach JOIN user u ON u.id = c.userId JOIN place p ON p.id = cs.placeId WHERE p.partnerId = '+data.profile.partnerId+' AND cs.placeId = '+data.param.byPlace+' GROUP BY u.id';
+                    }else if(data.param.byClass){
+                        query = 'SELECT u.name, u.gender, u.phone, u.address, u.email, u.imgProfile, u.accountStatus, u.registerDate, p.name as placeName FROM classschedule cs JOIN coach c ON c.id = cs.coach JOIN user u ON u.id = c.userId JOIN place p ON p.id = cs.placeId WHERE p.partnerId = '+data.profile.partnerId+' AND cs.class = '+data.param.byPlace+' GROUP BY u.id'
                     }
                     break;
             }

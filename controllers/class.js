@@ -96,6 +96,7 @@ module.exports.memberClassHistory = function memberClassHistory(req, res, next) 
 
 module.exports.classList = function classList(req, res, next) {
   let token = req.swagger.params['token'].value;
+  let param = req.swagger.params['param'].value;
   let body = {};
   body.token = token;
   if (token !== null) {
@@ -108,7 +109,8 @@ module.exports.classList = function classList(req, res, next) {
         }
         utils.writeJson(res, response);
       } else {
-        console.log("valid");
+        body.classId = param.byClassId;
+        body.byDate = param.byDate;
         body.profile = callback.profile;
         model.classList(body)
           .then(function (response) {

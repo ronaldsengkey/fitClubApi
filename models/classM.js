@@ -24,7 +24,18 @@ exports.partnerClass = function (data) {
 exports.classList = function (data) {
     return new Promise(async function (resolve, reject) {
         try {
-            let query = "SELECT * FROM classlist";
+            let query ='';
+            switch(data.classId){
+                case  "all":
+                    query = "SELECT * FROM classlist";
+                    break;
+                default:
+                    query = "SELECT c.name, c.id, cs.startDate FROM classschedule cs JOIN classlist c WHERE c.id IN ("+data.classId+") GROUP BY c.id"
+                    break;
+            }
+            if(data.byDate){
+                query = "SELECT c.name, c.id, cs.startDate FROM classschedule cs JOIN classlist c WHERE cs.startDate = '"+data.byDate+"'";
+            }
             await db.query(query, (err, result) => {
                 if (err) {
                     console.log("error get data", err)

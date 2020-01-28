@@ -629,6 +629,10 @@ paths:
         in: "path"
         required: true
         type: "string"
+      - name: "param"
+        in: "header"
+        required: true
+        type: "string"
       responses:
         200:
           description: "Success"
