@@ -95,7 +95,7 @@ module.exports.memberClassHistory = function memberClassHistory(req, res, next) 
 };
 
 module.exports.classList = function classList(req, res, next) {
-  let token = req.swagger.params['token'].value;
+  // let token = req.swagger.params['token'].value;
   let param = {};
   if(req.swagger.params['param'].value){
     param.param = req.swagger.params['param'].value;
@@ -105,21 +105,21 @@ module.exports.classList = function classList(req, res, next) {
     param.Date = req.swagger.params['byDate'].value;
   }
   let body = {};
-  body.token = token;
-  if (token !== null) {
-    jwt.verify(token, publicKEY, signOptions, function (err, callback) {
-      if (err) {
-        console.log("not valid", err);
-        response = {
-          "responseCode": process.env.UNAUTHORIZED_RESPONSE,
-          "responseMessage": process.env.UNAUTH_MESSAGE
-        }
-        utils.writeJson(res, response);
-      } else {
+  // body.token = token;
+  // if (token !== null) {
+    // jwt.verify(token, publicKEY, signOptions, function (err, callback) {
+      // if (err) {
+      //   console.log("not valid", err);
+      //   response = {
+      //     "responseCode": process.env.UNAUTHORIZED_RESPONSE,
+      //     "responseMessage": process.env.UNAUTH_MESSAGE
+      //   }
+      //   utils.writeJson(res, response);
+      // } else {
           body.byClassId = param.classId;
           body.byDate = param.date;
           body.param = param.param;
-          body.profile = callback;
+          // body.profile = callback;
           model.classList(body)
           .then(function (response) {
             utils.writeJson(res, response);
@@ -127,9 +127,9 @@ module.exports.classList = function classList(req, res, next) {
           .catch(function (response) {
             utils.writeJson(res, response);
           });
-      }
-    })
-  }
+      // }
+    // })
+  // }
 };
 
 module.exports.placeList = function placeList(req, res, next) {

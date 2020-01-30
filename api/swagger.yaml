@@ -627,7 +627,7 @@ paths:
       parameters:
       - name: "token"
         in: "path"
-        required: true
+        required: false
         type: "string"
       - name: "param"
         in: "header"

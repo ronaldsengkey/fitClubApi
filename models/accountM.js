@@ -190,7 +190,8 @@ async function addCoach(data) {
     try {
         query = 'insert into coach set ? ';
         const na = {
-            userId: data,
+            userId: data.userId,
+            placeId: data.placeId,
             status: 0
         };
         const ac = await db.query(query, na);
@@ -282,7 +283,8 @@ exports.addAccount = function addAccount(data) {
                     } else {
                         if (res.affectedRows > 0) {
                             if (data.filter == 'coach') {
-                                const ac = await addCoach(res.insertId);
+                                let param = {userId:res.insertId,placeId:data.placeId};
+                                const ac = await addCoach(param);
                                 if (ac == process.env.SUCCESS_RESPONSE) {
                                     message = {
                                         "responseCode": process.env.SUCCESS_RESPONSE,
