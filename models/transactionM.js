@@ -31,7 +31,9 @@ function tempTransaction(data) {
                 resolve(message);
             } else {
                 if (result.affectedRows > 0) {
+                    console.log(result.insertId)
                     par.oldMemberCat = data.oldMemberCat;
+                    par.requestNumber = result.insertId;
                     message = {
                         "responseCode": process.env.SUCCESS_RESPONSE,
                         "responseMessage": process.env.SUCCESS_MESSAGE,

@@ -22,15 +22,25 @@ exports.partnerClass = function (data) {
 }
 
 exports.classList = function (data) {
+    console.log(data);
     return new Promise(async function (resolve, reject) {
         try {
-            let query = "SELECT * FROM classlist";
+            let query ='';
+            if(data.param){
+                query = "SELECT * FROM classlist";
+            }
+            if(data.byClassId){
+                console.log('KKKKKKKK', data.byClassId)
+                query = "SELECT c.name, c.id, cs.startDate FROM classschedule cs JOIN classlist c WHERE c.id IN ("+data.byClassId+") GROUP BY c.id";
+            }
+            if(data.byDate){
+                query = "SELECT c.name, c.id, cs.startDate FROM classschedule cs JOIN classlist c WHERE cs.startDate = '"+data.byDate+"'";
+            }
             await db.query(query, (err, result) => {
                 if (err) {
                     console.log("error get data", err)
                 } else {
                     if (result.length > 0) {
-                        console.log(result);
                         message = {
                             "responseCode": process.env.SUCCESS_RESPONSE,
                             "responseMessage": process.env.SUCCESS_MESSAGE,

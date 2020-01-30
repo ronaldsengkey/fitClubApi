@@ -96,6 +96,14 @@ module.exports.memberClassHistory = function memberClassHistory(req, res, next) 
 
 module.exports.classList = function classList(req, res, next) {
   let token = req.swagger.params['token'].value;
+  let param = {};
+  if(req.swagger.params['param'].value){
+    param.param = req.swagger.params['param'].value;
+  }else if(req.swagger.params['byClassId'].value){
+    param.classId = req.swagger.params['byClassId'].value;
+  }else if(req.swagger.params['byDate'].value){
+    param.Date = req.swagger.params['byDate'].value;
+  }
   let body = {};
   body.token = token;
   if (token !== null) {
@@ -108,9 +116,11 @@ module.exports.classList = function classList(req, res, next) {
         }
         utils.writeJson(res, response);
       } else {
-        console.log("valid");
-        body.profile = callback.profile;
-        model.classList(body)
+          body.byClassId = param.classId;
+          body.byDate = param.date;
+          body.param = param.param;
+          body.profile = callback;
+          model.classList(body)
           .then(function (response) {
             utils.writeJson(res, response);
           })
