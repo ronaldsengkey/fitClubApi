@@ -641,6 +641,18 @@ paths:
         in: "header"
         required: false
         type: "string"
+      - name: "param"
+        in: "header"
+        required: false
+        type: "string"
+      - name: "byClassId"
+        in: "header"
+        required: false
+        type: "string"
+      - name: "byDate"
+        in: "header"
+        required: false
+        type: "string"
       responses:
         200:
           description: "Success"

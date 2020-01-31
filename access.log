@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 192.168.1.64 - - [24/Aug/2019:05:54:15 +0000] "GET / HTTP/1.1" 404 60 "-" "avast! Antivirus"
 127.0.0.1 - - [18/Sep/2019:08:12:05 +0000] "POST /ronaldSengkey/fitClub/api/v1/user HTTP/1.1" 415 208 "http://192.168.0.13:3000/memberregistration.html" "Mozilla/5.0 (Linux; Android 5.0; SM-G900P Build/LRX21T) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3865.75 Mobile Safari/537.36"
 127.0.0.1 - - [18/Sep/2019:09:34:18 +0000] "POST /ronaldSengkey/fitClub/api/v1/user HTTP/1.1" 415 208 "http://192.168.0.13:3000/memberregistration.html" "Mozilla/5.0 (Linux; Android 5.0; SM-G900P Build/LRX21T) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3865.75 Mobile Safari/537.36"
@@ -160,3 +161,5 @@
 192.168.0.66 - - [29/Jan/2020:02:31:58 +0000] "GET /ronaldSengkey/fitClub/api/v1 HTTP/1.1" 404 100 "http://192.168.0.66:3000/addCoachSchedule.html" "Mozilla/5.0 (Linux; Android 5.0; SM-G900P Build/LRX21T) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.94 Mobile Safari/537.36"
 192.168.0.66 - - [29/Jan/2020:02:32:50 +0000] "GET /ronaldSengkey/fitClub/api/v1 HTTP/1.1" 404 100 "http://192.168.0.66:3000/addCoachSchedule.html" "Mozilla/5.0 (Linux; Android 5.0; SM-G900P Build/LRX21T) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.94 Mobile Safari/537.36"
 192.168.0.66 - - [29/Jan/2020:02:38:02 +0000] "GET /ronaldSengkey/fitClub/api/v1 HTTP/1.1" 404 100 "http://192.168.0.66:3000/addCoachSchedule.html" "Mozilla/5.0 (Linux; Android 5.0; SM-G900P Build/LRX21T) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.94 Mobile Safari/537.36"
+=======
+>>>>>>> origin/jimmy
