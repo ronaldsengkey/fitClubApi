@@ -627,11 +627,7 @@ paths:
       parameters:
       - name: "token"
         in: "path"
-        required: false
-        type: "string"
-      - name: "param"
-        in: "header"
-        required: false
+        required: true
         type: "string"
       - name: "byClassId"
         in: "header"
@@ -642,14 +638,6 @@ paths:
         required: false
         type: "string"
       - name: "param"
-        in: "header"
-        required: false
-        type: "string"
-      - name: "byClassId"
-        in: "header"
-        required: false
-        type: "string"
-      - name: "byDate"
         in: "header"
         required: false
         type: "string"
@@ -835,7 +823,7 @@ paths:
         - "coach"
         summary: "Registration access"
         description: ""
-        operationId: "memberPayment"
+        operationId: "coachPaymentConfirm"
         consumes:
         - "multipart/form-data"
         - "application/x-www-form-urlencoded"
