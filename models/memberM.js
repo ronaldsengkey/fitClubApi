@@ -10,40 +10,55 @@ exports.joinMember = function (data) {
     return new Promise(async function (resolve, reject) {
         try {
             console.log('data join member => ', data)
-            const jm = "INSERT INTO member SET ?";
             const otp = generateOtp();
             let endDate = new Date();
             let day = new Date(endDate.setDate(endDate.getDate() + 30));
             let expDay = day.getDate();
             let expMonth = day.getMonth() + 1;
             let expYear = day.getFullYear();
-            con.query(jm, {
-                "userId": parseInt(data.profile.id),
-                "code": otp,
-                "memberCat": parseInt(data.memberCat),
-                "endDate": expYear + '-' + expMonth + '-' + expDay,
-                "status": 0
-            }, (err, result) => {
+            const checkMember = "SELECT userId,status FROM member WHERE userId = ? AND memberCat = ? AND status = ?"
+            con.query(checkMember, [data.id, data.memberCat, 1], (err, result) => {
                 if (!err) {
-                    if (result.affectedRows > 0) {
+                    if (result.affectedRows > 0) { //if user already joined member
                         message = {
-                            "responseCode": process.env.SUCCESS_RESPONSE,
-                            "responseMessage": process.env.SUCCESS_MESSAGE
+                            "responseCode": process.env.NOTACCEPT_RESPONSE,
+                            "responseMessage": "You have already joined member!"
                         }
                         resolve(message)
-                    } else {
-                        message = {
-                            "responseCode": process.env.ERRORINTERNAL_RESPONSE,
-                            "responseMessage": process.env.ERRORSCHEDULE_MESSAGE
-                        }
-                        resolve(message)
+                    } else { //if user not joined member yet
+                        const jm = "INSERT INTO member SET ?";
+                        con.query(jm, {
+                            "userId": parseInt(data.profile.id),
+                            "code": otp,
+                            "memberCat": parseInt(data.memberCat),
+                            "endDate": expYear + '-' + expMonth + '-' + expDay,
+                            "status": 0
+                        }, (err, result) => {
+                            if (!err) {
+                                if (result.affectedRows > 0) {
+                                    message = {
+                                        "responseCode": process.env.SUCCESS_RESPONSE,
+                                        "responseMessage": process.env.SUCCESS_MESSAGE
+                                    }
+                                    resolve(message)
+                                } else {
+                                    message = {
+                                        "responseCode": process.env.ERRORINTERNAL_RESPONSE,
+                                        "responseMessage": process.env.ERRORSCHEDULE_MESSAGE
+                                    }
+                                    resolve(message)
+                                }
+                            } else {
+                                console.log("Join member something error => ", err);
+                            }
+                        })
                     }
                 } else {
-                    console.log("created schedule error", err);
+                    console.log("something error when checking member => ", err);
                 }
             })
         } catch (err) {
-            console.log("error create schedule", err);
+            console.log("error join member", err);
             reject(err);
         }
     })
@@ -91,7 +106,7 @@ exports.memberFee = function (data) {
     return new Promise(async function (resolve, reject) {
         try {
             const memberFee = "SELECT mf.id, mc.categoryName as category, mf.memberCat as catId, mf.fee, mf.timePeriode FROM memberfee mf JOIN membercategory mc ON mc.id = mf.memberCat";
-            await con.query(memberFee, (err, result) => {
+            con.query(memberFee, (err, result) => {
                 if (!err) {
                     if (result.length > 0) {
                         console.log('Success get member fee');

@@ -53,6 +53,7 @@ function tempTransaction(data) {
 }
 exports.transactionRequest = function (data) {
     return new Promise(async function (resolve, reject) {
+        console.log('DATA TRANSACTION REQU EST => ', data)
         let query = "SELECT * FROM `memberfee` WHERE membercat = ? AND placeId = ?";
         let a = await generateNumber();
         let memberCat = JSON.parse(data.param);
@@ -151,6 +152,7 @@ exports.memberPayment = function (data) {
 exports.getBank = function (data) {
     return new Promise(async function (resolve, reject) {
         try {
+            console.log('DATA GET BANK => ', data)
             if (data.param == "all") {
                 const query = "SELECT * FROM bank";
                 con.query(query, (err, res) => {
@@ -183,8 +185,8 @@ exports.getBank = function (data) {
                     }
                 })
             } else {
-                const query = "SELECT * FROM bank WHERE name = LIKE '%?%'";
-                con.query(query, [data.param], (err, res) => {
+                const query = "SELECT * FROM bank WHERE LOWER(name) LIKE '%" + data.param + "%'";
+                con.query(query, (err, res) => {
                     if (!err) {
                         if (err) {
                             console.log('Error query get list bank => ', err)
@@ -210,12 +212,12 @@ exports.getBank = function (data) {
                             }
                         }
                     } else {
-                        console.log("created schedule error", err);
+                        console.log("Error query get list bank with param", err);
                     }
                 })
             }
         } catch (err) {
-            console.log("error create schedule", err);
+            console.log("error get list bank", err);
             reject(err);
         }
     })
@@ -370,6 +372,54 @@ function saveFile(data) {
 exports.listTransactionRequest = function (data) {
     return new Promise(async function (resolve, reject) {
         try {
+            let query = "SELECT * FROM temppayment";
+            con.query(query, (err, res) => {
+                if (err) {
+                    console.log('Error query get list transaction request => ', err)
+                    message = {
+                        "responseCode": process.env.ERRORINTERNAL_RESPONSE,
+                        "responseMessage": "Internal server error"
+                    }
+                    resolve(message);
+                } else {
+                    if (res.length > 0) {
+                        message = {
+                            "responseCode": process.env.SUCCESS_MESSAGE,
+                            "responseMessage": "List data transaction request",
+                            "data": res
+                        };
+                        resolve(message);
+                    } else {
+                        message = {
+                            "responseCode": process.env.NOTFOUND_RESPONSE,
+                            "responseMessage": "No data found"
+                        }
+                        resolve(message);
+                    }
+                }
+            })
+        } catch (error) {
+            console.log('Error get list transaction request => ', error)
+            message = {
+                "responseCode": process.env.ERRORINTERNAL_RESPONSE,
+                "responseMessage": process.env.INTERNALERROR_MESSAGE,
+            }
+            resolve(message)
+        }
+    })
+}
+
+exports.confirmPaymentMember = function (data) {
+    return new Promise(async function (resolve, reject) {
+        try {
+            switch (body.concern) {
+                case "upgrade":
+                    break;
+                case "rejoin":
+                    break;
+                case "join":
+                    break;
+            }
             let query = "SELECT * FROM temppayment";
             con.query(query, (err, res) => {
                 if (err) {

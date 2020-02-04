@@ -117,9 +117,36 @@ module.exports.getBank = async function getBank(req, res, next) {
             utils.writeJson(res, response);
         } else {
             console.log("valid => ", callback);
-            body.profile = callback.profile;
+            body.profile = callback;
             body.param = param;
             model.getBank(body)
+                .then(function (response) {
+                    utils.writeJson(res, response);
+                })
+                .catch(function (response) {
+                    utils.writeJson(res, response);
+                });
+        }
+    })
+};
+
+module.exports.confirmPaymentMember = async function confirmPaymentMember(req, res, next) {
+    var token = req.swagger.params['token'].value;
+    var body = req.swagger.params['body'].value;
+    // let body = {};
+    let response = {};
+    await jwt.verify(token, publicKEY, signOptions, function (err, callback) {
+        if (err) {
+            console.log("not valid token", err);
+            response = {
+                "responseCode": process.env.UNAUTHORIZED_RESPONSE,
+                "responseMessage": process.env.UNAUTH_MESSAGE
+            }
+            utils.writeJson(res, response);
+        } else {
+            console.log("valid token => ", callback);
+            body.profile = callback;
+            model.confirmPaymentMember(body)
                 .then(function (response) {
                     utils.writeJson(res, response);
                 })

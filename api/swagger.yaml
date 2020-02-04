@@ -70,41 +70,6 @@ paths:
           description: "Invalid status value"
       x-swagger-router-controller: "class"
 
-  /coach/{param}/{token}:
-    get:
-      tags:
-      - "coach"
-      summary: "Add new place off partner"
-      operationId: "coachList"
-      consumes:
-      - "multipart/form-data"
-      - "application/x-www-form-urlencoded"
-      - "application/json"
-      produces:
-      - "application/xml"
-      - "application/json"
-      parameters:
-      - name: "token"
-        in: "path"
-        description: "token of partner"
-        required: true
-        type: "string"
-      - name: "param"
-        in: "path"
-        description: "parameter filter"
-        required: true
-        type: "string"
-      responses:
-        200:
-          description: "successful operation"
-          schema:
-            type: "array"
-            items:
-              $ref: "#/definitions/notifSuccess"
-        400:
-          description: "Invalid status value"
-      x-swagger-router-controller: "coach"
-
   /addPlace/{token}:
     post:
       tags:
@@ -853,41 +818,114 @@ paths:
             description: "Data not found"
         x-swagger-router-controller: "transaction"
         
+  /member/confirm/payment/{token}:
+    post:
+      tags:
+      - "transaction"
+      summary: "Registration access"
+      description: ""
+      operationId: "confirmPaymentMember"
+      consumes:
+      - "multipart/form-data"
+      - "application/x-www-form-urlencoded"
+      - "application/json"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - name: "token"
+        in: "path"
+        required: true
+        type: "string"
+      - in: "body"
+        name: "body"
+        description: "data credential guest"
+        required: true
+        schema:
+          $ref: "#/definitions/confirmPaymentMember"
+      responses:
+        200:
+          description: "Success"
+        500:
+          description: "Internal error"
+        401:
+          description: "Unauthorize"
+        404:
+          description: "Data not found"
+      x-swagger-router-controller: "transaction"
+
   /member/payment/{token}:
-      post:
-        tags:
-        - "transaction"
-        summary: "Registration access"
-        description: ""
-        operationId: "memberPayment"
-        consumes:
-        - "multipart/form-data"
-        - "application/x-www-form-urlencoded"
-        - "application/json"
-        produces:
-        - "application/xml"
-        - "application/json"
-        parameters:
-        - name: "token"
-          in: "path"
-          required: true
-          type: "string"
-        - in: "body"
-          name: "body"
-          description: "data credential guest"
-          required: true
+    post:
+      tags:
+      - "transaction"
+      summary: "Registration access"
+      description: ""
+      operationId: "memberPayment"
+      consumes:
+      - "multipart/form-data"
+      - "application/x-www-form-urlencoded"
+      - "application/json"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - name: "token"
+        in: "path"
+        required: true
+        type: "string"
+      - in: "body"
+        name: "body"
+        description: "data credential guest"
+        required: true
+        schema:
+          $ref: "#/definitions/paymentParam"
+      responses:
+        200:
+          description: "Success"
+        500:
+          description: "Internal error"
+        401:
+          description: "Unauthorize"
+        404:
+          description: "Data not found"
+      x-swagger-router-controller: "transaction"
+
+  /coach/{param}/{token}:
+    get:
+      tags:
+      - "coach"
+      summary: "Add new place off partner"
+      operationId: "coachList"
+      consumes:
+      - "multipart/form-data"
+      - "application/x-www-form-urlencoded"
+      - "application/json"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - name: "token"
+        in: "path"
+        description: "token of partner"
+        required: true
+        type: "string"
+      - name: "param"
+        in: "path"
+        description: "parameter filter"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "successful operation"
           schema:
-            $ref: "#/definitions/paymentParam"
-        responses:
-          200:
-            description: "Success"
-          500:
-            description: "Internal error"
-          401:
-            description: "Unauthorize"
-          404:
-            description: "Data not found"
-        x-swagger-router-controller: "transaction"
+            type: "array"
+            items:
+              $ref: "#/definitions/notifSuccess"
+        400:
+          description: "Invalid status value"
+      x-swagger-router-controller: "coach"
+
+  
 
 
 securityDefinitions:
@@ -957,6 +995,14 @@ definitions:
       paymentType: #cash / transfer
         type: "string"
       description: #keterangan
+        type: "string"
+
+  confirmPaymentMember:
+    type: "object"
+    properties:
+      transactionId:
+        type: "string"
+      concern: # upgrade / rejoin / join
         type: "string"
       
 
