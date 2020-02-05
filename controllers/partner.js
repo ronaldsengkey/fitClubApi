@@ -34,6 +34,38 @@ async function checkToken(token){
   }
 }
 
+module.exports.partnerMember = async function partnerMember(req, res, next) {
+  let token = req.swagger.params['token'].value;
+  let param = req.swagger.params['param'].value;
+  let data = {};
+  try {
+    if (token !== null) {
+      let a = await checkToken(token);
+      data.profile = a;
+      data.param = param;
+      switch(a){
+        case process.env.UNAUTHORIZED_RESPONSE:
+          response = {
+            "responseCode": process.env.UNAUTHORIZED_RESPONSE,
+            "responseMessage": process.env.UNAUTH_MESSAGE
+          } 
+          break;
+        case process.env.ERRORINTERNAL_RESPONSE:
+          response = {
+            "responseCode": process.env.UNAUTHORIZED_RESPONSE,
+            "responseMessage": process.env.UNAUTH_MESSAGE
+          }
+          break
+        default:
+          response = await model.partnerMember(data);
+          break;
+      }
+      utils.writeJson(res, response);
+    }
+  }catch(err){
+    console.log("error get member of partner", err);
+  }
+}
 module.exports.addPlace = async function addPlace(req, res, next) {
   var token = req.swagger.params['token'].value;
   var data = req.swagger.params['body'].value;

@@ -23,7 +23,6 @@ let signOptions = {
 
 module.exports.joinMember = function joinMember(req, res, next) {
   var body = req.swagger.params['body'].value;
-  console.log('TOKEN ', body.token)
   ct.checkToken(body.token).then(function (response) {
     if (response.responseCode == process.env.UNAUTHORIZED_RESPONSE) {
       utils.writeJson(res, response);

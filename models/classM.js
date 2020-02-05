@@ -67,7 +67,7 @@ exports.classList = function (data) {
     })
 }
 
-exports.placeList = function (data) {
+exports.placeList = function () {
     return new Promise(async function (resolve, reject) {
         try {
             let query = "SELECT * FROM place";

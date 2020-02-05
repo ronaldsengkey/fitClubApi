@@ -35,10 +35,45 @@ schemes:
 
 paths:
 
+  /partner/member/{param}/{token}:
+    get:
+      tags:
+      - "partner"
+      summary: "Add new place off partner"
+      operationId: "partnerMember"
+      consumes:
+      - "multipart/form-data"
+      - "application/x-www-form-urlencoded"
+      - "application/json"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - name: "token"
+        in: "path"
+        description: "token of partner"
+        required: true
+        type: "string"
+      - name: "param"
+        in: "path"
+        description: "parameter filter"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/notifSuccess"
+        400:
+          description: "Invalid status value"
+      x-swagger-router-controller: "partner"
+
   /partner/class/{param}/{token}:
     get:
       tags:
-      - "coach"
+      - "member"
       summary: "Add new place off partner"
       operationId: "partnerClass"
       consumes:
@@ -68,7 +103,7 @@ paths:
               $ref: "#/definitions/notifSuccess"
         400:
           description: "Invalid status value"
-      x-swagger-router-controller: "class"
+      x-swagger-router-controller: "member"
 
   /coach/{param}/{token}:
     get:
