@@ -44,7 +44,15 @@ function partnerMembership(token) {
 exports.partnerMember = function (data) {
     return new Promise(async function (resolve, reject) {
         try {
-            let pm = await partnerMembership(data);
+            let pm = '';
+            switch(data.param){
+                case "account":
+                    pm = await partnerMembership(data);
+                    break;
+                case "payment":
+                    pm = await partnerMemberPayment(data);
+                    break;
+            }
             resolve(pm);
         }catch(err){
             console.log("error of partner member", err)

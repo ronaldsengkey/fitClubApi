@@ -13,7 +13,7 @@ const fs = require('fs');
 function getUserByMail(param) {
     return new Promise(async function (resolve, reject) {
         try {
-            let query = "SELECT u.*, m.id as memberId, p.id as partnerId, c.id as coachId, m.code, m.memberCat, m.joinDate, m.endDate FROM user u LEFT JOIN member m ON m.userId = u.id LEFT JOIN partner p ON p.userId = u.id LEFT JOIN coach c ON u.id = c.userId WHERE u.email = ?";
+            let query = "SELECT u.*, m.id as memberId, p.id as partnerId, c.id as coachId, m.code, m.memberCat, m.joinDate, m.endDate, c.specialization FROM user u LEFT JOIN member m ON m.userId = u.id LEFT JOIN partner p ON p.userId = u.id LEFT JOIN coach c ON u.id = c.userId WHERE u.email = ?";
             db.query(query, [param.email], async function (err, res) {
                 try {
                     if (err) {
@@ -210,12 +210,6 @@ function addCoach(data) {
                 }
             }
         });
-        
-        // console.log('result add coach => ', ac)
-        // if (ac) {
-        //     console.log("check coach =>", ac);
-        //     return (process.env.SUCCESS_RESPONSE);
-        // }
     } catch (err) {
         console.log("error add coach =>", err);
         return (process.env.ERRORINTERNAL_RESPONSE);
@@ -302,7 +296,6 @@ exports.addAccount = function addAccount(data) {
                             if (data.filter == 'coach') {
                                 let param = {userId:res.insertId,placeId:data.placeId,specialization:data.specialization};
                                 const ac = await addCoach(param);
-                                console.log("===============>", ac)
                                 if (ac == process.env.SUCCESS_RESPONSE) {
                                     message = {
                                         "responseCode": process.env.SUCCESS_RESPONSE,
