@@ -1004,6 +1004,8 @@ definitions:
         type: "string"
       concern: # upgrade / rejoin / join
         type: "string"
+      memberId:
+        type: "string"
       
 
   addAccountParam:

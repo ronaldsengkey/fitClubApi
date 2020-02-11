@@ -22,7 +22,8 @@ exports.joinMember = function (data) {
                     if (result.affectedRows > 0) { //if user already joined member
                         message = {
                             "responseCode": process.env.NOTACCEPT_RESPONSE,
-                            "responseMessage": "You have already joined member!"
+                            "responseMessage": "You have already joined member!",
+                            "data": result
                         }
                         resolve(message)
                     } else { //if user not joined member yet
