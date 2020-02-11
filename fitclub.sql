@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 28, 2020 at 04:07 AM
+-- Generation Time: Feb 07, 2020 at 12:47 PM
 -- Server version: 10.4.6-MariaDB
 -- PHP Version: 7.3.9
 
@@ -119,6 +119,8 @@ INSERT INTO `classschedule` (`id`, `class`, `coach`, `startTime`, `endTime`, `st
 CREATE TABLE `coach` (
   `id` int(11) NOT NULL,
   `userId` int(11) NOT NULL,
+  `placeId` int(11) NOT NULL,
+  `specialization` text NOT NULL,
   `status` tinyint(4) NOT NULL,
   `joinDate` datetime NOT NULL DEFAULT current_timestamp(),
   `endDate` datetime NOT NULL
@@ -128,9 +130,9 @@ CREATE TABLE `coach` (
 -- Dumping data for table `coach`
 --
 
-INSERT INTO `coach` (`id`, `userId`, `status`, `joinDate`, `endDate`) VALUES
-(1, 2, 1, '2019-12-20 10:03:18', '2020-01-20 00:00:00'),
-(2, 4, 1, '2020-01-22 12:02:18', '2020-03-20 00:00:00');
+INSERT INTO `coach` (`id`, `userId`, `placeId`, `specialization`, `status`, `joinDate`, `endDate`) VALUES
+(1, 1, 1, '1,2', 0, '2020-02-05 10:32:01', '0000-00-00 00:00:00'),
+(2, 2, 1, '1,2', 0, '2020-02-06 09:25:11', '0000-00-00 00:00:00');
 
 -- --------------------------------------------------------
 
@@ -170,81 +172,9 @@ CREATE TABLE `member` (
   `memberCat` int(11) NOT NULL,
   `joinDate` datetime NOT NULL DEFAULT current_timestamp(),
   `endDate` date NOT NULL,
+  `placeId` int(11) NOT NULL,
   `status` tinyint(4) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- Dumping data for table `member`
---
-
-INSERT INTO `member` (`id`, `userId`, `code`, `memberCat`, `joinDate`, `endDate`, `status`) VALUES
-(1, 1, 'FCG001', 2, '2019-12-20 09:52:14', '2020-01-20', 1),
-(2, 1, '519859', 1, '2020-01-20 08:41:48', '2020-02-19', 0),
-(3, 1, '171279', 1, '2020-01-20 08:56:29', '2020-02-19', 0),
-(4, 1, '812177', 1, '2020-01-20 08:58:01', '2020-02-19', 0),
-(5, 1, '847151', 1, '2020-01-20 08:58:07', '2020-02-19', 0),
-(6, 1, '718923', 1, '2020-01-20 08:58:11', '2020-02-19', 0),
-(7, 1, '307714', 1, '2020-01-20 08:58:16', '2020-02-19', 0),
-(8, 1, '789973', 1, '2020-01-20 08:58:21', '2020-02-19', 0),
-(9, 1, '993150', 1, '2020-01-20 08:59:00', '2020-02-19', 0),
-(10, 1, '984558', 1, '2020-01-20 09:03:49', '2020-02-19', 0),
-(11, 1, '700671', 1, '2020-01-20 09:04:43', '2020-02-19', 0),
-(12, 1, '371240', 2, '2020-01-20 09:15:18', '2020-02-19', 0),
-(13, 1, '401393', 1, '2020-01-20 09:16:48', '2020-02-19', 0),
-(14, 1, '339503', 1, '2020-01-20 09:17:11', '2020-02-19', 0),
-(15, 1, '838997', 1, '2020-01-20 09:21:22', '2020-02-19', 0),
-(16, 1, '293998', 1, '2020-01-20 09:22:17', '2020-02-19', 0),
-(17, 1, '987878', 1, '2020-01-20 09:24:21', '2020-02-19', 0),
-(18, 1, '245002', 1, '2020-01-20 09:25:16', '2020-02-19', 0),
-(19, 1, '525669', 1, '2020-01-20 09:27:42', '2020-02-19', 0),
-(20, 1, '272001', 1, '2020-01-20 09:29:01', '2020-02-19', 0),
-(21, 1, '811933', 1, '2020-01-20 09:34:29', '2020-02-19', 0),
-(22, 1, '199799', 1, '2020-01-20 09:40:31', '2020-02-19', 0),
-(23, 1, '936968', 1, '2020-01-20 09:54:58', '2020-02-19', 0),
-(24, 1, '914789', 1, '2020-01-20 09:55:02', '2020-02-19', 0),
-(25, 1, '889042', 1, '2020-01-20 17:47:55', '2020-02-19', 0),
-(26, 1, '210651', 1, '2020-01-20 17:58:10', '2020-02-19', 0),
-(27, 1, '678452', 1, '2020-01-22 08:27:11', '2020-02-21', 0),
-(28, 1, '823985', 1, '2020-01-22 08:36:03', '2020-02-21', 0),
-(29, 1, '647544', 1, '2020-01-22 08:38:57', '2020-02-21', 0),
-(30, 1, '474185', 1, '2020-01-22 08:40:55', '2020-02-21', 0),
-(31, 1, '424350', 1, '2020-01-22 08:42:17', '2020-02-21', 0),
-(32, 1, '542332', 1, '2020-01-22 08:46:32', '2020-02-21', 0),
-(33, 1, '819841', 1, '2020-01-22 08:47:05', '2020-02-21', 0),
-(34, 1, '701833', 1, '2020-01-22 08:48:03', '2020-02-21', 0),
-(35, 1, '138655', 1, '2020-01-22 08:48:36', '2020-02-21', 0),
-(36, 1, '596807', 1, '2020-01-22 08:49:49', '2020-02-21', 0),
-(37, 1, '559118', 1, '2020-01-22 08:52:11', '2020-02-21', 0),
-(38, 1, '386503', 1, '2020-01-22 08:55:21', '2020-02-21', 0),
-(39, 1, '930839', 1, '2020-01-22 08:59:09', '2020-02-21', 0),
-(40, 1, '169485', 100000, '2020-01-24 17:32:13', '2020-02-23', 0),
-(41, 1, '479419', 100000, '2020-01-24 17:33:03', '2020-02-23', 0),
-(42, 1, '319193', 50000, '2020-01-24 17:35:09', '2020-02-23', 0),
-(43, 1, '272100', 100000, '2020-01-24 17:41:56', '2020-02-23', 0),
-(44, 1, '251236', 100000, '2020-01-24 17:42:54', '2020-02-23', 0),
-(45, 1, '142706', 100000, '2020-01-24 17:44:22', '2020-02-23', 0),
-(46, 1, '366913', 50000, '2020-01-24 17:46:21', '2020-02-23', 0),
-(47, 1, '698319', 100000, '2020-01-24 17:50:16', '2020-02-23', 0),
-(48, 1, '437598', 50000, '2020-01-24 17:51:02', '2020-02-23', 0),
-(49, 1, '484418', 50000, '2020-01-24 17:51:08', '2020-02-23', 0),
-(50, 1, '616306', 50000, '2020-01-27 08:54:21', '2020-02-26', 0),
-(51, 1, '612688', 100000, '2020-01-27 09:14:24', '2020-02-26', 0),
-(52, 1, '261146', 100000, '2020-01-27 09:14:24', '2020-02-26', 0),
-(53, 1, '468717', 100000, '2020-01-27 09:14:34', '2020-02-26', 0),
-(54, 1, '834215', 100000, '2020-01-28 08:46:03', '2020-02-27', 0),
-(55, 1, '787893', 100000, '2020-01-28 08:55:08', '2020-02-27', 0),
-(56, 1, '424393', 50000, '2020-01-28 08:56:39', '2020-02-27', 0),
-(57, 1, '439611', 100000, '2020-01-28 09:00:27', '2020-02-27', 0),
-(58, 1, '583184', 100000, '2020-01-28 09:02:06', '2020-02-27', 0),
-(59, 1, '965836', 100000, '2020-01-28 09:02:18', '2020-02-27', 0),
-(60, 1, '922313', 100000, '2020-01-28 09:03:28', '2020-02-27', 0),
-(61, 1, '341271', 100000, '2020-01-28 09:05:46', '2020-02-27', 0),
-(62, 1, '273003', 100000, '2020-01-28 09:09:36', '2020-02-27', 0),
-(63, 1, '250499', 100000, '2020-01-28 09:10:26', '2020-02-27', 0),
-(64, 1, '894643', 100000, '2020-01-28 09:30:52', '2020-02-27', 0),
-(65, 1, '912824', 100000, '2020-01-28 09:35:32', '2020-02-27', 0),
-(66, 1, '433186', 100000, '2020-01-28 09:38:14', '2020-02-27', 0),
-(67, 1, '312995', 100000, '2020-01-28 09:48:40', '2020-02-27', 0);
 
 -- --------------------------------------------------------
 
@@ -342,13 +272,6 @@ CREATE TABLE `partner` (
   `status` tinyint(4) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
---
--- Dumping data for table `partner`
---
-
-INSERT INTO `partner` (`id`, `userId`, `joinDate`, `status`) VALUES
-(1, 3, '2020-01-22 03:41:34', 1);
-
 -- --------------------------------------------------------
 
 --
@@ -432,7 +355,7 @@ CREATE TABLE `temppayment` (
   `memberId` int(10) DEFAULT NULL,
   `paymentVia` varchar(50) NOT NULL,
   `bankId` int(10) NOT NULL,
-  `requestCategory` char(30) NOT NULL
+  `requestCategory` enum('upgrade','join','rejoin') NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -497,7 +420,29 @@ INSERT INTO `temppayment` (`id`, `nominal`, `memberCat`, `status`, `placeId`, `d
 (55, 100000, 2, 0, 1, '', 1, NULL, 'transfer', 0, 'upgrade'),
 (56, 100038, 2, 0, 1, '', 1, NULL, 'transfer', 0, 'upgrade'),
 (57, 100074, 2, 0, 1, '', 1, NULL, 'transfer', 0, 'upgrade'),
-(58, 100051, 2, 0, 1, '', 1, NULL, 'transfer', 0, 'upgrade');
+(58, 100051, 2, 0, 1, '', 1, NULL, 'transfer', 0, 'upgrade'),
+(59, 100024, 2, 0, 1, '', 1, NULL, 'transfer', 0, 'upgrade'),
+(60, 100090, 2, 0, 1, '', 1, NULL, 'transfer', 0, 'upgrade'),
+(61, 100097, 2, 0, 1, '', 1, NULL, 'transfer', 0, 'upgrade'),
+(62, 100001, 2, 0, 1, '', 1, NULL, 'transfer', 0, 'upgrade'),
+(63, 100073, 2, 0, 1, '', 1, NULL, 'transfer', 1, 'upgrade'),
+(64, 100062, 2, 0, 1, '', 1, NULL, 'transfer', 1, 'upgrade'),
+(65, 100029, 2, 0, 1, '', 1, NULL, 'transfer', 1, 'upgrade'),
+(66, 100076, 2, 0, 1, '', 1, NULL, 'transfer', 1, 'upgrade'),
+(67, 100011, 2, 0, 1, '', 1, NULL, 'transfer', 1, 'upgrade'),
+(68, 100094, 2, 0, 1, '', 1, NULL, 'transfer', 1, 'upgrade'),
+(69, 100090, 2, 0, 1, '', 1, NULL, 'transfer', 1, 'upgrade'),
+(70, 100003, 2, 0, 1, '', 1, NULL, 'transfer', 1, 'upgrade'),
+(71, 100033, 2, 0, 1, '', 1, NULL, 'transfer', 1, 'upgrade'),
+(72, 100073, 2, 0, 1, '', 1, NULL, 'transfer', 1, 'upgrade'),
+(73, 100080, 2, 0, 1, '', 1, NULL, 'transfer', 1, 'upgrade'),
+(74, 100006, 2, 0, 1, '', 1, NULL, 'transfer', 1, 'upgrade'),
+(75, 100068, 2, 0, 1, '', 1, NULL, 'transfer', 1, 'upgrade'),
+(76, 100045, 2, 0, 1, '', 1, NULL, 'transfer', 1, 'upgrade'),
+(77, 100096, 2, 0, 1, '', 1, NULL, 'transfer', 1, 'upgrade'),
+(78, 100047, 2, 0, 1, '', 1, NULL, 'transfer', 1, 'upgrade'),
+(79, 100099, 2, 0, 1, '', 1, NULL, 'transfer', 1, 'upgrade'),
+(80, 100075, 2, 0, 1, '', 1, NULL, 'transfer', 1, 'upgrade');
 
 -- --------------------------------------------------------
 
@@ -526,10 +471,8 @@ CREATE TABLE `user` (
 --
 
 INSERT INTO `user` (`id`, `name`, `gender`, `phone`, `address`, `email`, `password`, `imgProfile`, `accessToken`, `onlineStatus`, `verificationCode`, `accountStatus`, `registerDate`) VALUES
-(1, 'agnetiuslee', 1, '085854333433', 'Jl. Panjang', 'agnetiuslee@gmail.com', '$argon2i$v=19$m=4096,t=3,p=1$EmeVP5GlwJQCWJ45zvc7sQ$PZfjjt0vrwZ+lYIbgi63/bNhfRYljMnZnx5XJ18klA8', 'none', 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwibmFtZSI6ImFnbmV0aXVzbGVlIiwiZ2VuZGVyIjoxLCJtZW1iZXJDYXQiOjIsIm1lbWJlcklkIjoxLCJwYXJ0bmVySWQiOm51bGwsImNvYWNoSWQiOm51bGwsImpvaW5NZW1iZXJEYXRlIjoiMjAxOS0xMi0yMFQwOTo1MjoxNC4wMDBaIiwiZW5kTWVtYmVyRGF0ZSI6IjIwMjAtMDEtMjBUMDA6MDA6MDAuMDAwWiIsInBob25lIjoiMDg1ODU0MzMzNDMzIiwiYWRkcmVzcyI6IkpsLiBQYW5qYW5nIiwiZW1haWwiOiJhZ25ldGl1c2xlZUBnbWFpbC5jb20iLCJpYXQiOjE1ODAxNzU4NTIsImV4cCI6MTU4MDE5Mzg1MiwiYXVkIjoiaHR0cDovL2ZpdGNsdWIuaWQiLCJpc3MiOiJGaXRDbHViIE5ldHdvcmsiLCJzdWIiOiJhZ25ldGl1c2xlZUBnbWFpbC5jb20ifQ.d2bRO4q5LFIpGcEpE1l8d9Tqz8pmtDjEsv_NYCp6VwGpmC966xLK8YYSRAFyHE69_AAgBrp_llqShvr1C9rlEQ', 'online', '531433', 0, '2019-12-21 15:29:11'),
-(2, 'coach 1', 1, '7787878787', 'jl. Gulung kuming', 'coach1@mail.com', '7777777', '', '', 'online', '', 1, '2020-01-04 17:45:10'),
-(3, 'Partner1', 1, '08388489384', 'Jl Gunung rinjani 6 lippo karawachi tangerang', 'partner@mail.com', '$argon2i$v=19$m=4096,t=3,p=1$0XpkB66j35TemMT8iweQqA$W/UFp6/P6ICMZpqHwv56gR2RtGz2JKnjoWcTig8Rb/8', 'none', 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywibmFtZSI6IlBhcnRuZXIxIiwiZ2VuZGVyIjoxLCJtZW1iZXJDYXQiOm51bGwsIm1lbWJlcklkIjpudWxsLCJwYXJ0bmVySWQiOjEsImpvaW5NZW1iZXJEYXRlIjpudWxsLCJlbmRNZW1iZXJEYXRlIjpudWxsLCJwaG9uZSI6IjA4Mzg4NDg5Mzg0IiwiYWRkcmVzcyI6IkpsIEd1bnVuZyByaW5qYW5pIDYgbGlwcG8ga2FyYXdhY2hpIHRhbmdlcmFuZyIsImVtYWlsIjoicGFydG5lckBtYWlsLmNvbSIsImlhdCI6MTU3OTY2NjYwNywiZXhwIjoxNTc5Njg0NjA3LCJhdWQiOiJodHRwOi8vZml0Y2x1Yi5pZCIsImlzcyI6IkZpdENsdWIgTmV0d29yayIsInN1YiI6ImFnbmV0aXVzbGVlQGdtYWlsLmNvbSJ9.J78oCZjc3KS9rUVS4jv9-9yEfvxuSeAPyafDoWuYgp4fYUGb8nvfPsUEdxAooNP_4mwBp8TPv0E2lmcNkLpUYQ', 'online', '209824', 1, '2020-01-22 10:41:34'),
-(4, 'coach 2', 1, '07777777777', 'Jl Gunung Kembar 2', 'coach2@mail.com', '$argon2i$v=19$m=4096,t=3,p=1$0XpkB66j35TemMT8iweQqA$W/UFp6/P6ICMZpqHwv56gR2RtGz2JKnjoWcTig8Rb/8', '', 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwibmFtZSI6ImNvYWNoIDIiLCJnZW5kZXIiOjEsIm1lbWJlckNhdCI6bnVsbCwibWVtYmVySWQiOm51bGwsInBhcnRuZXJJZCI6bnVsbCwiY29hY2hJZCI6Miwiam9pbk1lbWJlckRhdGUiOm51bGwsImVuZE1lbWJlckRhdGUiOm51bGwsInBob25lIjoiMDc3Nzc3Nzc3NzciLCJhZGRyZXNzIjoiSmwgR3VudW5nIEtlbWJhciAyIiwiZW1haWwiOiJjb2FjaDJAbWFpbC5jb20iLCJpYXQiOjE1Nzk4MzIzODIsImV4cCI6MTU3OTg1MDM4MiwiYXVkIjoiaHR0cDovL2ZpdGNsdWIuaWQiLCJpc3MiOiJGaXRDbHViIE5ldHdvcmsiLCJzdWIiOiJhZ25ldGl1c2xlZUBnbWFpbC5jb20ifQ.SVGQzRF1vl7bSrlEYxDRVpeV0BwtYITg0a-6hcuLSJJqeQsGJdvG4BXQUfdpVgECMjneUGMpPo3_2dFPkUAcvQ', '1', '111111', 1, '2020-01-22 12:01:34');
+(1, 'Coach1', 1, '08388489384', 'Jl Gunung rinjani 6 lippo karawachi tangerang', 'coach1@mail.com', '$argon2i$v=19$m=4096,t=3,p=1$wKKjA/Lxf/Mjp0nY6E+WKQ$3I7ZbedhavP9z1b0tOnxVaqO/sEq4+GjveWx3AhydAo', 'none', 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiQ29hY2gxIiwiZ2VuZGVyIjoxLCJwaG9uZSI6IjA4Mzg4NDg5Mzg0IiwiYWRkcmVzcyI6IkpsIEd1bnVuZyByaW5qYW5pIDYgbGlwcG8ga2FyYXdhY2hpIHRhbmdlcmFuZyIsImVtYWlsIjoiY29hY2gxQG1haWwuY29tIiwicGFzc3dvcmQiOiIkYXJnb24yaSR2PTE5JG09NDA5Nix0PTMscD0xJHdLS2pBL0x4Zi9NanAwblk2RStXS1EkM0k3WmJlZGhhdlA5ejFiMHRPbnhWYXFPL3NFcTQrR2p2ZVd4M0FoeWRBbyIsImZpbHRlciI6ImNvYWNoIiwicGxhY2VJZCI6IjEiLCJzcGVjaWFsaXphdGlvbiI6WzEsMl0sInZlcmlmaWNhdGlvbkNvZGUiOjQ4ODQ5NSwiaWF0IjoxNTgwODczNTIxLCJleHAiOjE1ODA4OTE1MjEsImF1ZCI6Imh0dHA6Ly9maXRjbHViLmlkIiwiaXNzIjoiRml0Q2x1YiBOZXR3b3JrIiwic3ViIjoiYWduZXRpdXNsZWVAZ21haWwuY29tIn0.MVWTAX_fjW_u1_qViO-P5LQzL-Hk39nmnK1q0LVSFbY8TYr7oKMonvJceSoQSKE_IUxnnG1xqiskdcToIsfI9w', 'online', '488495', 0, '2020-02-05 10:32:01'),
+(2, 'ronald', 1, '085791334512', 'jalan ronald', 'ronald@gmail.com', '$argon2i$v=19$m=4096,t=3,p=1$3ieABvp/13XQGZmYTQSyoA$P4E4lZpg7G99Q9VW7CVQyE94NUvV78QZnohtrPeOrFI', 'none', 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwibmFtZSI6InJvbmFsZCIsImdlbmRlciI6MSwibWVtYmVyQ2F0IjpudWxsLCJtZW1iZXJJZCI6bnVsbCwicGFydG5lcklkIjpudWxsLCJjb2FjaElkIjoyLCJqb2luTWVtYmVyRGF0ZSI6bnVsbCwiZW5kTWVtYmVyRGF0ZSI6bnVsbCwicGhvbmUiOiIwODU3OTEzMzQ1MTIiLCJhZGRyZXNzIjoiamFsYW4gcm9uYWxkIiwiZW1haWwiOiJyb25hbGRAZ21haWwuY29tIiwiaWF0IjoxNTgwOTU2MDU0LCJleHAiOjE1ODA5NzQwNTQsImF1ZCI6Imh0dHA6Ly9maXRjbHViLmlkIiwiaXNzIjoiRml0Q2x1YiBOZXR3b3JrIiwic3ViIjoiYWduZXRpdXNsZWVAZ21haWwuY29tIn0.TX3s-QC62qH2qM3kHGMkevQ223-o0d63gBA-Jq4ZWkp_8OhJ7yGqzeApVOyGaYAtGHh07-IZEt8CqwWEGz1UEg', 'online', '537651', 1, '2020-02-06 09:25:11');
 
 --
 -- Indexes for dumped tables
@@ -693,7 +636,7 @@ ALTER TABLE `file`
 -- AUTO_INCREMENT for table `member`
 --
 ALTER TABLE `member`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=68;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `memberactivity`
@@ -723,7 +666,7 @@ ALTER TABLE `memberpayment`
 -- AUTO_INCREMENT for table `partner`
 --
 ALTER TABLE `partner`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `personalrecord`
@@ -747,13 +690,13 @@ ALTER TABLE `place`
 -- AUTO_INCREMENT for table `temppayment`
 --
 ALTER TABLE `temppayment`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=59;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=81;
 
 --
 -- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

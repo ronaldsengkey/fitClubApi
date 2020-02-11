@@ -13,7 +13,7 @@ const fs = require('fs');
 function getUserByMail(param) {
     return new Promise(async function (resolve, reject) {
         try {
-            let query = "SELECT u.*, m.id as memberId, p.id as partnerId, c.id as coachId, m.code, m.memberCat, m.joinDate, m.endDate FROM user u LEFT JOIN member m ON m.userId = u.id LEFT JOIN partner p ON p.userId = u.id LEFT JOIN coach c ON u.id = c.userId WHERE u.email = ?";
+            let query = "SELECT u.*, m.id as memberId, p.id as partnerId, c.id as coachId, m.code, m.memberCat, m.joinDate, m.endDate, c.specialization FROM user u LEFT JOIN member m ON m.userId = u.id LEFT JOIN partner p ON p.userId = u.id LEFT JOIN coach c ON u.id = c.userId WHERE u.email = ?";
             db.query(query, [param.email], async function (err, res) {
                 try {
                     if (err) {
@@ -186,23 +186,35 @@ async function addPartner(data) {
     }
 }
 
-async function addCoach(data) {
-    try {
-        query = 'insert into coach set ? ';
-        const na = {
-            userId: data,
+function addCoach(data) {
+    return new Promise(async function (resolve, reject) {
+        try {
+        let na = {
+            userId: data.userId,
+            placeId: data.placeId,
+            specialization:data.specialization.join(),
             status: 0
         };
-        const ac = await db.query(query, na);
-        console.log('result add coach => ', ac)
-        if (ac) {
-            console.log("check coach =>", ac);
-            return (process.env.SUCCESS_RESPONSE);
-        }
+        query = 'insert into coach set ? ';
+        let ac = await db.query(query, na, async function (err, res) {
+            if (err) {
+                console.log("error insert user data", err);
+                message = {
+                    "responseCode": process.env.ERRORINTERNAL_RESPONSE,
+                    "responseMessage": err.sqlMessage
+                }
+                resolve(message);
+            } else {
+                if (res.affectedRows > 0) {
+                    resolve(process.env.SUCCESS_RESPONSE);
+                }
+            }
+        });
     } catch (err) {
         console.log("error add coach =>", err);
         return (process.env.ERRORINTERNAL_RESPONSE);
     }
+})
 }
 
 async function generateToken(data) {
@@ -273,7 +285,7 @@ exports.addAccount = function addAccount(data) {
                 query = 'insert into user set ? ';
                 await db.query(query, newAccount, async function (err, res) {
                     if (err) {
-                        console.log(err);
+                        console.log("error insert user data", err);
                         message = {
                             "responseCode": process.env.ERRORINTERNAL_RESPONSE,
                             "responseMessage": err.sqlMessage
@@ -282,7 +294,8 @@ exports.addAccount = function addAccount(data) {
                     } else {
                         if (res.affectedRows > 0) {
                             if (data.filter == 'coach') {
-                                const ac = await addCoach(res.insertId);
+                                let param = {userId:res.insertId,placeId:data.placeId,specialization:data.specialization};
+                                const ac = await addCoach(param);
                                 if (ac == process.env.SUCCESS_RESPONSE) {
                                     message = {
                                         "responseCode": process.env.SUCCESS_RESPONSE,

@@ -30,7 +30,7 @@ exports.classList = function (data) {
                 query = "SELECT * FROM classlist";
             }
             if(data.byClassId){
-                console.log('KKKKKKKK', data.byClassId)
+                // console.log('KKKKKKKK', data.byClassId)
                 query = "SELECT c.name, c.id, cs.startDate FROM classschedule cs JOIN classlist c WHERE c.id IN ("+data.byClassId+") GROUP BY c.id";
             }
             if(data.byDate){
@@ -67,7 +67,7 @@ exports.classList = function (data) {
     })
 }
 
-exports.placeList = function (data) {
+exports.placeList = function () {
     return new Promise(async function (resolve, reject) {
         try {
             let query = "SELECT * FROM place";
