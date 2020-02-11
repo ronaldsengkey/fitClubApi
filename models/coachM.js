@@ -88,7 +88,7 @@ exports.createSchedule = function (data) {
             })
         } catch (err) {
             console.log("error create schedule", err);
-            reject(err);
+            reject(process.env.ERRORINTERNAL_RESPONSE);
         }
     })
 }
@@ -96,7 +96,12 @@ exports.createSchedule = function (data) {
 exports.getSchedule = function (data) {
     return new Promise(async function (resolve, reject) {
         try {
-            let query = "SELECT cs.id as scheduleId ,u.id as coach_account_id,cl.name as class_name,u.name as coach_name,cs.coach as coach_id,cs.class as class_id,cs.startTime as class_start_time,cs.endTime as class_end_time,cs.startDate as class_start_date,cs.endDate as class_end_date FROM classschedule cs INNER JOIN classlist cl ON cs.class = cl.id INNER JOIN coach c ON c.id = cs.coach INNER JOIN user u ON u.id = c.userId";
+            let query = '';
+            if(data.filter == all){
+                query = "SELECT cs.id as scheduleId ,u.id as coach_account_id,cl.name as class_name,u.name as coach_name,cs.coach as coach_id,cs.class as class_id,cs.startTime as class_start_time,cs.endTime as class_end_time,cs.startDate as class_start_date,cs.endDate as class_end_date FROM classschedule cs INNER JOIN classlist cl ON cs.class = cl.id INNER JOIN coach c ON c.id = cs.coach INNER JOIN user u ON u.id = c.userId";
+            }else{
+                query = "SELECT cs.id as scheduleId ,u.id as coach_account_id,cl.name as class_name,u.name as coach_name,cs.coach as coach_id,cs.class as class_id,cs.startTime as class_start_time,cs.endTime as class_end_time,cs.startDate as class_start_date,cs.endDate as class_end_date FROM classschedule cs INNER JOIN classlist cl ON cs.class = cl.id INNER JOIN coach c ON c.id = cs.coach INNER JOIN user u ON u.id = c.userId WHERE c.id = '"+data.profile.id+"'     ";
+            }
             await con.query(query, (err, result) => {
                 if (err) {
                     console.log("error get data", err)
@@ -107,7 +112,6 @@ exports.getSchedule = function (data) {
                     resolve(message);
                 } else {
                     if (result.length > 0) {
-                        console.log(result);
                         message = {
                             "responseCode": process.env.SUCCESS_RESPONSE,
                             "responseMessage": process.env.SUCCESS_MESSAGE,

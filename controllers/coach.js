@@ -72,10 +72,11 @@ module.exports.coachList = async function coachList(req, res, next) {
   }
 }
 
-module.exports.getSchedule = async function login(req, res, next) {
-  var token = req.swagger.params['token'].value;
+module.exports.getSchedule = async function getSchedule(req, res, next) {
+  const token = req.swagger.params['token'].value;
+  const filter = req.swagger.params['filter'].value;
   let response = {};
-  let body = {};
+  let data = {};
   try {
     if (token !== null) {
       await jwt.verify(token, publicKEY, signOptions, function (err, callback) {
@@ -88,8 +89,11 @@ module.exports.getSchedule = async function login(req, res, next) {
           utils.writeJson(res, response);
         } else {
           console.log("valid => ", callback);
-          body.profile = callback.profile;
-          model.getSchedule()
+          data.profile = callback;
+          if(filter){
+            data.filter == filter;
+          }
+          model.getSchedule(data)
             .then(function (response) {
               utils.writeJson(res, response);
             })
@@ -112,12 +116,13 @@ module.exports.getSchedule = async function login(req, res, next) {
   }
 };
 
-module.exports.createSchedule = async function login(req, res, next) {
+module.exports.createSchedule = async function createSchedule(req, res, next) {
+  const token = req.swagger.params['token'].value;
   var body = req.swagger.params['body'].value;
   let response = {};
   try {
-    if (body.token !== null) {
-      jwt.verify(body.token, process.env.KREDENTIAL_KEY, function (err, callback) {
+    if (token !== null) {
+      jwt.verify(token, publicKEY, signOptions, function (err, callback) {
         if (err) {
           console.log("not valid", err);
           response = {
@@ -126,8 +131,7 @@ module.exports.createSchedule = async function login(req, res, next) {
           }
           utils.writeJson(res, response);
         } else {
-          console.log("valid");
-          body.profile = callback.profile;
+          body.profile = callback;
           model.createSchedule(body)
             .then(function (response) {
               utils.writeJson(res, response);

@@ -516,11 +516,46 @@ paths:
         - "read:pets"
       x-swagger-router-controller: "member"
 
-  /coach/schedule/{token}:
+  /coach/class/schedule/{token}:
+    post:
+      tags:
+      - "coach"
+      summary: "Create Schedule access"
+      description: ""
+      operationId: "createSchedule" 
+      consumes:
+      - "multipart/form-data"
+      - "application/x-www-form-urlencoded"
+      - "application/json"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - name: "token"
+        in: "path"
+        description: "token of member device"
+        required: true
+        type: "string"
+      - in: "body"
+        name: "body"
+        description: "data credential guest"
+        required: true
+        schema:
+          $ref: "#/definitions/createSchedule"
+      responses:
+        200:
+          description: "Success"
+        500:
+          description: "Internal error"
+        401:
+          description: "Unauthorize"
+        404:
+          description: "Data not found"
+      x-swagger-router-controller: "coach"
     get:
       tags:
       - "coach"
-      summary: "Registration access"
+      summary: "Get Schedule access"
       description: ""
       operationId: "getSchedule" 
       consumes:
@@ -535,6 +570,11 @@ paths:
         in: "path"
         description: "token of member device"
         required: true
+        type: "string"
+      - name: "filter"
+        in: "header"
+        description: "filter for class schedule"
+        required: false
         type: "string"
       responses:
         200:
@@ -583,37 +623,7 @@ paths:
           description: "Data not found"
       x-swagger-router-controller: "transaction"
 
-  /coach/schedule:
-    post:
-      tags:
-      - "coach"
-      summary: "Registration access"
-      description: ""
-      operationId: "createSchedule" 
-      consumes:
-      - "multipart/form-data"
-      - "application/x-www-form-urlencoded"
-      - "application/json"
-      produces:
-      - "application/xml"
-      - "application/json"
-      parameters:
-      - in: "body"
-        name: "body"
-        description: "data credential guest"
-        required: true
-        schema:
-          $ref: "#/definitions/createSchedule"
-      responses:
-        200:
-          description: "Success"
-        500:
-          description: "Internal error"
-        401:
-          description: "Unauthorize"
-        404:
-          description: "Data not found"
-      x-swagger-router-controller: "coach"
+  
   
   /place/{token}:
     get:
@@ -1065,8 +1075,6 @@ definitions:
   createSchedule:
     type: "object"
     properties:
-      token:
-        type: "string"
       classId:
         type: "integer"
       startDate:
