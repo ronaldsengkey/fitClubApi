@@ -63,6 +63,22 @@ module.exports.partnerClass = async function partnerClass(req, res, next) {
     utils.writeJson(res, response);
   }catch(err){
     console.log("error get schedule on partner place", err)
+    utils.writeJson(res, process.env.ERRORINTERNAL_RESPONSE);
+  }
+}
+
+module.exports.coachClassHistory = async function coachClassHistory(req, res, next) {
+  let token = req.swagger.params['token'].value;
+  let body = {};
+  body.token = token;
+  try{
+    if (token !== null) {
+      let ct  = await jwt.verify(token, publicKEY, signOptions);
+      console.log(ct)
+    }
+  }catch(err){
+    console.log("error get class history of coach", err);
+    utils.writeJson(res, process.env.ERRORINTERNAL_RESPONSE);
   }
 }
 
