@@ -22,7 +22,6 @@ let signOptions = {
 exports.checkToken = function (data) {
   return new Promise(async function (resolve, reject) {
     try {
-      console.log('IN CHECKING TOKEN')
       let res = {};
       await jwt.verify(data.toString(), publicKEY, signOptions, function (err, callback) {
         if (err) {
@@ -33,13 +32,17 @@ exports.checkToken = function (data) {
           }
           resolve(response);
         } else {
-          console.log("valid => ", callback);
           res.profile = callback;
           resolve(res);
         }
       });
     } catch (err) {
-      console.log("error check token", err);
+      console.log("error check token", proc);
+      response = {
+        "responseCode": process.env.ERRORINTERNAL_RESPONSE,
+        "responseMessage": process.env.INTERNALERROR_MESSAGE
+      }
+      reject(response);
     }
   });
 }

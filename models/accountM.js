@@ -150,11 +150,18 @@ exports.loginAccess = function loginAccess(data) {
                     }
                 } else {
                     message = {
-                        "responseCode": process.env.NOTACCEPT_RESPONSE,
-                        "responseMessage": "Password dosen't match"
+                        "responseCode": process.env.NOTFOUND_RESPONSE,
+                        "responseMessage": process.env.DATANOTFOUND_MESSAGE
                     }
                     resolve(message)
                 }
+            }else{
+                message = {
+                    "responseCode": process.env.SUCCESS_RESPONSE,
+                    "responseMessage": "Login success",
+                    "data": ev.data
+                }
+                resolve(message);
             }
         } catch (err) {
             console.log(err);

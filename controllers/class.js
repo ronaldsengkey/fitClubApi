@@ -1,7 +1,7 @@
 var utils = require('../utils/writer.js');
 var model = require('../models/classM');
 const fs = require('fs');
-var jwt = require('jsonwebtoken');
+const ct = require('../service/checkToken');
 
 let privateKEY = fs.readFileSync('./private.key', 'utf8');
 let publicKEY = fs.readFileSync('./public.key', 'utf8');
@@ -20,13 +20,8 @@ let signOptions = {
 
 async function checkToken(token){
   try{
-    let a = await jwt.verify(token, publicKEY, signOptions);
-    if (a){
-      return a ;
-    }else{
-      console.log("not valid",a)
-      return process.env.UNAUTHORIZED_RESPONSE;
-    }
+    let a = await ct.checkToken(token);
+    return a;
   }catch(err){
     console.log("error check token", err);
     return process.env.ERRORINTERNAL_RESPONSE;
@@ -42,7 +37,7 @@ module.exports.partnerClass = async function partnerClass(req, res, next) {
     let b = JSON.parse(param);
     data.param = b;
     let a = await checkToken(token);
-    data.profile = a;
+    data.profile = a.profile;
     switch(a){
       case process.env.UNAUTHORIZED_RESPONSE:
         response = {
@@ -73,8 +68,20 @@ module.exports.coachClassHistory = async function coachClassHistory(req, res, ne
   body.token = token;
   try{
     if (token !== null) {
-      let ct  = await jwt.verify(token, publicKEY, signOptions);
-      console.log(ct)
+      let cek  = await checkToken(token);
+      switch(cek.responseCode){
+        case process.env.UNAUTHORIZED_RESPONSE:
+          utils.writeJson(res, cek);
+          break;
+        case process.env.ERRORINTERNAL_RESPONSE:
+          utils.writeJson(res, cek);
+          break;
+        default:
+          body.profile = cek.profile;
+          let cch = await model.coachClassHistory(body);
+          utils.writeJson(res, cch);
+          break;
+      }
     }
   }catch(err){
     console.log("error get class history of coach", err);
@@ -82,31 +89,54 @@ module.exports.coachClassHistory = async function coachClassHistory(req, res, ne
   }
 }
 
-module.exports.memberClassHistory = function memberClassHistory(req, res, next) {
+
+module.exports.memberClassBooked = async function memberClassBooked(req, res, next) {
   let token = req.swagger.params['token'].value;
   let body = {};
   body.token = token;
   if (token !== null) {
-    jwt.verify(token, publicKEY, signOptions, function (err, callback) {
-      if (err) {
-        console.log("not valid", err);
-        response = {
-          "responseCode": process.env.UNAUTHORIZED_RESPONSE,
-          "responseMessage": process.env.UNAUTH_MESSAGE
-        }
-        utils.writeJson(res, response);
-      } else {
-        console.log("valid");
-        body.profile = callback;
-        model.memberClassHistory(body)
-          .then(function (response) {
-            utils.writeJson(res, response);
-          })
-          .catch(function (response) {
-            utils.writeJson(res, response);
-          });
-      }
-    })
+    let cek = checkToken(token);
+    switch(cek.responseCode){
+      case process.env.UNAUTHORIZED_RESPONSE:
+        utils.writeJson(res, cek);
+        break;
+      case process.env.ERRORINTERNAL_RESPONSE:
+        utils.writeJson(res, cek);
+        break;
+      default:
+        body.profile = cek.profile;
+        let mcb = await model.memberClassBooked(body);;
+        utils.writeJson(res, mcb);
+        break;
+    }
+  }else{
+    response = {
+      "responseCode": process.env.UNAUTHORIZED_RESPONSE,
+      "responseMessage": process.env.UNAUTH_MESSAGE
+    }
+    utils.writeJson(res, response);
+  }
+};
+
+module.exports.memberClassHistory = async function memberClassHistory(req, res, next) {
+  let token = req.swagger.params['token'].value;
+  let body = {};
+  body.token = token;
+  if (token !== null) {
+    let cek  = await checkToken(token);
+    switch(cek.responseCode){
+      case process.env.UNAUTHORIZED_RESPONSE:
+        utils.writeJson(res, cek);
+        break;
+      case process.env.ERRORINTERNAL_RESPONSE:
+        utils.writeJson(res, cek);
+        break;
+      default:
+        body.profile = cek.profile;
+        let cch = await model.memberClassHistory(body);
+        utils.writeJson(res, cch);
+        break;
+    }
   }
 };
 
@@ -121,31 +151,17 @@ module.exports.classList = function classList(req, res, next) {
     param.Date = req.swagger.params['byDate'].value;
   }
   let body = {};
-  // body.token = token;
-  // if (token !== null) {
-    // jwt.verify(token, publicKEY, signOptions, function (err, callback) {
-      // if (err) {
-      //   console.log("not valid", err);
-      //   response = {
-      //     "responseCode": process.env.UNAUTHORIZED_RESPONSE,
-      //     "responseMessage": process.env.UNAUTH_MESSAGE
-      //   }
-      //   utils.writeJson(res, response);
-      // } else {
-          body.byClassId = param.classId;
-          body.byDate = param.date;
-          body.param = param.param;
-          // body.profile = callback;
-          model.classList(body)
-          .then(function (response) {
-            utils.writeJson(res, response);
-          })
-          .catch(function (response) {
-            utils.writeJson(res, response);
-          });
-      // }
-    // })
-  // }
+  body.byClassId = param.classId;
+  body.byDate = param.date;
+  body.param = param.param;
+  // body.profile = callback;
+  model.classList(body)
+  .then(function (response) {
+    utils.writeJson(res, response);
+  })
+  .catch(function (response) {
+    utils.writeJson(res, response);
+  });
 };
 
 module.exports.placeList = function placeList(req, res, next) {
@@ -181,6 +197,7 @@ module.exports.memberClass = function memberClass(req, res, next) {
   let token = req.swagger.params['token'].value;
   let body = {};
   if (token !== null) {
+    let cek = 
     jwt.verify(token, publicKEY, signOptions, function (err, callback) {
       if (err) {
         console.log("not valid", err);

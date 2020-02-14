@@ -103,7 +103,7 @@ exports.placeList = function () {
 exports.coachClassHistory = function (data) {
     return new Promise(async function (resolve, reject) {
         try {
-            let query = "SELECT ma.*, cs.class as classId, cs.coach as coachId, u1.name as coachName, cs.startTime, cs.endTime, cs.startDate, cs.endDate, c.name as className from memberactivity ma JOIN classschedule cs ON cs.id = ma.scheduleId JOIN classlist c ON c.id = cs.class JOIN coach co ON co.id = cs.coach JOIN user u1 ON u1.id = co.userId WHERE u1.id = ? AND co.userid = ?";
+            let query = "SELECT ma.*, cs.class as classId, cs.coach as coachId, u1.name as coachName, cs.startTime, cs.endTime, cs.startDate, cs.endDate, c.name as className from memberactivity ma JOIN classschedule cs ON cs.id = ma.scheduleId JOIN classlist c ON c.id = cs.class JOIN coach co ON co.id = cs.coach AND cs.coach = '"+data.profile.coachId+"' JOIN user u1 ON u1.id = co.userId WHERE u1.id = ? AND co.userid = ?";
             await db.query(query, [data.profile.id, data.profile.id], (err, result) => {
                 if (err) {
                     console.log("error get member class", err)
@@ -123,7 +123,7 @@ exports.coachClassHistory = function (data) {
                     } else {
                         message = {
                             "responseCode": process.env.NOTFOUND_RESPONSE,
-                            "responseMessage": "You not have history class"
+                            "responseMessage": "You don't have any history class yet"
                         };
                         resolve(message);
                     }
@@ -163,14 +163,53 @@ exports.memberClassHistory = function (data) {
                     } else {
                         message = {
                             "responseCode": process.env.NOTFOUND_RESPONSE,
-                            // "responseMessage": process.env.DATANOTFOUND_MESSAGE
-                            "responseMessage": "You not have history class"
+                            "responseMessage": "You don't have any history class yet"
                         };
                         resolve(message);
                     }
                 }
             })
         } catch (err) {
+            console.log("error get class", err)
+            message = {
+                "responseCode": process.env.ERRORINTERNAL_RESPONSE,
+                "responseMessage": process.env.INTERNALERROR_MESSAGE
+            };
+            reject(message);
+        }
+    })
+}
+
+exports.memberClassBooked = function (data) {
+    return new Promise(async function (resolve, reject) {
+        try {
+            let query ="SELECT * FROM memberactivity ma JOIN classschedule cs ON cs.id = ma.scheduleId JOIN member m ON m.id = ma.memberId AND ma.memberId = '"+data.profile.memberId+"' WHERE m.userId = '"+data.profile.id+"'";
+            await db.query(query, [data.profile.memberCat], (err, result) => {
+                if (err) {
+                    console.log("error get member class", err)
+                    message = {
+                        "responseCode": process.env.ERRORINTERNAL_RESPONSE,
+                        "responseMessage": process.env.INTERNALERROR_MESSAGE
+                    };
+                    reject(message);
+                } else {
+                    if (result.length > 0) {
+                        message = {
+                            "responseCode": process.env.SUCCESS_RESPONSE,
+                            "responseMessage": process.env.SUCCESS_MESSAGE,
+                            "data": result
+                        };
+                        resolve(message);
+                    } else {
+                        message = {
+                            "responseCode": process.env.NOTFOUND_RESPONSE,
+                            "responseMessage": process.env.DATANOTFOUND_MESSAGE
+                        };
+                        resolve(message);
+                    }
+                }
+            })
+        }catch(err){
             console.log("error get class", err)
             message = {
                 "responseCode": process.env.ERRORINTERNAL_RESPONSE,
