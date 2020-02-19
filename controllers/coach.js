@@ -18,16 +18,16 @@ let signOptions = {
   algorithm: "RS256"
 };
 
-async function checkToken(token){
-  try{
+async function checkToken(token) {
+  try {
     let a = await jwt.verify(token, publicKEY, signOptions);
-    if (a){
-      return a ;
-    }else{
-      console.log("not valid",a)
+    if (a) {
+      return a;
+    } else {
+      console.log("not valid", a)
       return process.env.UNAUTHORIZED_RESPONSE;
     }
-  }catch(err){
+  } catch (err) {
     console.log("error check token", err);
     return process.env.ERRORINTERNAL_RESPONSE;
   }
@@ -85,17 +85,18 @@ module.exports.coachList = async function coachList(req, res, next) {
   var param = req.swagger.params['param'].value;
   let response = {};
   let data = {};
+  console.log('PARAM COACH => ', param)
   let b = JSON.parse(param);
   data.param = b;
   try {
     let a = await checkToken(token);
     data.profile = a;
-    switch(a){
+    switch (a) {
       case process.env.UNAUTHORIZED_RESPONSE:
         response = {
           "responseCode": process.env.UNAUTHORIZED_RESPONSE,
           "responseMessage": process.env.UNAUTH_MESSAGE
-        } 
+        }
         break;
       case process.env.ERRORINTERNAL_RESPONSE:
         response = {
@@ -108,7 +109,7 @@ module.exports.coachList = async function coachList(req, res, next) {
         break;
     }
     utils.writeJson(res, response);
-  }catch(err){
+  } catch (err) {
     console.log("error get coach list", err);
     response = {
       "responseCode": process.env.ERRORINTERNAL_RESPONSE,

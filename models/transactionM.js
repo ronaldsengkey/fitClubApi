@@ -1,4 +1,5 @@
 const con = require('../config/dbConfig');
+const member = require('../models/memberM');
 let query = '',
     message = {};
 var fs = require('fs');
@@ -20,6 +21,9 @@ function tempTransaction(data) {
         }
         if (data.bankId) {
             par.bankId = data.bankId;
+        }
+        if (data.memberId) {
+            par.memberId = data.memberId
         }
         const query = "INSERT INTO temppayment SET ?";
         con.query(query, par, async function (err, result) {
@@ -53,6 +57,7 @@ function tempTransaction(data) {
 }
 exports.transactionRequest = function (data) {
     return new Promise(async function (resolve, reject) {
+        console.log('DATA TRANSACTION REQU EST => ', data)
         let query = "SELECT * FROM `memberfee` WHERE membercat = ? AND placeId = ?";
         let a = await generateNumber();
         let memberCat = JSON.parse(data.param);
@@ -151,6 +156,7 @@ exports.memberPayment = function (data) {
 exports.getBank = function (data) {
     return new Promise(async function (resolve, reject) {
         try {
+            console.log('DATA GET BANK => ', data)
             if (data.param == "all") {
                 const query = "SELECT * FROM bank";
                 con.query(query, (err, res) => {
@@ -183,8 +189,8 @@ exports.getBank = function (data) {
                     }
                 })
             } else {
-                const query = "SELECT * FROM bank WHERE name = LIKE '%?%'";
-                con.query(query, [data.param], (err, res) => {
+                const query = "SELECT * FROM bank WHERE LOWER(name) LIKE '%" + data.param + "%'";
+                con.query(query, (err, res) => {
                     if (!err) {
                         if (err) {
                             console.log('Error query get list bank => ', err)
@@ -210,12 +216,12 @@ exports.getBank = function (data) {
                             }
                         }
                     } else {
-                        console.log("created schedule error", err);
+                        console.log("Error query get list bank with param", err);
                     }
                 })
             }
         } catch (err) {
-            console.log("error create schedule", err);
+            console.log("error get list bank", err);
             reject(err);
         }
     })
@@ -396,6 +402,163 @@ exports.listTransactionRequest = function (data) {
                     }
                 }
             })
+        } catch (error) {
+            console.log('Error get list transaction request => ', error)
+            message = {
+                "responseCode": process.env.ERRORINTERNAL_RESPONSE,
+                "responseMessage": process.env.INTERNALERROR_MESSAGE,
+            }
+            resolve(message)
+        }
+    })
+}
+
+exports.confirmPaymentMember = function (data) {
+    return new Promise(async function (resolve, reject) {
+        try {
+            switch (data.concern) {
+                case "upgrade":
+                    let endDate = new Date();
+                    let day = new Date(endDate.setDate(endDate.getDate() + 30));
+                    let expDay = day.getDate();
+                    let expMonth = day.getMonth() + 1;
+                    let expYear = day.getFullYear();
+                    let nowDay = new Date(endDate.setDate(endDate.getDate()));
+                    let nowExpDay = nowDay.getDate();
+                    let nowExpMonth = nowDay.getMonth() + 1;
+                    let nowExpYear = nowDay.getFullYear();
+                    let convertDate = expYear + '-' + expMonth + '-' + expDay;
+                    let nowConvertDate = nowExpYear + '-' + nowExpMonth + '-' + nowExpDay;
+                    if (data.memberId) {
+                        let checkTrans = "SELECT * FROM temppayment WHERE id = ? AND userId = ? AND requestCategory = ?";
+                        con.query(checkTrans, [data.transactionId, data.profile.id, data.concern], (err, res) => {
+                            if (!err) {
+                                if (res.affectedRows > 0) {
+                                    let upTrans = "UPDATE temppayment SET status = ? WHERE id = ?";
+                                    con.query(upTrans, ['1', data.transactionId], (err, result) => {
+                                        if (!err) {
+                                            if (result.affectedRows > 0) {
+                                                let p = {
+                                                    "userId": res[0].userId,
+                                                    "nominal": res[0].nominal,
+                                                    "memberCat": res[0].memberCat,
+                                                    "createdAt": nowConvertDate,
+                                                    "paymentVia": res[0].paymentVia
+                                                };
+                                                if (res[0].paymentVia == "transfer") {
+                                                    p.bankId = res[0].bankId
+                                                }
+                                                let insertPayment = "INSERT INTO memberpayment SET ?";
+                                                con.query(insertPayment, p, (err, ip) => {
+                                                    if (!err) {
+                                                        if (ip.affectedRows > 0) {
+                                                            let updateMember = "UPDATE member SET status = ?, memberCat = ?, endDate = ? WHERE id = ? AND userId = ?";
+                                                            con.query(updateMember, [1, res[0].memberCat, convertDate, data.memberId, res[0].userId], (err, um) => {
+                                                                if (!err) {
+                                                                    if (um.affectedRows > 0) {
+                                                                        console.log('Transaction success confirmation');
+                                                                        message = {
+                                                                            "responseCode": process.env.SUCCESS_RESPONSE,
+                                                                            "responseMessage": "Transaction success confirm",
+                                                                        }
+                                                                        resolve(message)
+                                                                    } else {
+                                                                        console.log('failed confirm transaction');
+                                                                        message = {
+                                                                            "responseCode": process.env.NOTACCEPT_RESPONSE,
+                                                                            "responseMessage": "Transaction failed confirm",
+                                                                        }
+                                                                        resolve(message)
+                                                                    }
+                                                                } else {
+                                                                    console.log('Error query update member');
+                                                                    message = {
+                                                                        "responseCode": process.env.ERRORINTERNAL_RESPONSE,
+                                                                        "responseMessage": process.env.INTERNALERROR_MESSAGE,
+                                                                    }
+                                                                    resolve(message)
+                                                                }
+                                                            })
+                                                        } else {
+                                                            console.log('Failed insert into member payment');
+                                                            message = {
+                                                                "responseCode": process.env.ERRORINTERNAL_RESPONSE,
+                                                                "responseMessage": process.env.INTERNALERROR_MESSAGE,
+                                                            }
+                                                            resolve(message)
+                                                        }
+                                                    } else {
+                                                        console.log('Error query insert into member payment');
+                                                        message = {
+                                                            "responseCode": process.env.ERRORINTERNAL_RESPONSE,
+                                                            "responseMessage": process.env.INTERNALERROR_MESSAGE,
+                                                        }
+                                                        resolve(message)
+                                                    }
+                                                })
+                                            } else {
+                                                console.log('Failed query update temporary payment');
+                                                message = {
+                                                    "responseCode": process.env.ERRORINTERNAL_RESPONSE,
+                                                    "responseMessage": process.env.INTERNALERROR_MESSAGE,
+                                                }
+                                                resolve(message)
+                                            }
+                                        } else {
+                                            console.log('Error query update temporary payment');
+                                            message = {
+                                                "responseCode": process.env.ERRORINTERNAL_RESPONSE,
+                                                "responseMessage": process.env.INTERNALERROR_MESSAGE,
+                                            }
+                                            resolve(message)
+                                        }
+                                    })
+                                } else {
+                                    console.log('transaction is not exist')
+                                    message = {
+                                        "responseCode": process.env.NOTFOUND_RESPONSE,
+                                        "responseMessage": "Your transaction is not exist!",
+                                    }
+                                    resolve(message)
+                                }
+                            } else {
+                                console.log('Something error on query check transaction')
+                                message = {
+                                    "responseCode": process.env.ERRORINTERNAL_RESPONSE,
+                                    "responseMessage": process.env.INTERNALERROR_MESSAGE,
+                                }
+                                resolve(message)
+                            }
+                        })
+                    } else {
+                        console.log('Member Id is required')
+                        message = {
+                            "responseCode": process.env.NOTACCEPT_RESPONSE,
+                            "responseMessage": "Data member ID is required",
+                        }
+                        resolve(message)
+                    }
+                    break;
+                case "rejoin":
+                    const updateMember = "UPDATE member SET joinDate = ?, endDate = ?"
+                    break;  
+                case "join":
+                    if (data.memberCat) { 
+                        let param = {
+                            "profile": data.profile,
+                            "memberCat": data.memberCat
+                        }
+                        let memb = await member.joinMember(param);
+                        resolve(memb);
+                    } else {
+                        message = {
+                            "responseCode": process.env.NOTACCEPT_RESPONSE,
+                            "responseMessage": "Member category is required",
+                        }
+                        resolve(message)
+                    }
+                    break;
+            }
         } catch (error) {
             console.log('Error get list transaction request => ', error)
             message = {
