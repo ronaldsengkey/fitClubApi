@@ -106,6 +106,45 @@ paths:
       x-swagger-router-controller: "member"
 
   /coach/{param}/{token}:
+    put:
+      tags:
+      - "coach"
+      summary: "Update service for coach"
+      operationId: "coachUpdate"
+      consumes:
+      - "multipart/form-data"
+      - "application/x-www-form-urlencoded"
+      - "application/json"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - name: "token"
+        in: "path"
+        description: "token of partner"
+        required: true
+        type: "string"
+      - name: "param"
+        in: "path"
+        description: "parameter filter"
+        required: true
+        type: "string"
+      - in: "body"
+        name: "body"
+        description: "data credential guest"
+        required: true
+        schema:
+          $ref: "#/definitions/coachUpdateParam"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/notifSuccess"
+        400:
+          description: "Invalid status value"
+      x-swagger-router-controller: "coach"
     get:
       tags:
       - "coach"
@@ -686,6 +725,40 @@ paths:
         404:
           description: "Data not found"
       x-swagger-router-controller: "class"
+  
+  /class/schedule/{token}:
+    get:
+      tags:
+      - "coach"
+      summary: "Registration access"
+      description: ""
+      operationId: "classSchedule"
+      consumes:
+      - "multipart/form-data"
+      - "application/x-www-form-urlencoded"
+      - "application/json"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - name: "token"
+        in: "path"
+        required: true
+        type: "string"
+      - name: "param"
+        in: "header"
+        required: false
+        type: "string"
+      responses:
+        200:
+          description: "Success"
+        500:
+          description: "Internal error"
+        401:
+          description: "Unauthorize"
+        404:
+          description: "Data not found"
+      x-swagger-router-controller: "class"    
 
   /class/{token}:
     get:
@@ -1012,6 +1085,22 @@ securityDefinitions:
 
 definitions:
   
+  coachUpdateParam:
+    type: "object"
+    properties:
+      idSelfSchedule:
+        type: "integer"
+        format: "int32"
+      selfId:
+        type: "integer"
+        format: "int32"
+      targetSchedule:
+        type: "integer"
+        format: "int32"
+      targetCoach:
+        type: "integer"
+        format: "int32"
+
   addPlaceParam:
     type: "object"
     properties:

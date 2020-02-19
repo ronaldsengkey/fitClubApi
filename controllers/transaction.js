@@ -89,7 +89,6 @@ module.exports.memberPayment = async function memberPayment(req, res, next) {
             }
             utils.writeJson(res, response);
         } else {
-            console.log("valid => ", callback);
             body.profile = callback.profile;
             model.memberPayment(body)
                 .then(function (response) {
@@ -116,7 +115,6 @@ module.exports.getBank = async function getBank(req, res, next) {
             }
             utils.writeJson(res, response);
         } else {
-            console.log("valid => ", callback);
             body.profile = callback.profile;
             body.param = param;
             model.getBank(body)

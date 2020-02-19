@@ -2,6 +2,56 @@ const con = require('../config/dbConfig');
 let query = '',
     message 
 
+async function updateCoachClassSchedule(data){
+    query = "UPDATE classschedule SET coach ? WHERE id = ? AND class = ? AND startDate = ? AND start_time = ? ";
+    let aparam = [data.selfId, data.targetSchedule, data.targetClass, data.startDate, data.startTime]
+    await con.query(query,param,(err, result) => {
+        if (err) {
+            console.log("error get data", err)
+            message = {
+                "responseCode": process.env.ERRORINTERNAL_RESPONSE,
+                "responseMessage": process.env.INTERNALERROR_MESSAGE
+            };
+            resolve(message);
+        } else {
+            if (result.length > 0) {
+                message = {
+                    "responseCode": process.env.SUCCESS_RESPONSE,
+                    "responseMessage": process.env.SUCCESS_MESSAGE,
+                    "data": result
+                };
+                resolve(message);
+            } else {
+                message = {
+                    "responseCode": process.env.NOTFOUND_RESPONSE,
+                    "responseMessage": process.env.DATANOTFOUND_MESSAGE
+                };
+                resolve(message);
+            }
+        }
+    })
+
+}
+
+exports.coachUpdate = function (data) {
+    return new Promise(async function (resolve, reject) {
+        try {
+            switch(data.param){
+                case "switchClass":
+                    updateCoachClassSchedule(data)
+                    break;
+              }
+        }catch(err){
+            console.log("error coachUpdate =>",err)
+            message = {
+                "responseCode": process.env.ERRORINTERNAL_RESPONSE,
+                "responseMessage": process.env.ERRORSCHEDULE_MESSAGE
+            };
+            reject(message);
+        }
+    })
+}
+
 exports.coachList = function (data) {
     return new Promise(async function (resolve, reject) {
         try {

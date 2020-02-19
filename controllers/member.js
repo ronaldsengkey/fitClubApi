@@ -55,7 +55,6 @@ module.exports.getPersonalRecord = async function getPersonalRecord(req, res, ne
       }
       utils.writeJson(res, response);
     } else {
-      console.log("valid => ", callback);
       body.profile = callback;
       body.param = param;
       Member.getPersonalRecord(body)
@@ -83,7 +82,6 @@ module.exports.getPersonalRecordCategory = async function getPersonalRecordCateg
       }
       utils.writeJson(res, response);
     } else {
-      console.log("valid => ", callback);
       body.profile = callback.profile;
       Member.getPersonalRecordCategory(body)
         .then(function (response) {

@@ -33,6 +33,52 @@ async function checkToken(token){
   }
 }
 
+module.exports.coachUpdate = async function coachUpdate(req, res, next) {
+  var token = req.swagger.params['token'].value;
+  var param = req.swagger.params['param'].value;
+  var body = req.swagger.params['body'].value;
+  let response = {};
+  let data = {};
+  data = body;
+  data.param = param;
+  if(token != '' && token != undefined && !token){
+    try {
+      let a = await checkToken(token);
+      data.profile = a;
+      switch(a){
+        case process.env.UNAUTHORIZED_RESPONSE:
+          response = {
+            "responseCode": process.env.UNAUTHORIZED_RESPONSE,
+            "responseMessage": process.env.UNAUTH_MESSAGE
+          } 
+          break;
+        case process.env.ERRORINTERNAL_RESPONSE:
+          response = {
+            "responseCode": process.env.UNAUTHORIZED_RESPONSE,
+            "responseMessage": process.env.UNAUTH_MESSAGE
+          }
+          break
+        default:
+          response = model.coachUpdate(data);
+          break;
+      }
+      utils.writeJson(res, response);
+    }catch(err){
+      console.log("error get coach list", err);
+      response = {
+        "responseCode": process.env.ERRORINTERNAL_RESPONSE,
+        "responseMessage": process.env.INTERNALERROR_MESSAGE
+      }
+      utils.writeJson(res, response);
+    }
+  }else{
+    response = {
+      "responseCode": process.env.UNAUTHORIZED_RESPONSE,
+      "responseMessage": process.env.UNAUTH_MESSAGE
+    }
+    utils.writeJson(res, response);
+  }
+}
 
 module.exports.coachList = async function coachList(req, res, next) {
   var token = req.swagger.params['token'].value;
@@ -88,7 +134,6 @@ module.exports.getSchedule = async function getSchedule(req, res, next) {
           }
           utils.writeJson(res, response);
         } else {
-          console.log("valid => ", callback);
           data.profile = callback;
           if(filter){
             data.filter == filter;

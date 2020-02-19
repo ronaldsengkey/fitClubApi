@@ -2,6 +2,25 @@ const db = require('../config/dbConfig');
 let query = '',
     message = '';
 
+exports.classSchedule = function (data) {
+    return new Promise(async function (resolve, reject) {
+        try {
+            let query = "SELECT * FROM classschedule cs JOIN place p ON p.id = cs.placeId WHERE p.partnerId = ?";
+            await db.query(query,[data.profile.id],(err, result) => {
+                if (err) {
+                    console.log("error get data", err)
+                } else {
+                    if (result.length > 0) {
+                        console.log(result);
+                    }
+                }
+            });
+        }catch(err){
+            console.log(err)
+        }
+    })
+}
+
 exports.partnerClass = function (data) {
     return new Promise(async function (resolve, reject) {
         try {
@@ -29,10 +48,7 @@ exports.classList = function (data) {
                 query = "SELECT * FROM classlist";
             }
             if(data.byClassId){
-                query = "SELECT c.name, c.id, cs.startDate FROM classschedule cs JOIN classlist c WHERE c.id IN ("+data.byClassId+") GROUP BY c.id";
-            }
-            if(data.byDate){
-                query = "SELECT c.name, c.id, cs.startDate FROM classschedule cs JOIN classlist c WHERE cs.startDate = '"+data.byDate+"'";
+                query = "SELECT c.name, c.id FROM classlist c WHERE c.id IN ("+data.byClassId+") GROUP BY c.id";
             }
             await db.query(query, (err, result) => {
                 if (err) {
@@ -103,6 +119,7 @@ exports.placeList = function () {
 exports.coachClassHistory = function (data) {
     return new Promise(async function (resolve, reject) {
         try {
+            console.log(data);
             let query = "SELECT ma.*, cs.class as classId, cs.coach as coachId, u1.name as coachName, cs.startTime, cs.endTime, cs.startDate, cs.endDate, c.name as className from memberactivity ma JOIN classschedule cs ON cs.id = ma.scheduleId JOIN classlist c ON c.id = cs.class JOIN coach co ON co.id = cs.coach AND cs.coach = '"+data.profile.coachId+"' JOIN user u1 ON u1.id = co.userId WHERE u1.id = ? AND co.userid = ?";
             await db.query(query, [data.profile.id, data.profile.id], (err, result) => {
                 if (err) {
