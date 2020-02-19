@@ -17,7 +17,7 @@ exports.joinMember = function (data) {
             let expMonth = day.getMonth() + 1;
             let expYear = day.getFullYear();
             const checkMember = "SELECT userId,status FROM member WHERE userId = ? AND memberCat = ? AND status = ?"
-            con.query(checkMember, [data.id, data.memberCat, 1], (err, result) => {
+            con.query(checkMember, [data.profile.id, data.memberCat, 1], (err, result) => {
                 if (!err) {
                     if (result.affectedRows > 0) { //if user already joined member
                         message = {
@@ -33,7 +33,7 @@ exports.joinMember = function (data) {
                             "code": otp,
                             "memberCat": parseInt(data.memberCat),
                             "endDate": expYear + '-' + expMonth + '-' + expDay,
-                            "status": 0
+                            "status": 1
                         }, (err, result) => {
                             if (!err) {
                                 if (result.affectedRows > 0) {

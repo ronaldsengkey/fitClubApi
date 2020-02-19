@@ -1,4 +1,5 @@
 const con = require('../config/dbConfig');
+const member = require('../models/memberM');
 let query = '',
     message = {};
 var fs = require('fs');
@@ -539,8 +540,23 @@ exports.confirmPaymentMember = function (data) {
                     }
                     break;
                 case "rejoin":
-                    break;
+                    const updateMember = "UPDATE member SET joinDate = ?, endDate = ?"
+                    break;  
                 case "join":
+                    if (data.memberCat) { 
+                        let param = {
+                            "profile": data.profile,
+                            "memberCat": data.memberCat
+                        }
+                        let memb = await member.joinMember(param);
+                        resolve(memb);
+                    } else {
+                        message = {
+                            "responseCode": process.env.NOTACCEPT_RESPONSE,
+                            "responseMessage": "Member category is required",
+                        }
+                        resolve(message)
+                    }
                     break;
             }
         } catch (error) {
