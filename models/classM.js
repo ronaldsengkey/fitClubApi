@@ -5,7 +5,7 @@ let query = '',
 exports.classSchedule = function (data) {
     return new Promise(async function (resolve, reject) {
         try {
-            let query = "SELECT * FROM classschedule cs JOIN place p ON p.id = cs.placeId WHERE p.partnerId = ?";
+            let query = "SELECT cs.id as scheduleId, cs.class as classId, c.name as className, cs.coach as coachId, u.name as coachName, cs.startTime, cs.endTime, cs.startDate, cs.endDate, cs.placeId FROM classschedule cs JOIN coach ch ON ch.id = cs.coach JOIN classlist c ON cs.class = c.id JOIN place p ON p.id = cs.placeId JOIN user u ON u.id = ch.userId WHERE cs.startDate = '2019-12-23'";
             await db.query(query,[data.profile.id],(err, result) => {
                 if (err) {
                     console.log("error get data", err)
