@@ -143,10 +143,8 @@ module.exports.memberClassHistory = async function memberClassHistory(req, res, 
 module.exports.classSchedule = async function classSchedule(req, res, next) {
   let body = {};
   if(req.swagger.params['param'].value){
-    body.param = req.swagger.params['param'].value;
+    body.param = JSON.parse(req.swagger.params['param'].value);
   }
-  body.byClassId = param.classId;
-  body.byDate = param.date;
   let cs = await model.classSchedule(body);
 };
 
@@ -164,8 +162,6 @@ module.exports.classList = function classList(req, res, next) {
   body.byClassId = param.classId;
   body.byDate = param.date;
   body.param = param.param;
-  // body.profile = callback;
-  console.log("=========>", body);
   model.classList(body)
   .then(function (response) {
     utils.writeJson(res, response);
