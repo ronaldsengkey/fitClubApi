@@ -7,23 +7,42 @@ exports.classSchedule = function (data) {
         try {
             let query = "SELECT cs.id as scheduleId, cs.class as classId, c.name as className, cs.coach as coachId, u.name as coachName, cs.startTime, cs.endTime, cs.startDate, cs.endDate, cs.placeId FROM classschedule cs JOIN coach ch ON ch.id = cs.coach JOIN classlist c ON cs.class = c.id JOIN place p ON p.id = cs.placeId JOIN user u ON u.id = ch.userId ";
             if(data.param.byDate){
-                query += "WHERE cs.startDate ="+data.param.byDate;
+                query += "WHERE cs.startDate = '"+data.param.byDate+"'";
             }else{
-                console.log(">>>>>>>");
+
             }
-            console.log()
-            // query += conditions;
             await db.query(query,(err, result) => {
                 if (err) {
                     console.log("error get data", err)
+                    message = {
+                        "responseCode": process.env.ERRORINTERNAL_RESPONSE,
+                        "responseMessage": process.env.INTERNALERROR_MESSAGE
+                    };
+                    reject(message);
                 } else {
                     if (result.length > 0) {
-                        console.log(result);
+                        message = {
+                            "responseCode": process.env.SUCCESS_RESPONSE,
+                            "responseMessage": process.env.SUCCESS_MESSAGE,
+                            "data": result
+                        };
+                        resolve(message);
+                    }else{
+                        message = {
+                            "responseCode": process.env.NOTFOUND_RESPONSE,
+                            "responseMessage": process.env.DATANOTFOUND_MESSAGE
+                        };
+                        reject(message);
                     }
                 }
             });
         }catch(err){
-            console.log(err)
+            console.log(err);
+            message = {
+                "responseCode": process.env.ERRORINTERNAL_RESPONSE,
+                "responseMessage": process.env.INTERNALERROR_MESSAGE
+            };
+            reject(message);
         }
     })
 }
@@ -34,15 +53,30 @@ exports.partnerClass = function (data) {
             let query = "SELECT * FROM classschedule cs JOIN place p ON p.id = cs.placeId WHERE p.partnerId = ?";
             await db.query(query,[data.profile.id],(err, result) => {
                 if (err) {
-                    console.log("error get data", err)
+                    console.log("error get data", err);
+                    message = {
+                        "responseCode": process.env.ERRORINTERNAL_RESPONSE,
+                        "responseMessage": process.env.INTERNALERROR_MESSAGE
+                    };
+                    reject(message);
                 } else {
                     if (result.length > 0) {
-                        console.log(result);
+                        message = {
+                            "responseCode": process.env.SUCCESS_RESPONSE,
+                            "responseMessage": process.env.SUCCESS_MESSAGE,
+                            "data": result
+                        };
+                        resolve(message);
                     }
                 }
             });
         }catch(err){
-            console.log(err)
+            console.log(err);
+            message = {
+                "responseCode": process.env.ERRORINTERNAL_RESPONSE,
+                "responseMessage": process.env.INTERNALERROR_MESSAGE
+            };
+            reject(message);
         }
     })
 }
@@ -127,7 +161,7 @@ exports.coachClassHistory = function (data) {
     return new Promise(async function (resolve, reject) {
         try {
             console.log(data);
-            let query = "SELECT ma.*, cs.class as classId, cs.coach as coachId, u1.name as coachName, cs.startTime, cs.endTime, cs.startDate, cs.endDate, c.name as className from memberactivity ma JOIN classschedule cs ON cs.id = ma.scheduleId JOIN classlist c ON c.id = cs.class JOIN coach co ON co.id = cs.coach AND cs.coach = '"+data.profile.coachId+"' JOIN user u1 ON u1.id = co.userId WHERE u1.id = ? AND co.userid = ?";
+            let query = "SELECT ca.*, cs.class as classId, cs.coach as coachId, u1.name as coachName, cs.startTime, cs.endTime, cs.startDate, cs.endDate, c.name as className from coachactivity ca JOIN classschedule cs ON cs.id = ca.scheduleId JOIN classlist c ON c.id = cs.class JOIN coach co ON co.id = cs.coach AND cs.coach = '"+data.profile.coachId+"' JOIN user u1 ON u1.id = co.userId WHERE u1.id = ? AND co.userid = ? AND action = 'finished'";
             await db.query(query, [data.profile.id, data.profile.id], (err, result) => {
                 if (err) {
                     console.log("error get member class", err)

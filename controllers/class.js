@@ -146,6 +146,7 @@ module.exports.classSchedule = async function classSchedule(req, res, next) {
     body.param = JSON.parse(req.swagger.params['param'].value);
   }
   let cs = await model.classSchedule(body);
+  utils.writeJson(res, cs);
 };
 
 module.exports.classList = function classList(req, res, next) {

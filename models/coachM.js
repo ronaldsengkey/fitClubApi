@@ -1,11 +1,12 @@
 const con = require('../config/dbConfig');
 let query = '',
-    message 
+    message ='';
 
-async function updateCoachClassSchedule(data){
-    query = "UPDATE classschedule SET coach ? WHERE id = ? AND class = ? AND startDate = ? AND start_time = ? ";
-    let aparam = [data.selfId, data.targetSchedule, data.targetClass, data.startDate, data.startTime]
-    await con.query(query,param,(err, result) => {
+function updateCoachClassSchedule(data) {
+    return new Promise(async function (resolve, reject) {
+    query = "UPDATE classschedule SET coach = ? WHERE id = ?  ";
+    let param = [data.targetCoach, data.idSelfSchedule];
+    await con.query(query,param, async function (err, result){
         if (err) {
             console.log("error get data", err)
             message = {
@@ -14,23 +15,34 @@ async function updateCoachClassSchedule(data){
             };
             resolve(message);
         } else {
-            if (result.length > 0) {
-                message = {
-                    "responseCode": process.env.SUCCESS_RESPONSE,
-                    "responseMessage": process.env.SUCCESS_MESSAGE,
-                    "data": result
-                };
-                resolve(message);
-            } else {
+            if(result.affectedRows > 0){
+                let query2 = "UPDATE classschedule SET coach = ? WHERE id = ?  ";
+                let param2 = [data.selfId, data.targetSchedule];
+                await con.query(query2,param2,(err, result) => {
+                    if(result.affectedRows > 0){
+                        message = {
+                            "responseCode": process.env.SUCCESS_RESPONSE,
+                            "responseMessage": process.env.SUCCESS_MESSAGE
+                        };
+                        resolve(message);
+                    }else{
+                        message = {
+                            "responseCode": process.env.NOTFOUND_RESPONSE,
+                            "responseMessage": process.env.DATANOTFOUND_MESSAGE
+                        };
+                        reject(message);
+                    }
+                })
+            }else{
                 message = {
                     "responseCode": process.env.NOTFOUND_RESPONSE,
                     "responseMessage": process.env.DATANOTFOUND_MESSAGE
                 };
-                resolve(message);
+                reject(message);
             }
         }
     })
-
+})
 }
 
 exports.coachUpdate = function (data) {
@@ -38,9 +50,10 @@ exports.coachUpdate = function (data) {
         try {
             switch(data.param){
                 case "switchClass":
-                    updateCoachClassSchedule(data)
+                    message = await updateCoachClassSchedule(data);
                     break;
-              }
+            }
+            resolve(message);
         }catch(err){
             console.log("error coachUpdate =>",err)
             message = {

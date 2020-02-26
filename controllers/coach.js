@@ -41,7 +41,7 @@ module.exports.coachUpdate = async function coachUpdate(req, res, next) {
   let data = {};
   data = body;
   data.param = param;
-  if(token != '' && token != undefined && !token){
+  if(token != '' && token != undefined){
     try {
       let a = await checkToken(token);
       data.profile = a;
@@ -59,7 +59,7 @@ module.exports.coachUpdate = async function coachUpdate(req, res, next) {
           }
           break
         default:
-          response = model.coachUpdate(data);
+          response = await model.coachUpdate(data);
           break;
       }
       utils.writeJson(res, response);
