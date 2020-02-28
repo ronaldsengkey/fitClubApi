@@ -4,8 +4,17 @@ let query = '',
 
 function updateCoachClassSchedule(data) {
     return new Promise(async function (resolve, reject) {
-    query = "UPDATE classschedule SET coach = ? WHERE id = ?  ";
-    let param = [data.targetCoach, data.idSelfSchedule];
+    query = "INSERT INTO switchschedulerequest SET ?";
+    let param = {
+        "fromCoachId": parseInt(data.classId),
+        "toCoachId": parseInt(data.profile.id),
+        "fromScheduleId": data.startDate,
+        "toScheduleId": data.endDate,
+        "requestDate": data.startTime,
+        "status":"0"
+    }
+    // query = "UPDATE classschedule SET coach = ? WHERE id = ?  ";
+    // let param = [data.targetCoach, data.idSelfSchedule];
     await con.query(query,param, async function (err, result){
         if (err) {
             console.log("error get data", err)
@@ -16,29 +25,34 @@ function updateCoachClassSchedule(data) {
             resolve(message);
         } else {
             if(result.affectedRows > 0){
-                let query2 = "UPDATE classschedule SET coach = ? WHERE id = ?  ";
-                let param2 = [data.selfId, data.targetSchedule];
-                await con.query(query2,param2,(err, result) => {
-                    if(result.affectedRows > 0){
-                        message = {
-                            "responseCode": process.env.SUCCESS_RESPONSE,
-                            "responseMessage": process.env.SUCCESS_MESSAGE
-                        };
-                        resolve(message);
-                    }else{
-                        message = {
-                            "responseCode": process.env.NOTFOUND_RESPONSE,
-                            "responseMessage": process.env.DATANOTFOUND_MESSAGE
-                        };
-                        reject(message);
-                    }
-                })
+                message = {
+                    "responseCode": process.env.SUCCESS_RESPONSE,
+                    "responseMessage": process.env.SUCCESS_MESSAGE
+                };
+                resolve(message);
+                // let query2 = "UPDATE classschedule SET coach = ? WHERE id = ?  ";
+                // let param2 = [data.selfId, data.targetSchedule];
+                // await con.query(query2,param2,(err, result) => {
+                //     if(result.affectedRows > 0){
+                //         message = {
+                //             "responseCode": process.env.SUCCESS_RESPONSE,
+                //             "responseMessage": process.env.SUCCESS_MESSAGE
+                //         };
+                //         resolve(message);
+                //     }else{
+                //         message = {
+                //             "responseCode": process.env.NOTFOUND_RESPONSE,
+                //             "responseMessage": process.env.DATANOTFOUND_MESSAGE
+                //         };
+                //         reject(message);
+                //     }
+                // })
             }else{
                 message = {
                     "responseCode": process.env.NOTFOUND_RESPONSE,
                     "responseMessage": process.env.DATANOTFOUND_MESSAGE
                 };
-                reject(message);
+                resolve(message);
             }
         }
     })
