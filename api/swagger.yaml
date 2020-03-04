@@ -145,6 +145,7 @@ paths:
         400:
           description: "Invalid status value"
       x-swagger-router-controller: "coach"
+
     get:
       tags:
       - "coach"
@@ -623,6 +624,7 @@ paths:
         404:
           description: "Data not found"
       x-swagger-router-controller: "coach"
+      
     get:
       tags:
       - "coach"
@@ -1126,6 +1128,14 @@ definitions:
   coachUpdateParam:
     type: "object"
     properties:
+      switchId: #===========> for switch response
+        type: "integer"
+        format: "int32"
+      scheduleId: #===========> for open & close class
+        type: "integer"
+        format: "int32"
+      action: #===========> for open & close class
+        type: "string"
       idSelfSchedule:
         type: "integer"
         format: "int32"

@@ -6,10 +6,18 @@ function generateOtp() {
     return Math.floor(100000 + Math.random() * 900000);
 }
 
-function partnerMembership(token) {
+function partnerMembership(data) {
     return new Promise(async function (resolve, reject) {
       try {
-            let query = "SELECT u.*, p.name FROM place p JOIN member m ON m.placeId = p.id JOIN user u ON u.id = m.userId WHERE p.partnerId = "+parseInt(data.profile.partnerId)+"";
+          let query = '';
+            switch(data.param){
+                case "account":
+                    query = "SELECT m.*, u.name as memberName,mc.categoryName as memberCategory, p.name as placeName FROM member m JOIN membercategory mc ON mc.id = m.memberCat JOIN place p ON p.id = m.placeId JOIN user u ON u.id = m.userId WHERE p.partnerId = "+parseInt(data.profile.partnerId)+"";
+                    break;
+                case "payment":
+                    query = "SELECT m.*, u.name as memberName,mc.categoryName as memberCategory, p.name as placeName, mp.nominal, mp.paymentVia, mp.bankId FROM member m JOIN membercategory mc ON mc.id = m.memberCat JOIN place p ON p.id = m.placeId JOIN user u ON u.id = m.userId LEFT JOIN memberpayment mp ON mp.userId = u.id WHERE p.partnerId = "+parseInt(data.profile.partnerId)+"";
+                    break;
+            }
             await con.query(query, (err, result) => {
                 if (err) {
                     console.log("error get data", err)
@@ -45,14 +53,15 @@ exports.partnerMember = function (data) {
     return new Promise(async function (resolve, reject) {
         try {
             let pm = '';
-            switch(data.param){
-                case "account":
-                    pm = await partnerMembership(data);
-                    break;
-                case "payment":
-                    pm = await partnerMemberPayment(data);
-                    break;
-            }
+            pm = await partnerMembership(data);
+            // switch(data.param){
+            //     case "account":
+            //         pm = await partnerMembership(data);
+            //         break;
+            //     case "payment":
+            //         pm = await partnerMemberPayment(data);
+            //         break;
+            // }
             resolve(pm);
         }catch(err){
             console.log("error of partner member", err)

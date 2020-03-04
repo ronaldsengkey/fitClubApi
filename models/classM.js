@@ -323,7 +323,7 @@ exports.classDetail = function (data) {
     return new Promise(async function (resolve, reject) {
         try {
             // console.log(data);
-            let query = "SELECT *,u.name as coachName,cs.id as scheduleId, cl.name as className FROM classlist cl INNER JOIN classschedule cs ON cs.class = cl.id INNER JOIN coach c ON c.id = cs.coach INNER JOIN user u ON u.id = c.userId WHERE cl.id = '" + data.classId + "'";
+            let query = "SELECT *,u.name as coachName,cs.id as scheduleId, cl.name as className, ca.action FROM classlist cl INNER JOIN classschedule cs ON cs.class = cl.id INNER JOIN coach c ON c.id = cs.coach INNER JOIN user u ON u.id = c.userId LEFT JOIN coachactivity ca ON ca.scheduleId = cs.id  WHERE cl.id = "+data.classId+" GROUP BY cl.id";
             await db.query(query, (err, result) => {
                 if (err) {
                     console.log("error get data", err)

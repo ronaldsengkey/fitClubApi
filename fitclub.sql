@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 07, 2020 at 12:47 PM
+-- Generation Time: Feb 28, 2020 at 09:30 AM
 -- Server version: 10.4.6-MariaDB
 -- PHP Version: 7.3.9
 
@@ -142,9 +142,18 @@ INSERT INTO `coach` (`id`, `userId`, `placeId`, `specialization`, `status`, `joi
 
 CREATE TABLE `coachactivity` (
   `id` int(11) NOT NULL,
-  `classId` int(11) NOT NULL,
+  `scheduleId` int(11) NOT NULL,
+  `coachId` int(11) NOT NULL,
+  `action` enum('started','finished','','') NOT NULL,
   `dateTrain` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `coachactivity`
+--
+
+INSERT INTO `coachactivity` (`id`, `scheduleId`, `coachId`, `action`, `dateTrain`) VALUES
+(1, 1, 1, 'finished', '2019-12-23 00:00:00');
 
 -- --------------------------------------------------------
 
@@ -175,6 +184,13 @@ CREATE TABLE `member` (
   `placeId` int(11) NOT NULL,
   `status` tinyint(4) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `member`
+--
+
+INSERT INTO `member` (`id`, `userId`, `code`, `memberCat`, `joinDate`, `endDate`, `placeId`, `status`) VALUES
+(1, 3, '240929', 50000, '2020-02-18 09:05:34', '2020-03-19', 0, 0);
 
 -- --------------------------------------------------------
 
@@ -341,6 +357,23 @@ INSERT INTO `place` (`id`, `name`, `location`, `partnerId`, `joinDate`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `switchschedulerequest`
+--
+
+CREATE TABLE `switchschedulerequest` (
+  `id` int(11) NOT NULL,
+  `fromCoachId` int(11) NOT NULL,
+  `toCoachId` int(11) NOT NULL,
+  `fromScheduleId` int(11) NOT NULL,
+  `toScheduleId` int(11) NOT NULL,
+  `requestDate` date NOT NULL,
+  `confirmDate` date NOT NULL,
+  `status` enum('yes','no') NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `temppayment`
 --
 
@@ -442,7 +475,13 @@ INSERT INTO `temppayment` (`id`, `nominal`, `memberCat`, `status`, `placeId`, `d
 (77, 100096, 2, 0, 1, '', 1, NULL, 'transfer', 1, 'upgrade'),
 (78, 100047, 2, 0, 1, '', 1, NULL, 'transfer', 1, 'upgrade'),
 (79, 100099, 2, 0, 1, '', 1, NULL, 'transfer', 1, 'upgrade'),
-(80, 100075, 2, 0, 1, '', 1, NULL, 'transfer', 1, 'upgrade');
+(80, 100075, 2, 0, 1, '', 1, NULL, 'transfer', 1, 'upgrade'),
+(81, 50022, 1, 0, 1, '', 3, NULL, 'transfer', 1, 'join'),
+(82, 50092, 1, 0, 1, '', 3, NULL, 'transfer', 1, 'join'),
+(83, 50004, 1, 0, 1, '', 3, NULL, 'transfer', 1, 'join'),
+(84, 50007, 1, 0, 1, '', 3, NULL, 'transfer', 1, 'join'),
+(85, 50047, 1, 0, 1, '', 3, NULL, 'transfer', 1, 'join'),
+(86, 50040, 1, 0, 1, '', 3, NULL, 'transfer', 1, 'join');
 
 -- --------------------------------------------------------
 
@@ -471,8 +510,9 @@ CREATE TABLE `user` (
 --
 
 INSERT INTO `user` (`id`, `name`, `gender`, `phone`, `address`, `email`, `password`, `imgProfile`, `accessToken`, `onlineStatus`, `verificationCode`, `accountStatus`, `registerDate`) VALUES
-(1, 'Coach1', 1, '08388489384', 'Jl Gunung rinjani 6 lippo karawachi tangerang', 'coach1@mail.com', '$argon2i$v=19$m=4096,t=3,p=1$wKKjA/Lxf/Mjp0nY6E+WKQ$3I7ZbedhavP9z1b0tOnxVaqO/sEq4+GjveWx3AhydAo', 'none', 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiQ29hY2gxIiwiZ2VuZGVyIjoxLCJwaG9uZSI6IjA4Mzg4NDg5Mzg0IiwiYWRkcmVzcyI6IkpsIEd1bnVuZyByaW5qYW5pIDYgbGlwcG8ga2FyYXdhY2hpIHRhbmdlcmFuZyIsImVtYWlsIjoiY29hY2gxQG1haWwuY29tIiwicGFzc3dvcmQiOiIkYXJnb24yaSR2PTE5JG09NDA5Nix0PTMscD0xJHdLS2pBL0x4Zi9NanAwblk2RStXS1EkM0k3WmJlZGhhdlA5ejFiMHRPbnhWYXFPL3NFcTQrR2p2ZVd4M0FoeWRBbyIsImZpbHRlciI6ImNvYWNoIiwicGxhY2VJZCI6IjEiLCJzcGVjaWFsaXphdGlvbiI6WzEsMl0sInZlcmlmaWNhdGlvbkNvZGUiOjQ4ODQ5NSwiaWF0IjoxNTgwODczNTIxLCJleHAiOjE1ODA4OTE1MjEsImF1ZCI6Imh0dHA6Ly9maXRjbHViLmlkIiwiaXNzIjoiRml0Q2x1YiBOZXR3b3JrIiwic3ViIjoiYWduZXRpdXNsZWVAZ21haWwuY29tIn0.MVWTAX_fjW_u1_qViO-P5LQzL-Hk39nmnK1q0LVSFbY8TYr7oKMonvJceSoQSKE_IUxnnG1xqiskdcToIsfI9w', 'online', '488495', 0, '2020-02-05 10:32:01'),
-(2, 'ronald', 1, '085791334512', 'jalan ronald', 'ronald@gmail.com', '$argon2i$v=19$m=4096,t=3,p=1$3ieABvp/13XQGZmYTQSyoA$P4E4lZpg7G99Q9VW7CVQyE94NUvV78QZnohtrPeOrFI', 'none', 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwibmFtZSI6InJvbmFsZCIsImdlbmRlciI6MSwibWVtYmVyQ2F0IjpudWxsLCJtZW1iZXJJZCI6bnVsbCwicGFydG5lcklkIjpudWxsLCJjb2FjaElkIjoyLCJqb2luTWVtYmVyRGF0ZSI6bnVsbCwiZW5kTWVtYmVyRGF0ZSI6bnVsbCwicGhvbmUiOiIwODU3OTEzMzQ1MTIiLCJhZGRyZXNzIjoiamFsYW4gcm9uYWxkIiwiZW1haWwiOiJyb25hbGRAZ21haWwuY29tIiwiaWF0IjoxNTgwOTU2MDU0LCJleHAiOjE1ODA5NzQwNTQsImF1ZCI6Imh0dHA6Ly9maXRjbHViLmlkIiwiaXNzIjoiRml0Q2x1YiBOZXR3b3JrIiwic3ViIjoiYWduZXRpdXNsZWVAZ21haWwuY29tIn0.TX3s-QC62qH2qM3kHGMkevQ223-o0d63gBA-Jq4ZWkp_8OhJ7yGqzeApVOyGaYAtGHh07-IZEt8CqwWEGz1UEg', 'online', '537651', 1, '2020-02-06 09:25:11');
+(1, 'Coach1', 1, '08388489384', 'Jl Gunung rinjani 6 lippo karawachi tangerang', 'coach1@mail.com', '$argon2i$v=19$m=4096,t=3,p=1$wKKjA/Lxf/Mjp0nY6E+WKQ$3I7ZbedhavP9z1b0tOnxVaqO/sEq4+GjveWx3AhydAo', 'none', 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwibmFtZSI6IkNvYWNoMSIsImdlbmRlciI6MSwibWVtYmVyQ2F0IjpudWxsLCJtZW1iZXJJZCI6bnVsbCwicGFydG5lcklkIjpudWxsLCJjb2FjaElkIjoxLCJqb2luTWVtYmVyRGF0ZSI6bnVsbCwiZW5kTWVtYmVyRGF0ZSI6bnVsbCwicGhvbmUiOiIwODM4ODQ4OTM4NCIsImFkZHJlc3MiOiJKbCBHdW51bmcgcmluamFuaSA2IGxpcHBvIGthcmF3YWNoaSB0YW5nZXJhbmciLCJlbWFpbCI6ImNvYWNoMUBtYWlsLmNvbSIsImlhdCI6MTU4Mjg3NjMwNCwiZXhwIjoxNTgyODk0MzA0LCJhdWQiOiJodHRwOi8vZml0Y2x1Yi5pZCIsImlzcyI6IkZpdENsdWIgTmV0d29yayIsInN1YiI6ImFnbmV0aXVzbGVlQGdtYWlsLmNvbSJ9.cyDk9Nqa0LCEc23NmrjvVnQ6t8zboAbUTxDLPnAcOf0HaETYDr2OfZ4KGM2mVR_K-Df6zdEHoAsr0C4pcfQfeA', 'online', '488495', 0, '2020-02-05 10:32:01'),
+(2, 'ronald', 1, '085791334512', 'jalan ronald', 'ronald@gmail.com', '$argon2i$v=19$m=4096,t=3,p=1$3ieABvp/13XQGZmYTQSyoA$P4E4lZpg7G99Q9VW7CVQyE94NUvV78QZnohtrPeOrFI', 'none', 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwibmFtZSI6InJvbmFsZCIsImdlbmRlciI6MSwibWVtYmVyQ2F0IjpudWxsLCJtZW1iZXJJZCI6bnVsbCwicGFydG5lcklkIjpudWxsLCJjb2FjaElkIjoyLCJqb2luTWVtYmVyRGF0ZSI6bnVsbCwiZW5kTWVtYmVyRGF0ZSI6bnVsbCwicGhvbmUiOiIwODU3OTEzMzQ1MTIiLCJhZGRyZXNzIjoiamFsYW4gcm9uYWxkIiwiZW1haWwiOiJyb25hbGRAZ21haWwuY29tIiwiaWF0IjoxNTgxOTA1NTU5LCJleHAiOjE1ODE5MjM1NTksImF1ZCI6Imh0dHA6Ly9maXRjbHViLmlkIiwiaXNzIjoiRml0Q2x1YiBOZXR3b3JrIiwic3ViIjoiYWduZXRpdXNsZWVAZ21haWwuY29tIn0.JOVHEwhXRosfj9OjLyh1C2ZtQBcILi7efhERVpdkF7dLRKXW8sHi1KCnP5yOAFPyBg5hbdblJfyyQX-mLueTfQ', 'online', '537651', 1, '2020-02-06 09:25:11'),
+(3, 'member', 1, '085797478712', 'jl member', 'dbudianto9@gmail.com', '$argon2i$v=19$m=4096,t=3,p=1$QKL5KgkFYobsolZMzsCSPw$UWk+wYYwNOA0QbPy1ABDMcGzfPJ3l+XwBPElF/y89ig', 'none', 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywibmFtZSI6Im1lbWJlciIsImdlbmRlciI6MSwibWVtYmVyQ2F0IjpudWxsLCJtZW1iZXJJZCI6bnVsbCwicGFydG5lcklkIjpudWxsLCJjb2FjaElkIjpudWxsLCJqb2luTWVtYmVyRGF0ZSI6bnVsbCwiZW5kTWVtYmVyRGF0ZSI6bnVsbCwicGhvbmUiOiIwODU3OTc0Nzg3MTIiLCJhZGRyZXNzIjoiamwgbWVtYmVyIiwiZW1haWwiOiJkYnVkaWFudG85QGdtYWlsLmNvbSIsImlhdCI6MTU4MTk5MTUyMiwiZXhwIjoxNTgyMDA5NTIyLCJhdWQiOiJodHRwOi8vZml0Y2x1Yi5pZCIsImlzcyI6IkZpdENsdWIgTmV0d29yayIsInN1YiI6ImFnbmV0aXVzbGVlQGdtYWlsLmNvbSJ9.IBQDZuWyeYDOUUL2hydTSdvHlO0Wxq6M9ABrowOnlCeSOguzep2okPuv1xIWUUeWPsfTgPnkbVPoLIRLkpoWgg', 'online', '654638', 1, '2020-02-14 09:27:14');
 
 --
 -- Indexes for dumped tables
@@ -575,6 +615,12 @@ ALTER TABLE `place`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `switchschedulerequest`
+--
+ALTER TABLE `switchschedulerequest`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `temppayment`
 --
 ALTER TABLE `temppayment`
@@ -624,7 +670,7 @@ ALTER TABLE `coach`
 -- AUTO_INCREMENT for table `coachactivity`
 --
 ALTER TABLE `coachactivity`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `file`
@@ -636,7 +682,7 @@ ALTER TABLE `file`
 -- AUTO_INCREMENT for table `member`
 --
 ALTER TABLE `member`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `memberactivity`
@@ -687,16 +733,22 @@ ALTER TABLE `place`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
+-- AUTO_INCREMENT for table `switchschedulerequest`
+--
+ALTER TABLE `switchschedulerequest`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `temppayment`
 --
 ALTER TABLE `temppayment`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=81;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=87;
 
 --
 -- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
