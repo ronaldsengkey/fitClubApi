@@ -302,7 +302,7 @@ function uploadToLocal(data) {
     return new Promise(async function (resolve, reject) {
         try {
             let base64Image = data.file.split(';base64,').pop();
-            let name = new Buffer.from(data.id + ":" + new Date().toISOString()).toString('base64');
+            let name = new Buffer.from(data.transactionId + ":" + new Date().toISOString()).toString('base64');
             const type = data.file.split(';')[0].split('/')[1];
             let path = `uploads/${name}.` + type;
             fs.writeFile(path, base64Image, {
@@ -541,9 +541,9 @@ exports.confirmPaymentMember = function (data) {
                     break;
                 case "rejoin":
                     const updateMember = "UPDATE member SET joinDate = ?, endDate = ?"
-                    break;  
+                    break;
                 case "join":
-                    if (data.memberCat) { 
+                    if (data.memberCat) {
                         let param = {
                             "profile": data.profile,
                             "memberCat": data.memberCat

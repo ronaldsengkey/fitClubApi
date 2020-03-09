@@ -128,6 +128,33 @@ module.exports.getBank = async function getBank(req, res, next) {
     })
 };
 
+module.exports.uploadFiles = async function uploadFiles(req, res, next) {
+    var token = req.swagger.params['token'].value;
+    var param = req.swagger.params['param'].value;
+    let body = {};
+    let response = {};
+    await jwt.verify(token, publicKEY, signOptions, function (err, callback) {
+        if (err) {
+            console.log("not valid token", err);
+            response = {
+                "responseCode": process.env.UNAUTHORIZED_RESPONSE,
+                "responseMessage": process.env.UNAUTH_MESSAGE
+            }
+            utils.writeJson(res, response);
+        } else {
+            body.profile = callback.profile;
+            body.param = param;
+            model.uploadFiles(body)
+                .then(function (response) {
+                    utils.writeJson(res, response);
+                })
+                .catch(function (response) {
+                    utils.writeJson(res, response);
+                });
+        }
+    })
+};
+
 module.exports.confirmPaymentMember = async function confirmPaymentMember(req, res, next) {
     var token = req.swagger.params['token'].value;
     var body = req.swagger.params['body'].value;
