@@ -1294,6 +1294,8 @@ definitions:
         type: "string"
       endTime:
         type: "string"
+      placeId:
+        type: "integer"
   
 
 
