@@ -1107,7 +1107,7 @@ paths:
           description: "Data not found"
       x-swagger-router-controller: "transaction"
 
-  /upload/{token}:
+  /upload/{concern}/{token}:
     post:
       tags:
       - "transaction"
@@ -1126,12 +1126,16 @@ paths:
         in: "path"
         required: true
         type: "string"
+      - name: "concern" # payment, profile
+        in: "path"
+        required: true
+        type: "string"
       - in: "body"
         name: "body"
         description: "data credential guest"
         required: true
         schema:
-          $ref: "#/definitions/uploadPayment"
+          $ref: "#/definitions/uploadSchema"
       responses:
         200:
           description: "Success"
@@ -1141,7 +1145,7 @@ paths:
           description: "Unauthorize"
         404:
           description: "Data not found"
-      x-swagger-router-controller: "transaction"
+      x-swagger-router-controller: "upload"
 
   
 
@@ -1249,7 +1253,7 @@ definitions:
       memberId:
         type: "string"
 
-  uploadPayment:
+  uploadSchema:
     type: "object"
     properties:
       transactionId:
@@ -1351,6 +1355,7 @@ definitions:
     example:
       message: "Success"
       data: "data all customer"
+
   apiResponse:
     type: "object"
     properties:
