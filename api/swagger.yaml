@@ -1112,6 +1112,46 @@ paths:
           description: "Data not found"
       x-swagger-router-controller: "transaction"
 
+  /upload/{concern}/{token}:
+    post:
+      tags:
+      - "transaction"
+      summary: "Registration access"
+      description: ""
+      operationId: "uploadFiles"
+      consumes:
+      - "multipart/form-data"
+      - "application/x-www-form-urlencoded"
+      - "application/json"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - name: "token"
+        in: "path"
+        required: true
+        type: "string"
+      - name: "concern" # payment, profile
+        in: "path"
+        required: true
+        type: "string"
+      - in: "body"
+        name: "body"
+        description: "data credential guest"
+        required: true
+        schema:
+          $ref: "#/definitions/uploadSchema"
+      responses:
+        200:
+          description: "Success"
+        500:
+          description: "Internal error"
+        401:
+          description: "Unauthorize"
+        404:
+          description: "Data not found"
+      x-swagger-router-controller: "upload"
+
   
 
 
@@ -1217,6 +1257,14 @@ definitions:
         type: "string"
       memberId:
         type: "string"
+
+  uploadSchema:
+    type: "object"
+    properties:
+      transactionId:
+        type: "string"
+      file:
+        type: "string"
       
 
   addAccountParam:
@@ -1314,6 +1362,7 @@ definitions:
     example:
       message: "Success"
       data: "data all customer"
+
   apiResponse:
     type: "object"
     properties:

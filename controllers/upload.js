@@ -1,7 +1,7 @@
 'use strict';
 
 let utils = require('../utils/writer.js');
-let model = require('../models/transactionM');
+let model = require('../models/uploadM');
 let ct = require('../service/checkToken');
 const fs = require('fs');
 var jwt = require('jsonwebtoken');
@@ -37,6 +37,33 @@ async function checkToken(token) {
         return process.env.ERRORINTERNAL_RESPONSE;
     }
 }
+
+module.exports.uploadFiles = async function uploadFiles(req, res, next) {
+    var token = req.swagger.params['token'].value;
+    var body = req.swagger.params['body'].value;
+    var concern = req.swagger.params['concern'].value;
+    let response = {};
+    await jwt.verify(token, publicKEY, signOptions, function (err, callback) {
+        if (err) {
+            console.log("not valid token", err);
+            response = {
+                "responseCode": process.env.UNAUTHORIZED_RESPONSE,
+                "responseMessage": process.env.UNAUTH_MESSAGE
+            }
+            utils.writeJson(res, response);
+        } else {
+            body.profile = callback;
+            body.concern = concern;
+            model.uploadFiles(body)
+                .then(function (response) {
+                    utils.writeJson(res, response);
+                })
+                .catch(function (response) {
+                    utils.writeJson(res, response);
+                });
+        }
+    })
+};
 
 
 module.exports.transactionRequest = async function transactionRequest(req, res, next) {
@@ -91,60 +118,6 @@ module.exports.memberPayment = async function memberPayment(req, res, next) {
         } else {
             body.profile = callback.profile;
             model.memberPayment(body)
-                .then(function (response) {
-                    utils.writeJson(res, response);
-                })
-                .catch(function (response) {
-                    utils.writeJson(res, response);
-                });
-        }
-    })
-};
-
-module.exports.getBank = async function getBank(req, res, next) {
-    var token = req.swagger.params['token'].value;
-    var param = req.swagger.params['param'].value;
-    let body = {};
-    let response = {};
-    await jwt.verify(token, publicKEY, signOptions, function (err, callback) {
-        if (err) {
-            console.log("not valid token", err);
-            response = {
-                "responseCode": process.env.UNAUTHORIZED_RESPONSE,
-                "responseMessage": process.env.UNAUTH_MESSAGE
-            }
-            utils.writeJson(res, response);
-        } else {
-            body.profile = callback.profile;
-            body.param = param;
-            model.getBank(body)
-                .then(function (response) {
-                    utils.writeJson(res, response);
-                })
-                .catch(function (response) {
-                    utils.writeJson(res, response);
-                });
-        }
-    })
-};
-
-module.exports.confirmPaymentMember = async function confirmPaymentMember(req, res, next) {
-    var token = req.swagger.params['token'].value;
-    var body = req.swagger.params['body'].value;
-    // let body = {};
-    let response = {};
-    await jwt.verify(token, publicKEY, signOptions, function (err, callback) {
-        if (err) {
-            console.log("not valid token", err);
-            response = {
-                "responseCode": process.env.UNAUTHORIZED_RESPONSE,
-                "responseMessage": process.env.UNAUTH_MESSAGE
-            }
-            utils.writeJson(res, response);
-        } else {
-            console.log("valid token => ", callback);
-            body.profile = callback;
-            model.confirmPaymentMember(body)
                 .then(function (response) {
                     utils.writeJson(res, response);
                 })
