@@ -137,7 +137,7 @@ module.exports.getSchedule = async function getSchedule(req, res, next) {
         } else {
           data.profile = callback;
           if(filter){
-            data.filter == filter;
+            data.filter = filter;
           }
           model.getSchedule(data)
             .then(function (response) {

@@ -5,7 +5,7 @@ let query = '',
     function switchResponse(data) {
         return new Promise(async function (resolve, reject) {
         query = "UPDATE switchschedulerequest SET status = ? WHERE toCoachId = ? AND id = ? ";
-        let param = [data.profile.id, data.switchId];
+        let param = [data.action,data.profile.id, data.switchId];
         await con.query(query,param, async function (err, result){
             if (err) {
                 console.log("error get data", err);
@@ -22,6 +22,7 @@ let query = '',
                     };
                     resolve(message);
                 }else{
+                    console.log("error get data", result);
                     message = {
                         "responseCode": process.env.ERRORINTERNAL_RESPONSE,
                         "responseMessage": process.env.INTERNALERROR_MESSAGE
@@ -219,9 +220,11 @@ exports.coachUpdate = function (data) {
 exports.coachList = function (data) {
     return new Promise(async function (resolve, reject) {
         try {
+            console.log("kkkkkkkkkkkkkkkkk", data);
             let query = '';
             switch(data.param){
                 case "all":
+                    
                     query = 'SELECT u.name, u.gender, u.phone, u.address, u.email, u.imgProfile, u.accountStatus, u.registerDate, p.name as placeName FROM classschedule cs JOIN coach c ON c.id = cs.coach JOIN user u ON u.id = c.userId JOIN place p ON p.id = cs.placeId WHERE p.partnerId = '+data.profile.partnerId+' GROUP BY u.id'
                     break;
                 default:
@@ -234,6 +237,7 @@ exports.coachList = function (data) {
                     }
                     break;
             }
+            console.log(query);
             await con.query(query, (err, result) => {
                 if (err) {
                     console.log("error get data", err)
@@ -280,7 +284,8 @@ exports.createSchedule = function (data) {
                 "startDate": data.startDate,
                 "endDate": data.endDate,
                 "startTime": data.startTime,
-                "endTime": data.endTime
+                "endTime": data.endTime,
+                "placeId":parseInt(data.placeId)
             }, (err, result) => {
                 if (!err) {
                     if (result.affectedRows > 0) {
@@ -316,11 +321,10 @@ exports.getSchedule = function (data) {
             }else if (data.filter == "startedClass"){
                 query = "SELECT ca.*, cs.startTime, cs.endTime, cs.startDate, cs.endDate, cs.placeId, p.name, p.location FROM `coachactivity` ca JOIN classschedule cs ON cs.id = ca.scheduleId JOIN place p ON p.id = cs.placeId  WHERE ca.coachId = "+data.profile.coachId+" AND ca.action = '"+data.filter+"'";
             }else if(data.filter =="switchRequest"){
-                query = "SELECT * FROM switchschedulerequest scr WHERE scr.toCoachId = "+data.profile.coachId
+                query = "SELECT scr.*, u1.name, cl1.name as className, cs1.startDate, cs1.endDate, cs1.startTime, cs1.endTime FROM switchschedulerequest scr JOIN coach c1 ON c1.id = scr.fromCoachId JOIN user u1 ON u1.id = c1.userId JOIN classschedule cs1 ON cs1.id = scr.fromScheduleId JOIN classlist cl1 ON cl1.id = cs1.class  WHERE scr.toCoachId = '"+data.profile.coachId+"'";
             }else{
                 query = "SELECT cs.id as scheduleId ,u.id as coach_account_id,cl.name as class_name,u.name as coach_name,cs.coach as coach_id,cs.class as class_id,cs.startTime as class_start_time,cs.endTime as class_end_time,cs.startDate as class_start_date,cs.endDate as class_end_date FROM classschedule cs INNER JOIN classlist cl ON cs.class = cl.id INNER JOIN coach c ON c.id = cs.coach INNER JOIN user u ON u.id = c.userId WHERE c.id = '"+data.profile.coachId+"'";
             }
-            console.log("=======>",query);
             await con.query(query, (err, result) => {
                 if (err) {
                     console.log("error get data", err)

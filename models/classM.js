@@ -6,10 +6,8 @@ exports.classSchedule = function (data) {
     return new Promise(async function (resolve, reject) {
         try {
             let query = "SELECT cs.id as scheduleId, cs.class as classId, c.name as className, cs.coach as coachId, u.name as coachName, cs.startTime, cs.endTime, cs.startDate, cs.endDate, cs.placeId FROM classschedule cs JOIN coach ch ON ch.id = cs.coach JOIN classlist c ON cs.class = c.id JOIN place p ON p.id = cs.placeId JOIN user u ON u.id = ch.userId ";
-            if(data.param.byDate){
+            if(data.param !== undefined){
                 query += "WHERE cs.startDate = '"+data.param.byDate+"'";
-            }else{
-
             }
             await db.query(query,(err, result) => {
                 if (err) {
@@ -85,7 +83,7 @@ exports.classList = function (data) {
     return new Promise(async function (resolve, reject) {
         try {
             let query ='';
-            if(data.param){
+            if(data.param == 'all'){
                 query = "SELECT * FROM classlist";
             }
             if(data.byClassId){
