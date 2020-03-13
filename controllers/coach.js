@@ -122,6 +122,7 @@ module.exports.coachList = async function coachList(req, res, next) {
 module.exports.getSchedule = async function getSchedule(req, res, next) {
   const token = req.swagger.params['token'].value;
   const filter = req.swagger.params['filter'].value;
+  const classStatus = req.swagger.params['classStatus'].value;
   let response = {};
   let data = {};
   try {
@@ -138,6 +139,9 @@ module.exports.getSchedule = async function getSchedule(req, res, next) {
           data.profile = callback;
           if(filter){
             data.filter = filter;
+          }
+          if(classStatus){
+            data.classStatus = classStatus;
           }
           model.getSchedule(data)
             .then(function (response) {

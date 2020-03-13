@@ -649,6 +649,11 @@ paths:
         description: "filter for class schedule"
         required: false
         type: "string"
+      - name: "classStatus"
+        in: "header"
+        description: "filter for class schedule"
+        required: false
+        type: "string"
       responses:
         200:
           description: "Success"

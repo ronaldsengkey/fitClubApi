@@ -5,35 +5,39 @@ let query = '',
 exports.classSchedule = function (data) {
     return new Promise(async function (resolve, reject) {
         try {
-            let query = "SELECT cs.id as scheduleId, cs.class as classId, c.name as className, cs.coach as coachId, u.name as coachName, cs.startTime, cs.endTime, cs.startDate, cs.endDate, cs.placeId FROM classschedule cs JOIN coach ch ON ch.id = cs.coach JOIN classlist c ON cs.class = c.id JOIN place p ON p.id = cs.placeId JOIN user u ON u.id = ch.userId ";
-            if(data.param !== undefined){
-                query += "WHERE cs.startDate = '"+data.param.byDate+"'";
-            }
-            await db.query(query,(err, result) => {
-                if (err) {
-                    console.log("error get data", err)
-                    message = {
-                        "responseCode": process.env.ERRORINTERNAL_RESPONSE,
-                        "responseMessage": process.env.INTERNALERROR_MESSAGE
-                    };
-                    reject(message);
-                } else {
-                    if (result.length > 0) {
-                        message = {
-                            "responseCode": process.env.SUCCESS_RESPONSE,
-                            "responseMessage": process.env.SUCCESS_MESSAGE,
-                            "data": result
-                        };
-                        resolve(message);
-                    }else{
-                        message = {
-                            "responseCode": process.env.NOTFOUND_RESPONSE,
-                            "responseMessage": process.env.DATANOTFOUND_MESSAGE
-                        };
-                        reject(message);
-                    }
-                }
-            });
+            console.log("kkkkkk", data)
+            // let query = "SELECT cs.id as scheduleId, cs.class as classId, c.name as className, cs.coach as coachId, u.name as coachName, cs.startTime, cs.endTime, cs.startDate, cs.endDate, cs.placeId FROM classschedule cs JOIN coach ch ON ch.id = cs.coach JOIN classlist c ON cs.class = c.id JOIN place p ON p.id = cs.placeId JOIN user u ON u.id = ch.userId ";
+            // if(data.param !== undefined){
+            //     query += "WHERE cs.startDate = '"+data.param.byDate+"'";
+            //     if(data.param.filter !== undefined){
+            //         query += "AND"
+            //     }
+            // }
+            // await db.query(query,(err, result) => {
+            //     if (err) {
+            //         console.log("error get data", err)
+            //         message = {
+            //             "responseCode": process.env.ERRORINTERNAL_RESPONSE,
+            //             "responseMessage": process.env.INTERNALERROR_MESSAGE
+            //         };
+            //         reject(message);
+            //     } else {
+            //         if (result.length > 0) {
+            //             message = {
+            //                 "responseCode": process.env.SUCCESS_RESPONSE,
+            //                 "responseMessage": process.env.SUCCESS_MESSAGE,
+            //                 "data": result
+            //             };
+            //             resolve(message);
+            //         }else{
+            //             message = {
+            //                 "responseCode": process.env.NOTFOUND_RESPONSE,
+            //                 "responseMessage": process.env.DATANOTFOUND_MESSAGE
+            //             };
+            //             reject(message);
+            //         }
+            //     }
+            // });
         }catch(err){
             console.log(err);
             message = {

@@ -142,11 +142,39 @@ module.exports.memberClassHistory = async function memberClassHistory(req, res, 
 
 module.exports.classSchedule = async function classSchedule(req, res, next) {
   let body = {};
-  if(req.swagger.params['param'].value){
-    body.param = JSON.parse(req.swagger.params['param'].value);
+  let token = req.swagger.params['token'].value;
+  if (token !== null) {
+    let a = await checkToken(token);
+    switch(a){
+      case process.env.UNAUTHORIZED_RESPONSE:
+        response = {
+          "responseCode": process.env.UNAUTHORIZED_RESPONSE,
+          "responseMessage": process.env.UNAUTH_MESSAGE
+        } 
+        break;
+      case process.env.ERRORINTERNAL_RESPONSE:
+        response = {
+          "responseCode": process.env.UNAUTHORIZED_RESPONSE,
+          "responseMessage": process.env.UNAUTH_MESSAGE
+        }
+        break
+      default:
+        body.profile = a.profile;
+        if(req.swagger.params['param'].value){
+          body.param = JSON.parse(req.swagger.params['param'].value);
+        }
+        let cs = await model.classSchedule(body);
+        utils.writeJson(res, cs);
+        break;
+    }
+    utils.writeJson(res, response);
+  }else{
+    response = {
+      "responseCode": process.env.UNAUTHORIZED_RESPONSE,
+      "responseMessage": process.env.UNAUTH_MESSAGE
+    }
+    utils.writeJson(res, response);
   }
-  let cs = await model.classSchedule(body);
-  utils.writeJson(res, cs);
 };
 
 module.exports.classList = function classList(req, res, next) {
