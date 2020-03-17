@@ -142,6 +142,7 @@ module.exports.memberClassHistory = async function memberClassHistory(req, res, 
 
 module.exports.classSchedule = async function classSchedule(req, res, next) {
   let body = {};
+  let response = {};
   let token = req.swagger.params['token'].value;
   if (token !== null) {
     let a = await checkToken(token);
