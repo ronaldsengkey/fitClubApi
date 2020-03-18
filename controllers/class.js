@@ -230,30 +230,52 @@ module.exports.placeList = function placeList(req, res, next) {
 };
 
 
-module.exports.memberClass = function memberClass(req, res, next) {
+module.exports.memberClass = async function memberClass(req, res, next) {
   let token = req.swagger.params['token'].value;
   let body = {};
-  if (token !== null) {
-    let cek = 
-    jwt.verify(token, publicKEY, signOptions, function (err, callback) {
-      if (err) {
-        console.log("not valid", err);
-        response = {
-          "responseCode": process.env.UNAUTHORIZED_RESPONSE,
-          "responseMessage": process.env.UNAUTH_MESSAGE
-        }
-        utils.writeJson(res, response);
-      } else {
-        body.profile = callback;
-        model.memberClass(body)
+  try{
+    if (token !== null) {
+      let a = await checkToken(token);
+      switch(a){
+        case process.env.UNAUTHORIZED_RESPONSE:
+          response = {
+            "responseCode": process.env.UNAUTHORIZED_RESPONSE,
+            "responseMessage": process.env.UNAUTH_MESSAGE
+          } 
+          utils.writeJson(res, response);
+          break;
+        case process.env.ERRORINTERNAL_RESPONSE:
+          response = {
+            "responseCode": process.env.UNAUTHORIZED_RESPONSE,
+            "responseMessage": process.env.UNAUTH_MESSAGE
+          }
+          utils.writeJson(res, response);
+          break
+        default:
+          body.profile = a;
+          model.memberClass(body)
           .then(function (response) {
             utils.writeJson(res, response);
           })
           .catch(function (response) {
             utils.writeJson(res, response);
           });
+          break;
       }
-    })
+    }else{
+      response = {
+        "responseCode": process.env.UNAUTHORIZED_RESPONSE,
+        "responseMessage": process.env.UNAUTH_MESSAGE
+      }
+      utils.writeJson(res, response);
+    }
+  }catch(err){
+    console.log(err);
+    response = {
+      "responseCode": process.env.ERRORINTERNAL_RESPONSE,
+      "responseMessage": process.env.INTERNALERROR_MESSAGE
+    }
+    utils.writeJson(res, response);
   }
 };
 

@@ -204,8 +204,8 @@ exports.coachClassHistory = function (data) {
 exports.memberClassHistory = function (data) {
     return new Promise(async function (resolve, reject) {
         try {
-            let query = "SELECT ma.*, cs.class as classId, cs.coach as coachId, u1.name as coachName, cs.startTime, cs.endTime, cs.startDate, cs.endDate, c.name as className from memberactivity ma JOIN classschedule cs ON cs.id = ma.scheduleId JOIN classlist c ON c.id = cs.class JOIN coach co ON co.id = cs.coach JOIN user u1 ON u1.id = co.userId JOIN member m ON m.id = ma.memberId JOIN user u2 ON u2.id = ma.memberId WHERE u2.id = ? AND m.userid = ?";
-            await db.query(query, [data.profile.id, data.profile.id], (err, result) => {
+            let query = "SELECT ma.*, cs.class as classId, cs.coach as coachId, u1.name as coachName, cs.startTime, cs.endTime, cs.startDate, cs.endDate, c.name as className from memberactivity ma JOIN classschedule cs ON cs.id = ma.scheduleId JOIN classlist c ON c.id = cs.class JOIN coach co ON co.id = cs.coach JOIN user u1 ON u1.id = co.userId JOIN member m ON m.id = ma.memberId JOIN user u2 On u2.id = m.userId WHERE u2.id = ? AND m.userId = ? AND m.id = ?";
+            await db.query(query, [data.profile.id, data.profile.id, data.profile.memberId], (err, result) => {
                 if (err) {
                     console.log("error get member class", err)
                     message = {
@@ -284,8 +284,8 @@ exports.memberClassBooked = function (data) {
 exports.memberClass = function (data) {
     return new Promise(async function (resolve, reject) {
         try {
-            let query = "SELECT cm.*, c.name, c.descript, ch.id as coachid, u.name as coachname, u.gender as coachgender FROM classmember cm JOIN classlist c ON c.id JOIN classschedule cs ON cs.class = c.id JOIN coach ch ON ch.id = cs.coach JOIN user u ON u.id = ch.userId WHERE cm.membercat = ?";
-            await db.query(query, [data.profile.memberCat], (err, result) => {
+            let query = "SELECT cs.class as classId, c.name as className, p.name as placeName, p.location, cs.coach as coachId, u1.name as coachName, cs.startTime, cs.endTime, cs.startDate, cs.endDate, cs.placeId, cm.membercat as memberCatId FROM classschedule cs JOIN classlist c ON c.id = cs.class JOIN classmember cm ON cm.classId = c.id JOIN coach co ON co.id = cs.coach JOIN user u1 ON u1.id = co.userId JOIN place p ON p.id = cs.placeId WHERE cm.membercat = ? GROUP BY c.id";
+           await db.query(query, [data.profile.memberCat], (err, result) => {
                 if (err) {
                     console.log("error get member class", err)
                     message = {
