@@ -297,6 +297,7 @@ exports.coachUpdate = function (data) {
                     let m = await matchingScheduleSwitch(data);
                     switch(m.responseCode){
                         case process.env.SUCCESS_RESPONSE:
+                            // =====> request switch class
                             message = await updateCoachClassSchedule(data);
                             resolve(message);
                             break;
