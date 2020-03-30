@@ -121,6 +121,7 @@ exports.loginAccess = function loginAccess(data) {
                         memberId: ev.data.memberId,
                         partnerId: ev.data.partnerId,
                         coachId: ev.data.coachId,
+                        specialization:ev.data.specialization,
                         memberCode: ev.data.memberCode,
                         joinMemberDate: ev.data.joinDate,
                         endMemberDate: ev.data.endDate,

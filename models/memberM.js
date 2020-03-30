@@ -142,7 +142,7 @@ exports.personalRecord = function (data) {
             console.log(data)
             const pr = "INSERT INTO personalrecord SET ?";
             await con.query(pr, {
-                "memberId": parseInt(data.profile.id),
+                "memberId": parseInt(data.profile.memberId),
                 "prCat": parseInt(data.prCat),
                 "value": data.dataValue
             }, (err, result) => {
@@ -185,8 +185,8 @@ exports.getPersonalRecord = function (data) {
     return new Promise(async function (resolve, reject) {
         try {
             if (data.param == "all") {
-                const pr = "SELECT * FROM personalrecord pr INNER JOIN member m ON pr.memberId = m.id INNER JOIN user u ON u.id = m.userId INNER JOIN personalrecordcategory prc ON prc.id = pr.prCat";
-                await con.query(pr, (err, result) => {
+                const pr = "SELECT prc.categoryName, pr.value, pr.memberId, u.name as userName FROM personalrecord pr JOIN member m ON pr.memberId = m.id JOIN user u ON u.id = m.userId JOIN personalrecordcategory prc ON prc.id = pr.prCat WHERE pr.memberId = ? ";
+                await con.query(pr, [data.profile.memberId], (err, result) => {
                     if (!err) {
                         if (result.length > 0) {
                             console.log("Success get all personal record")

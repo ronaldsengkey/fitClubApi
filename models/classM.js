@@ -285,6 +285,7 @@ exports.memberClass = function (data) {
     return new Promise(async function (resolve, reject) {
         try {
             let query = "SELECT cs.class as classId, c.name as className, p.name as placeName, p.location, cs.coach as coachId, u1.name as coachName, cs.startTime, cs.endTime, cs.startDate, cs.endDate, cs.placeId, cm.membercat as memberCatId FROM classschedule cs JOIN classlist c ON c.id = cs.class JOIN classmember cm ON cm.classId = c.id JOIN coach co ON co.id = cs.coach JOIN user u1 ON u1.id = co.userId JOIN place p ON p.id = cs.placeId WHERE cm.membercat = ? GROUP BY c.id";
+            console.log("wkwkwkwkwkwkwk", data);
            await db.query(query, [data.profile.memberCat], (err, result) => {
                 if (err) {
                     console.log("error get member class", err)

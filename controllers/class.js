@@ -252,8 +252,7 @@ module.exports.memberClass = async function memberClass(req, res, next) {
           utils.writeJson(res, response);
           break
         default:
-          body.profile = a;
-          model.memberClass(body)
+          model.memberClass(a)
           .then(function (response) {
             utils.writeJson(res, response);
           })
