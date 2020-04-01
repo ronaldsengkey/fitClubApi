@@ -6,46 +6,54 @@ let query = '',
         return new Promise(async function (resolve, reject) {
         query = "UPDATE switchschedulerequest SET status = ? WHERE toCoachId = ? AND id = ? ";
         let param = [data.action,data.profile.coachId, data.switchId];
-        await con.query(query,param, async function (err, result){
-            if (err) {
-                console.log("error get data", err);
-                message = {
-                    "responseCode": process.env.ERRORINTERNAL_RESPONSE,
-                    "responseMessage": process.env.INTERNALERROR_MESSAGE
-                };
-                resolve(message);
-            } else {
-                if(result.affectedRows > 0){
-                    let a = await getDataSCR(data);
-                    switch(a.responseCode){
-                        case "200":
-                            a.data[0].coachId = data.profile.coachId;
-                            if(data.action == "yes"){
-                                // change schedule
-                                let b = await updateClassSchedule(a.data[0]);
-                                resolve(b);
-                            }else{            
-                                message = {
-                                    "responseCode": process.env.SUCCESS_RESPONSE,
-                                    "responseMessage": process.env.SUCCESS_MESSAGE
-                                };
-                                resolve(message);
-                            }
-                            break;
-                        default:
-                            resolve(a);
-                            break;
-                    }
-                }else{
-                    console.log("error get data", result);
+        try{
+            await con.query(query,param, async function (err, result){
+                if (err) {
+                    console.log("ERRRORRR", err);
                     message = {
                         "responseCode": process.env.ERRORINTERNAL_RESPONSE,
                         "responseMessage": process.env.INTERNALERROR_MESSAGE
                     };
                     resolve(message);
+                } else {
+                    if(result.affectedRows > 0){
+                        let a = await getDataSCR(data);
+                        switch(a.responseCode){
+                            case "200":
+                                a.data[0].coachId = data.profile.coachId;
+                                if(data.action == "yes"){
+                                    let b = await updateClassSchedule(a.data[0]);
+                                    message = b;
+                                }else{            
+                                    message = {
+                                        "responseCode": process.env.SUCCESS_RESPONSE,
+                                        "responseMessage": process.env.SUCCESS_MESSAGE
+                                    };
+                                }
+                                break;
+                            default:
+                                message = a;
+                                break;
+                        }
+                        console.log(message)
+                        resolve(message);
+                    }else{
+                        message = {
+                            "responseCode": process.env.NOTACCEPT_RESPONSE,
+                            "responseMessage": "Oopss data doesn't match, Please try again"
+                        };
+                        resolve(message);
+                    }
                 }
-            }
-        })
+            })
+        }catch(err){
+            console.log(err)
+            message = {
+                "responseCode": process.env.ERRORINTERNAL_RESPONSE,
+                "responseMessage": process.env.INTERNALERROR_MESSAGE
+            };
+            resolve(message);
+        }
     })
 }
 
@@ -325,6 +333,7 @@ exports.coachUpdate = function (data) {
                     message = await switchResponse(data);
                     break;
             }
+            resolve(message);
         }catch(err){
             console.log("error coachUpdate =>",err)
             message = {
