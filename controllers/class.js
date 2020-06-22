@@ -18,32 +18,65 @@ let signOptions = {
   algorithm: "RS256"
 };
 
-async function checkToken(token){
-  try{
+async function checkToken(token) {
+  try {
     let a = await ct.checkToken(token);
     return a;
-  }catch(err){
+  } catch (err) {
     console.log("error check token", err);
     return process.env.ERRORINTERNAL_RESPONSE;
+  }
+}
+
+module.exports.operation = async function operation(req, res, next) {
+  let token = req.swagger.params['token'].value;
+  let m = req.swagger.params['method'].value;
+  var data = req.swagger.params['body'].value;
+  let response = {};
+  try {
+    let a = await checkToken(token);
+    data.profile = a.profile;
+    data.method = m;
+    switch (a.responseCode) {
+      case process.env.UNAUTHORIZED_RESPONSE:
+        response = {
+          "responseCode": process.env.UNAUTHORIZED_RESPONSE,
+          "responseMessage": process.env.UNAUTH_MESSAGE
+        }
+        break;
+      case process.env.ERRORINTERNAL_RESPONSE:
+        response = {
+          "responseCode": process.env.UNAUTHORIZED_RESPONSE,
+          "responseMessage": process.env.UNAUTH_MESSAGE
+        }
+        break
+      default:
+        response = await model.operation(data);
+        break;
+    }
+    utils.writeJson(res, response);
+  } catch (err) {
+    console.log("error get schedule on partner place", err)
+    utils.writeJson(res, process.env.ERRORINTERNAL_RESPONSE);
   }
 }
 
 module.exports.partnerClass = async function partnerClass(req, res, next) {
   let token = req.swagger.params['token'].value;
   let param = req.swagger.params['param'].value;
-  try{
+  try {
     let response = {};
     let data = {};
     let b = JSON.parse(param);
     data.param = b;
     let a = await checkToken(token);
     data.profile = a.profile;
-    switch(a){
+    switch (a) {
       case process.env.UNAUTHORIZED_RESPONSE:
         response = {
           "responseCode": process.env.UNAUTHORIZED_RESPONSE,
           "responseMessage": process.env.UNAUTH_MESSAGE
-        } 
+        }
         break;
       case process.env.ERRORINTERNAL_RESPONSE:
         response = {
@@ -56,7 +89,7 @@ module.exports.partnerClass = async function partnerClass(req, res, next) {
         break;
     }
     utils.writeJson(res, response);
-  }catch(err){
+  } catch (err) {
     console.log("error get schedule on partner place", err)
     utils.writeJson(res, process.env.ERRORINTERNAL_RESPONSE);
   }
@@ -66,10 +99,10 @@ module.exports.coachClassHistory = async function coachClassHistory(req, res, ne
   let token = req.swagger.params['token'].value;
   let body = {};
   body.token = token;
-  try{
+  try {
     if (token !== null) {
-      let cek  = await checkToken(token);
-      switch(cek.responseCode){
+      let cek = await checkToken(token);
+      switch (cek.responseCode) {
         case process.env.UNAUTHORIZED_RESPONSE:
           utils.writeJson(res, cek);
           break;
@@ -83,7 +116,7 @@ module.exports.coachClassHistory = async function coachClassHistory(req, res, ne
           break;
       }
     }
-  }catch(err){
+  } catch (err) {
     console.log("error get class history of coach", err);
     utils.writeJson(res, process.env.ERRORINTERNAL_RESPONSE);
   }
@@ -96,7 +129,7 @@ module.exports.memberClassBooked = async function memberClassBooked(req, res, ne
   body.token = token;
   if (token !== null) {
     let cek = checkToken(token);
-    switch(cek.responseCode){
+    switch (cek.responseCode) {
       case process.env.UNAUTHORIZED_RESPONSE:
         utils.writeJson(res, cek);
         break;
@@ -109,7 +142,7 @@ module.exports.memberClassBooked = async function memberClassBooked(req, res, ne
         utils.writeJson(res, mcb);
         break;
     }
-  }else{
+  } else {
     response = {
       "responseCode": process.env.UNAUTHORIZED_RESPONSE,
       "responseMessage": process.env.UNAUTH_MESSAGE
@@ -120,11 +153,13 @@ module.exports.memberClassBooked = async function memberClassBooked(req, res, ne
 
 module.exports.memberClassHistory = async function memberClassHistory(req, res, next) {
   let token = req.swagger.params['token'].value;
+  let request = req.swagger.params['request'].value;
+
   let body = {};
   body.token = token;
   if (token !== null) {
-    let cek  = await checkToken(token);
-    switch(cek.responseCode){
+    let cek = await checkToken(token);
+    switch (cek.responseCode) {
       case process.env.UNAUTHORIZED_RESPONSE:
         utils.writeJson(res, cek);
         break;
@@ -132,6 +167,9 @@ module.exports.memberClassHistory = async function memberClassHistory(req, res, 
         utils.writeJson(res, cek);
         break;
       default:
+        if (request) {
+          body.request = request;
+        }
         body.profile = cek.profile;
         let cch = await model.memberClassHistory(body);
         utils.writeJson(res, cch);
@@ -146,12 +184,12 @@ module.exports.classSchedule = async function classSchedule(req, res, next) {
   let token = req.swagger.params['token'].value;
   if (token !== null) {
     let a = await checkToken(token);
-    switch(a){
+    switch (a.responseCode) {
       case process.env.UNAUTHORIZED_RESPONSE:
         response = {
           "responseCode": process.env.UNAUTHORIZED_RESPONSE,
           "responseMessage": process.env.UNAUTH_MESSAGE
-        } 
+        }
         break;
       case process.env.ERRORINTERNAL_RESPONSE:
         response = {
@@ -161,7 +199,7 @@ module.exports.classSchedule = async function classSchedule(req, res, next) {
         break
       default:
         body.profile = a.profile;
-        if(req.swagger.params['param'].value){
+        if (req.swagger.params['param'].value) {
           body.param = JSON.parse(req.swagger.params['param'].value);
         }
         let cs = await model.classSchedule(body);
@@ -169,7 +207,7 @@ module.exports.classSchedule = async function classSchedule(req, res, next) {
         break;
     }
     utils.writeJson(res, response);
-  }else{
+  } else {
     response = {
       "responseCode": process.env.UNAUTHORIZED_RESPONSE,
       "responseMessage": process.env.UNAUTH_MESSAGE
@@ -180,12 +218,14 @@ module.exports.classSchedule = async function classSchedule(req, res, next) {
 
 module.exports.classList = function classList(req, res, next) {
   // let token = req.swagger.params['token'].value;
+  // let method = req.swagger.params['method'].value;
+
   let param = {};
-  if(req.swagger.params['param'].value){
+  if (req.swagger.params['param'].value) {
     param.param = req.swagger.params['param'].value;
-  }else if(req.swagger.params['byClassId'].value){
+  } else if (req.swagger.params['byClassId'].value) {
     param.classId = req.swagger.params['byClassId'].value;
-  }else if(req.swagger.params['byDate'].value){
+  } else if (req.swagger.params['byDate'].value) {
     param.date = req.swagger.params['byDate'].value;
   }
   let body = {};
@@ -193,55 +233,28 @@ module.exports.classList = function classList(req, res, next) {
   body.byDate = param.date;
   body.param = param.param;
   model.classList(body)
-  .then(function (response) {
-    utils.writeJson(res, response);
-  })
-  .catch(function (response) {
-    utils.writeJson(res, response);
-  });
+    .then(function (response) {
+      utils.writeJson(res, response);
+    })
+    .catch(function (response) {
+      utils.writeJson(res, response);
+    });
 };
 
-module.exports.placeList = function placeList(req, res, next) {
-  let token = req.swagger.params['token'].value;
-  let body = {};
-  body.token = token;
-  // if (token !== null) {
-    // jwt.verify(token, publicKEY, signOptions, function (err, callback) {
-      // if (err) {
-      //   console.log("not valid", err);
-      //   response = {
-      //     "responseCode": process.env.UNAUTHORIZED_RESPONSE,
-      //     "responseMessage": process.env.UNAUTH_MESSAGE
-      //   }
-      //   utils.writeJson(res, response);
-      // } else {
-        console.log("valid");
-        // body.profile = callback.profile;
-        model.placeList()
-          .then(function (response) {
-            utils.writeJson(res, response);
-          })
-          .catch(function (response) {
-            utils.writeJson(res, response);
-          });
-      // }
-    // })
-  // }
-};
 
 
 module.exports.memberClass = async function memberClass(req, res, next) {
   let token = req.swagger.params['token'].value;
   let body = {};
-  try{
+  try {
     if (token !== null) {
       let a = await checkToken(token);
-      switch(a){
+      switch (a.responseCode) {
         case process.env.UNAUTHORIZED_RESPONSE:
           response = {
             "responseCode": process.env.UNAUTHORIZED_RESPONSE,
             "responseMessage": process.env.UNAUTH_MESSAGE
-          } 
+          }
           utils.writeJson(res, response);
           break;
         case process.env.ERRORINTERNAL_RESPONSE:
@@ -253,22 +266,22 @@ module.exports.memberClass = async function memberClass(req, res, next) {
           break
         default:
           model.memberClass(a)
-          .then(function (response) {
-            utils.writeJson(res, response);
-          })
-          .catch(function (response) {
-            utils.writeJson(res, response);
-          });
+            .then(function (response) {
+              utils.writeJson(res, response);
+            })
+            .catch(function (response) {
+              utils.writeJson(res, response);
+            });
           break;
       }
-    }else{
+    } else {
       response = {
         "responseCode": process.env.UNAUTHORIZED_RESPONSE,
         "responseMessage": process.env.UNAUTH_MESSAGE
       }
       utils.writeJson(res, response);
     }
-  }catch(err){
+  } catch (err) {
     console.log(err);
     response = {
       "responseCode": process.env.ERRORINTERNAL_RESPONSE,
@@ -287,12 +300,12 @@ module.exports.classDetail = async function classDetail(req, res, next) {
   };
   if (token !== null) {
     let a = await checkToken(token);
-    switch(a){
+    switch (a.responseCode) {
       case process.env.UNAUTHORIZED_RESPONSE:
         response = {
           "responseCode": process.env.UNAUTHORIZED_RESPONSE,
           "responseMessage": process.env.UNAUTH_MESSAGE
-        } 
+        }
         break;
       case process.env.ERRORINTERNAL_RESPONSE:
         response = {
@@ -306,7 +319,7 @@ module.exports.classDetail = async function classDetail(req, res, next) {
         break;
     }
     utils.writeJson(res, response);
-  }else{
+  } else {
     response = {
       "responseCode": process.env.UNAUTHORIZED_RESPONSE,
       "responseMessage": process.env.UNAUTH_MESSAGE

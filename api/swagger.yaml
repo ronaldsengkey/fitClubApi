@@ -13,52 +13,49 @@ info:
 host: "petstore.swagger.io"
 basePath: "/ronaldSengkey/fitClub/api/v1"
 tags:
-- name: "account"
-  description: "Fitclub account"
-- name: "member"
-  description: "Fitclub member"
-- name: "coach"
-  description: "Fitclub coach"
-- name: "class"
-  description: "Fitclub class"
-- name: "activity"
-  description: "Fitclub member adn coach activity"
-- name: "place"
-  description: "Fitclub place"
-- name: "partner"
-  description: "Fitclub coach"
-- name: "transaction"
-  description: "Fitclub transaction"
+  - name: "account"
+    description: "Fitclub account"
+  - name: "member"
+    description: "Fitclub member"
+  - name: "coach"
+    description: "Fitclub coach"
+  - name: "class"
+    description: "Fitclub class"
+  - name: "activity"
+    description: "Fitclub member adn coach activity"
+  - name: "partner"
+    description: "Fitclub coach"
+  - name: "transaction"
+    description: "Fitclub transaction"
 schemes:
-- "https"
-- "http"
+  - "https"
+  - "http"
 
 paths:
-
   /partner/member/{param}/{token}:
     get:
       tags:
-      - "partner"
+        - "partner"
       summary: "Add new place off partner"
       operationId: "partnerMember"
       consumes:
-      - "multipart/form-data"
-      - "application/x-www-form-urlencoded"
-      - "application/json"
+        - "multipart/form-data"
+        - "application/x-www-form-urlencoded"
+        - "application/json"
       produces:
-      - "application/xml"
-      - "application/json"
+        - "application/xml"
+        - "application/json"
       parameters:
-      - name: "token"
-        in: "path"
-        description: "token of partner"
-        required: true
-        type: "string"
-      - name: "param"
-        in: "path"
-        description: "parameter filter"
-        required: true
-        type: "string"
+        - name: "token"
+          in: "path"
+          description: "token of partner"
+          required: true
+          type: "string"
+        - name: "param"
+          in: "path"
+          description: "parameter filter"
+          required: true
+          type: "string"
       responses:
         200:
           description: "successful operation"
@@ -73,27 +70,27 @@ paths:
   /partner/class/{param}/{token}:
     get:
       tags:
-      - "member"
+        - "member"
       summary: "Add new place off partner"
       operationId: "partnerClass"
       consumes:
-      - "multipart/form-data"
-      - "application/x-www-form-urlencoded"
-      - "application/json"
+        - "multipart/form-data"
+        - "application/x-www-form-urlencoded"
+        - "application/json"
       produces:
-      - "application/xml"
-      - "application/json"
+        - "application/xml"
+        - "application/json"
       parameters:
-      - name: "token"
-        in: "path"
-        description: "token of partner"
-        required: true
-        type: "string"
-      - name: "param"
-        in: "path"
-        description: "parameter filter"
-        required: true
-        type: "string"
+        - name: "token"
+          in: "path"
+          description: "token of partner"
+          required: true
+          type: "string"
+        - name: "param"
+          in: "path"
+          description: "parameter filter"
+          required: true
+          type: "string"
       responses:
         200:
           description: "successful operation"
@@ -108,33 +105,33 @@ paths:
   /coach/{param}/{token}:
     put:
       tags:
-      - "coach"
+        - "coach"
       summary: "Update service for coach"
       operationId: "coachUpdate"
       consumes:
-      - "multipart/form-data"
-      - "application/x-www-form-urlencoded"
-      - "application/json"
+        - "multipart/form-data"
+        - "application/x-www-form-urlencoded"
+        - "application/json"
       produces:
-      - "application/xml"
-      - "application/json"
+        - "application/xml"
+        - "application/json"
       parameters:
-      - name: "token"
-        in: "path"
-        description: "token of partner"
-        required: true
-        type: "string"
-      - name: "param"
-        in: "path"
-        description: "parameter filter"
-        required: true
-        type: "string"
-      - in: "body"
-        name: "body"
-        description: "data credential guest"
-        required: true
-        schema:
-          $ref: "#/definitions/coachUpdateParam"
+        - name: "token"
+          in: "path"
+          description: "token of partner"
+          required: true
+          type: "string"
+        - name: "param"
+          in: "path"
+          description: "parameter filter"
+          required: true
+          type: "string"
+        - in: "body"
+          name: "body"
+          description: "data credential guest"
+          required: true
+          schema:
+            $ref: "#/definitions/coachUpdateParam"
       responses:
         200:
           description: "successful operation"
@@ -148,27 +145,27 @@ paths:
 
     get:
       tags:
-      - "coach"
+        - "coach"
       summary: "Add new place off partner"
       operationId: "coachList"
       consumes:
-      - "multipart/form-data"
-      - "application/x-www-form-urlencoded"
-      - "application/json"
+        - "multipart/form-data"
+        - "application/x-www-form-urlencoded"
+        - "application/json"
       produces:
-      - "application/xml"
-      - "application/json"
+        - "application/xml"
+        - "application/json"
       parameters:
-      - name: "token"
-        in: "path"
-        description: "token of partner"
-        required: true
-        type: "string"
-      - name: "param"
-        in: "path"
-        description: "parameter filter"
-        required: true
-        type: "string"
+        - name: "token"
+          in: "path"
+          description: "token of partner"
+          required: true
+          type: "string"
+        - name: "param"
+          in: "path"
+          description: "parameter filter"
+          required: true
+          type: "string"
       responses:
         200:
           description: "successful operation"
@@ -183,28 +180,28 @@ paths:
   /addPlace/{token}:
     post:
       tags:
-      - "partner"
+        - "partner"
       summary: "Add new place off partner"
       operationId: "addPlace"
       consumes:
-      - "multipart/form-data"
-      - "application/x-www-form-urlencoded"
-      - "application/json"
+        - "multipart/form-data"
+        - "application/x-www-form-urlencoded"
+        - "application/json"
       produces:
-      - "application/xml"
-      - "application/json"
+        - "application/xml"
+        - "application/json"
       parameters:
-      - name: "token"
-        in: "path"
-        description: "token of partner"
-        required: true
-        type: "string"
-      - in: "body"
-        name: "body"
-        description: "data credential guest"
-        required: true
-        schema:
-          $ref: "#/definitions/addPlaceParam"
+        - name: "token"
+          in: "path"
+          description: "token of partner"
+          required: true
+          type: "string"
+        - in: "body"
+          name: "body"
+          description: "data credential guest"
+          required: true
+          schema:
+            $ref: "#/definitions/addPlaceParam"
       responses:
         200:
           description: "successful operation"
@@ -219,29 +216,29 @@ paths:
   /partner/profile/{token}:
     get:
       tags:
-      - "partner"
+        - "partner"
       summary: "profile account"
       description: ""
       operationId: "partnerProfile"
       consumes:
-      - "multipart/form-data"
-      - "application/x-www-form-urlencoded"
-      - "application/json"
+        - "multipart/form-data"
+        - "application/x-www-form-urlencoded"
+        - "application/json"
       produces:
-      - "application/xml"
-      - "application/json"
+        - "application/xml"
+        - "application/json"
       parameters:
-      - name: "token"
-        in: "path"
-        description: "token of member device"
-        required: true
-        type: "string"
-      - in: "body"
-        name: "body"
-        description: "data credential guest"
-        required: true
-        schema:
-          $ref: "#/definitions/loginParam"
+        - name: "token"
+          in: "path"
+          description: "token of member device"
+          required: true
+          type: "string"
+        - in: "body"
+          name: "body"
+          description: "data credential guest"
+          required: true
+          schema:
+            $ref: "#/definitions/loginParam"
       responses:
         200:
           description: "successful operation"
@@ -256,24 +253,24 @@ paths:
   /login:
     post:
       tags:
-      - "account"
+        - "account"
       summary: "Login account"
       description: ""
       operationId: "loginAccess"
       consumes:
-      - "multipart/form-data"
-      - "application/x-www-form-urlencoded"
-      - "application/json"
+        - "multipart/form-data"
+        - "application/x-www-form-urlencoded"
+        - "application/json"
       produces:
-      - "application/xml"
-      - "application/json"
+        - "application/xml"
+        - "application/json"
       parameters:
-      - in: "body"
-        name: "body"
-        description: "data credential guest"
-        required: true
-        schema:
-          $ref: "#/definitions/loginParam"
+        - in: "body"
+          name: "body"
+          description: "data credential guest"
+          required: true
+          schema:
+            $ref: "#/definitions/loginParam"
       responses:
         200:
           description: "successful operation"
@@ -288,23 +285,23 @@ paths:
   /otp:
     put:
       tags:
-      - "account"
+        - "account"
       summary: "otp confirmation"
       operationId: "confirmation"
       consumes:
-      - "multipart/form-data"
-      - "application/x-www-form-urlencoded"
-      - "application/json"
+        - "multipart/form-data"
+        - "application/x-www-form-urlencoded"
+        - "application/json"
       produces:
-      - "application/xml"
-      - "application/json"
+        - "application/xml"
+        - "application/json"
       parameters:
-      - in: "body"
-        name: "body"
-        description: "data credential guest"
-        required: true
-        schema:
-          $ref: "#/definitions/otpConfirmationSchema"
+        - in: "body"
+          name: "body"
+          description: "data credential guest"
+          required: true
+          schema:
+            $ref: "#/definitions/otpConfirmationSchema"
       responses:
         200:
           description: "successful operation"
@@ -314,28 +311,28 @@ paths:
               $ref: "#/definitions/notifSuccess"
         400:
           description: "Invalid status value"
-      x-swagger-router-controller: "account"    
+      x-swagger-router-controller: "account"
 
   /register:
     post:
       tags:
-      - "account"
+        - "account"
       summary: "Add new account"
       operationId: "addAccount"
       consumes:
-      - "multipart/form-data"
-      - "application/x-www-form-urlencoded"
-      - "application/json"
+        - "multipart/form-data"
+        - "application/x-www-form-urlencoded"
+        - "application/json"
       produces:
-      - "application/xml"
-      - "application/json"
+        - "application/xml"
+        - "application/json"
       parameters:
-      - in: "body"
-        name: "body"
-        description: "data credential guest"
-        required: true
-        schema:
-          $ref: "#/definitions/addAccountParam"
+        - in: "body"
+          name: "body"
+          description: "data credential guest"
+          required: true
+          schema:
+            $ref: "#/definitions/addAccountParam"
       responses:
         200:
           description: "successful operation"
@@ -350,24 +347,24 @@ paths:
   /member/join:
     post:
       tags:
-      - "member"
+        - "member"
       summary: "join membership"
       description: ""
       operationId: "joinMember"
       consumes:
-      - "multipart/form-data"
-      - "application/x-www-form-urlencoded"
-      - "application/json"
+        - "multipart/form-data"
+        - "application/x-www-form-urlencoded"
+        - "application/json"
       produces:
-      - "application/xml"
-      - "application/json"
+        - "application/xml"
+        - "application/json"
       parameters:
-      - in: "body"
-        name: "body"
-        description: "data credential guest"
-        required: true
-        schema:
-          $ref: "#/definitions/joinMemberParam"
+        - in: "body"
+          name: "body"
+          description: "data credential guest"
+          required: true
+          schema:
+            $ref: "#/definitions/joinMemberParam"
       responses:
         200:
           description: "successful operation"
@@ -382,22 +379,22 @@ paths:
   /member/fee/{token}:
     get:
       tags:
-      - "member"
+        - "member"
       summary: "fee of membership"
       description: ""
       operationId: "memberFee"
       consumes:
-      - "multipart/form-data"
-      - "application/x-www-form-urlencoded"
+        - "multipart/form-data"
+        - "application/x-www-form-urlencoded"
       produces:
-      - "application/xml"
-      - "application/json"
+        - "application/xml"
+        - "application/json"
       parameters:
-      - name: "token"
-        in: "path"
-        description: "token of member device"
-        required: true
-        type: "string"
+        - name: "token"
+          in: "path"
+          description: "token of member device"
+          required: true
+          type: "string"
       responses:
         200:
           description: "successful operation"
@@ -408,9 +405,9 @@ paths:
         400:
           description: "Invalid status value"
       security:
-      - petstore_auth:
-        - "write:pets"
-        - "read:pets"
+        - petstore_auth:
+            - "write:pets"
+            - "read:pets"
       x-swagger-router-controller: "member"
 
   /member/act:
@@ -448,24 +445,24 @@ paths:
 
     post:
       tags:
-      - "member"
+        - "member"
       summary: "fee of membership"
       description: ""
       operationId: "memberActivity"
       consumes:
-      - "multipart/form-data"
-      - "application/x-www-form-urlencoded"
-      - "application/json"
+        - "multipart/form-data"
+        - "application/x-www-form-urlencoded"
+        - "application/json"
       produces:
-      - "application/xml"
-      - "application/json"
+        - "application/xml"
+        - "application/json"
       parameters:
-      - in: "body"
-        name: "body"
-        description: "data credential guest"
-        required: true
-        schema:
-          $ref: "#/definitions/memberActivityParam"
+        - in: "body"
+          name: "body"
+          description: "data credential guest"
+          required: true
+          schema:
+            $ref: "#/definitions/memberActivityParam"
       responses:
         200:
           description: "Success"
@@ -474,31 +471,31 @@ paths:
         401:
           description: "Unauthorize"
       security:
-      - petstore_auth:
-        - "write:pets"
-        - "read:pets"
+        - petstore_auth:
+            - "write:pets"
+            - "read:pets"
       x-swagger-router-controller: "member"
-  
+
   /member/personalRecord/category/{token}:
     get:
       tags:
-      - "member"
+        - "member"
       summary: "Personal record"
       description: ""
       operationId: "getPersonalRecordCategory"
       consumes:
-      - "multipart/form-data"
-      - "application/x-www-form-urlencoded"
-      - "application/json"
+        - "multipart/form-data"
+        - "application/x-www-form-urlencoded"
+        - "application/json"
       produces:
-      - "application/xml"
-      - "application/json"
+        - "application/xml"
+        - "application/json"
       parameters:
-      - name: "token"
-        in: "path"
-        description: "token of member device"
-        required: true
-        type: "string"
+        - name: "token"
+          in: "path"
+          description: "token of member device"
+          required: true
+          type: "string"
       responses:
         200:
           description: "Success"
@@ -507,36 +504,36 @@ paths:
         401:
           description: "Unauthorize"
       security:
-      - petstore_auth:
-        - "write:pets"
-        - "read:pets"
+        - petstore_auth:
+            - "write:pets"
+            - "read:pets"
       x-swagger-router-controller: "member"
 
   /member/personalRecord/{token}:
     get:
       tags:
-      - "member"
+        - "member"
       summary: "Personal record"
       description: ""
       operationId: "getPersonalRecord"
       consumes:
-      - "multipart/form-data"
-      - "application/x-www-form-urlencoded"
-      - "application/json"
+        - "multipart/form-data"
+        - "application/x-www-form-urlencoded"
+        - "application/json"
       produces:
-      - "application/xml"
-      - "application/json"
+        - "application/xml"
+        - "application/json"
       parameters:
-      - name: "token"
-        in: "path"
-        description: "token of member device"
-        required: true
-        type: "string"
-      - name: "param" # all / {"prCat":""}
-        in: "header"
-        description: "token of member device"
-        required: true
-        type: "string"
+        - name: "token"
+          in: "path"
+          description: "token of member device"
+          required: true
+          type: "string"
+        - name: "param" # all / {"prCat":""}
+          in: "header"
+          description: "token of member device"
+          required: true
+          type: "string"
       responses:
         200:
           description: "Success"
@@ -545,36 +542,36 @@ paths:
         401:
           description: "Unauthorize"
       security:
-      - petstore_auth:
-        - "write:pets"
-        - "read:pets"
+        - petstore_auth:
+            - "write:pets"
+            - "read:pets"
       x-swagger-router-controller: "member"
 
     post:
       tags:
-      - "member"
+        - "member"
       summary: "Personal record"
       description: ""
       operationId: "personalRecord"
       consumes:
-      - "multipart/form-data"
-      - "application/x-www-form-urlencoded"
-      - "application/json"
+        - "multipart/form-data"
+        - "application/x-www-form-urlencoded"
+        - "application/json"
       produces:
-      - "application/xml"
-      - "application/json"
+        - "application/xml"
+        - "application/json"
       parameters:
-      - name: "token"
-        in: "path"
-        description: "token of member device"
-        required: true
-        type: "string"
-      - in: "body"
-        name: "body"
-        description: "data credential guest"
-        required: true
-        schema:
-          $ref: "#/definitions/personalRecordParam"
+        - name: "token"
+          in: "path"
+          description: "token of member device"
+          required: true
+          type: "string"
+        - in: "body"
+          name: "body"
+          description: "data credential guest"
+          required: true
+          schema:
+            $ref: "#/definitions/personalRecordParam"
       responses:
         200:
           description: "Success"
@@ -583,37 +580,37 @@ paths:
         401:
           description: "Unauthorize"
       security:
-      - petstore_auth:
-        - "write:pets"
-        - "read:pets"
+        - petstore_auth:
+            - "write:pets"
+            - "read:pets"
       x-swagger-router-controller: "member"
 
   /coach/class/schedule/{token}:
     post:
       tags:
-      - "coach"
+        - "coach"
       summary: "Create Schedule access"
       description: ""
-      operationId: "createSchedule" 
+      operationId: "createSchedule"
       consumes:
-      - "multipart/form-data"
-      - "application/x-www-form-urlencoded"
-      - "application/json"
+        - "multipart/form-data"
+        - "application/x-www-form-urlencoded"
+        - "application/json"
       produces:
-      - "application/xml"
-      - "application/json"
+        - "application/xml"
+        - "application/json"
       parameters:
-      - name: "token"
-        in: "path"
-        description: "token of member device"
-        required: true
-        type: "string"
-      - in: "body"
-        name: "body"
-        description: "data credential guest"
-        required: true
-        schema:
-          $ref: "#/definitions/createSchedule"
+        - name: "token"
+          in: "path"
+          description: "token of member device"
+          required: true
+          type: "string"
+        - in: "body"
+          name: "body"
+          description: "data credential guest"
+          required: true
+          schema:
+            $ref: "#/definitions/createSchedule"
       responses:
         200:
           description: "Success"
@@ -624,36 +621,36 @@ paths:
         404:
           description: "Data not found"
       x-swagger-router-controller: "coach"
-      
+
     get:
       tags:
-      - "coach"
+        - "coach"
       summary: "Get Schedule access"
       description: ""
-      operationId: "getSchedule" 
+      operationId: "getSchedule"
       consumes:
-      - "multipart/form-data"
-      - "application/x-www-form-urlencoded"
-      - "application/json"
+        - "multipart/form-data"
+        - "application/x-www-form-urlencoded"
+        - "application/json"
       produces:
-      - "application/xml"
-      - "application/json"
+        - "application/xml"
+        - "application/json"
       parameters:
-      - name: "token"
-        in: "path"
-        description: "token of member device"
-        required: true
-        type: "string"
-      - name: "filter"
-        in: "header"
-        description: "filter for class schedule"
-        required: false
-        type: "string"
-      - name: "classStatus"
-        in: "header"
-        description: "filter for class schedule"
-        required: false
-        type: "string"
+        - name: "token"
+          in: "path"
+          description: "token of member device"
+          required: true
+          type: "string"
+        - name: "filter"
+          in: "header"
+          description: "filter for class schedule"
+          required: false
+          type: "string"
+        - name: "classStatus"
+          in: "header"
+          description: "filter for class schedule"
+          required: false
+          type: "string"
       responses:
         200:
           description: "Success"
@@ -668,28 +665,28 @@ paths:
   /bank/{token}:
     get:
       tags:
-      - "coach"
+        - "coach"
       summary: "Registration access"
       description: ""
-      operationId: "getBank" 
+      operationId: "getBank"
       consumes:
-      - "multipart/form-data"
-      - "application/x-www-form-urlencoded"
-      - "application/json"
+        - "multipart/form-data"
+        - "application/x-www-form-urlencoded"
+        - "application/json"
       produces:
-      - "application/xml"
-      - "application/json"
+        - "application/xml"
+        - "application/json"
       parameters:
-      - name: "param"
-        in: "header"
-        description: "token of member device"
-        required: true
-        type: "string"
-      - name: "token"
-        in: "path"
-        description: "token of member device"
-        required: true
-        type: "string"
+        - name: "param"
+          in: "header"
+          description: "token of member device"
+          required: true
+          type: "string"
+        - name: "token"
+          in: "path"
+          description: "token of member device"
+          required: true
+          type: "string"
       responses:
         200:
           description: "Success"
@@ -701,27 +698,59 @@ paths:
           description: "Data not found"
       x-swagger-router-controller: "transaction"
 
-  
-  
   /place/{token}:
     get:
       tags:
-      - "coach"
+        - "partner"
       summary: "Registration access"
       description: ""
       operationId: "placeList"
       consumes:
-      - "multipart/form-data"
-      - "application/x-www-form-urlencoded"
-      - "application/json"
+        - "multipart/form-data"
+        - "application/x-www-form-urlencoded"
+        - "application/json"
       produces:
-      - "application/xml"
-      - "application/json"
+        - "application/xml"
+        - "application/json"
       parameters:
-      - name: "token"
-        in: "path"
-        required: true
-        type: "string"
+        - name: "token"
+          in: "path"
+          required: true
+          type: "string"
+      responses:
+        200:
+          description: "Success"
+        500:
+          description: "Internal error"
+        401:
+          description: "Unauthorize"
+        404:
+          description: "Data not found"
+      x-swagger-router-controller: "partner"
+
+  /class/schedule/{token}:
+    get:
+      tags:
+        - "coach"
+      summary: "Registration access"
+      description: ""
+      operationId: "classSchedule"
+      consumes:
+        - "multipart/form-data"
+        - "application/x-www-form-urlencoded"
+        - "application/json"
+      produces:
+        - "application/xml"
+        - "application/json"
+      parameters:
+        - name: "token"
+          in: "path"
+          required: true
+          type: "string"
+        - name: "param"
+          in: "header"
+          required: false
+          type: "string"
       responses:
         200:
           description: "Success"
@@ -732,72 +761,42 @@ paths:
         404:
           description: "Data not found"
       x-swagger-router-controller: "class"
-  
-  /class/schedule/{token}:
-    get:
-      tags:
-      - "coach"
-      summary: "Registration access"
-      description: ""
-      operationId: "classSchedule"
-      consumes:
-      - "multipart/form-data"
-      - "application/x-www-form-urlencoded"
-      - "application/json"
-      produces:
-      - "application/xml"
-      - "application/json"
-      parameters:
-      - name: "token"
-        in: "path"
-        required: true
-        type: "string"
-      - name: "param"
-        in: "header"
-        required: false
-        type: "string"
-      responses:
-        200:
-          description: "Success"
-        500:
-          description: "Internal error"
-        401:
-          description: "Unauthorize"
-        404:
-          description: "Data not found"
-      x-swagger-router-controller: "class"    
 
-  /class/{token}:
+  /class/{method}/{token}:
     get:
       tags:
-      - "coach"
+        - "class"
       summary: "Registration access"
       description: ""
       operationId: "classList"
       consumes:
-      - "multipart/form-data"
-      - "application/x-www-form-urlencoded"
-      - "application/json"
+        - "multipart/form-data"
+        - "application/x-www-form-urlencoded"
+        - "application/json"
       produces:
-      - "application/xml"
-      - "application/json"
+        - "application/xml"
+        - "application/json"
       parameters:
-      - name: "token"
-        in: "path"
-        required: true
-        type: "string"
-      - name: "byClassId"
-        in: "header"
-        required: false
-        type: "string"
-      - name: "byDate"
-        in: "header"
-        required: false
-        type: "string"
-      - name: "param"
-        in: "header"
-        required: false
-        type: "string"
+        - name: "token"
+          in: "path"
+          required: true
+          type: "string"
+        - name: "method"
+          in: "path"
+          required: true
+          type: "string"
+        - name: "byClassId"
+          in: "header"
+          required: false
+          type: "string"
+        - name: "byDate"
+          in: "header"
+          required: false
+          type: "string"
+        - name: "param"
+          in: "header"
+          required: false
+          type: "string"
       responses:
         200:
           description: "Success"
@@ -811,28 +810,32 @@ paths:
 
     post:
       tags:
-      - "coach"
+        - "class"
       summary: "Registration access"
       description: ""
-      operationId: "createClass"
+      operationId: "operation"
       consumes:
-      - "multipart/form-data"
-      - "application/x-www-form-urlencoded"
-      - "application/json"
+        - "multipart/form-data"
+        - "application/x-www-form-urlencoded"
+        - "application/json"
       produces:
-      - "application/xml"
-      - "application/json"
+        - "application/xml"
+        - "application/json"
       parameters:
-      - name: "token"
-        in: "path"
-        required: true
-        type: "string"
-      - in: "body"
-        name: "body"
-        description: "data credential guest"
-        required: true
-        schema:
-          $ref: "#/definitions/createClassParam"
+        - name: "token"
+          in: "path"
+          required: true
+          type: "string"
+        - name: "method"
+          in: "path"
+          required: true
+          type: "string"
+        - in: "body"
+          name: "body"
+          description: "data credential guest"
+          required: true
+          schema:
+            $ref: "#/definitions/createClassParam"
       responses:
         200:
           description: "Success"
@@ -847,22 +850,31 @@ paths:
   /class/memberClass/history/{token}:
     get:
       tags:
-      - "coach"
+        - "coach"
       summary: "Registration access"
       description: ""
       operationId: "memberClassHistory"
       consumes:
-      - "multipart/form-data"
-      - "application/x-www-form-urlencoded"
-      - "application/json"
+        - "multipart/form-data"
+        - "application/x-www-form-urlencoded"
+        - "application/json"
       produces:
-      - "application/xml"
-      - "application/json"
+        - "application/xml"
+        - "application/json"
       parameters:
-      - name: "token"
-        in: "path"
-        required: true
-        type: "string"
+        - name: "token"
+          in: "path"
+          required: true
+          type: "string"
+        - name: "request"
+          in: "header"
+          required: false
+          type: "string"
+        - name: "placeId"
+          in: "header"
+          required: false
+          type: "integer"
+          format: "int8"
       responses:
         200:
           description: "Success"
@@ -873,26 +885,26 @@ paths:
         404:
           description: "Data not found"
       x-swagger-router-controller: "class"
-  
+
   /class/coachClass/history/{token}:
     get:
       tags:
-      - "class"
+        - "class"
       summary: "Registration access"
       description: ""
       operationId: "coachClassHistory"
       consumes:
-      - "multipart/form-data"
-      - "application/x-www-form-urlencoded"
-      - "application/json"
+        - "multipart/form-data"
+        - "application/x-www-form-urlencoded"
+        - "application/json"
       produces:
-      - "application/xml"
-      - "application/json"
+        - "application/xml"
+        - "application/json"
       parameters:
-      - name: "token"
-        in: "path"
-        required: true
-        type: "string"
+        - name: "token"
+          in: "path"
+          required: true
+          type: "string"
       responses:
         200:
           description: "Success"
@@ -907,22 +919,22 @@ paths:
   /class/memberClass/{token}:
     get:
       tags:
-      - "coach"
+        - "coach"
       summary: "Registration access"
       description: ""
       operationId: "memberClass"
       consumes:
-      - "multipart/form-data"
-      - "application/x-www-form-urlencoded"
-      - "application/json"
+        - "multipart/form-data"
+        - "application/x-www-form-urlencoded"
+        - "application/json"
       produces:
-      - "application/xml"
-      - "application/json"
+        - "application/xml"
+        - "application/json"
       parameters:
-      - name: "token"
-        in: "path"
-        required: true
-        type: "string"
+        - name: "token"
+          in: "path"
+          required: true
+          type: "string"
       responses:
         200:
           description: "Success"
@@ -933,23 +945,22 @@ paths:
         404:
           description: "Data not found"
       x-swagger-router-controller: "class"
-    
 
   /class/detail/{token}/{classId}:
-      get:
-        tags:
+    get:
+      tags:
         - "coach"
-        summary: "Registration access"
-        description: ""
-        operationId: "classDetail"
-        consumes:
+      summary: "Registration access"
+      description: ""
+      operationId: "classDetail"
+      consumes:
         - "multipart/form-data"
         - "application/x-www-form-urlencoded"
         - "application/json"
-        produces:
+      produces:
         - "application/xml"
         - "application/json"
-        parameters:
+      parameters:
         - name: "token"
           in: "path"
           required: true
@@ -959,32 +970,32 @@ paths:
           required: true
           type: "integer"
           format: "int8"
-        responses:
-          200:
-            description: "Success"
-          500:
-            description: "Internal error"
-          401:
-            description: "Unauthorize"
-          404:
-            description: "Data not found"
-        x-swagger-router-controller: "class"
-  
+      responses:
+        200:
+          description: "Success"
+        500:
+          description: "Internal error"
+        401:
+          description: "Unauthorize"
+        404:
+          description: "Data not found"
+      x-swagger-router-controller: "class"
+
   /transaction/request/{param}/{token}:
-      get:
-        tags:
+    get:
+      tags:
         - "transaction"
-        summary: "Registration access"
-        description: ""
-        operationId: "transactionRequest"
-        consumes:
+      summary: "Registration access"
+      description: ""
+      operationId: "transactionRequest"
+      consumes:
         - "multipart/form-data"
         - "application/x-www-form-urlencoded"
         - "application/json"
-        produces:
+      produces:
         - "application/xml"
         - "application/json"
-        parameters:
+      parameters:
         - name: "token"
           in: "path"
           required: true
@@ -993,32 +1004,32 @@ paths:
           in: "path"
           required: true
           type: "string"
-        responses:
-          200:
-            description: "Success"
-          500:
-            description: "Internal error"
-          401:
-            description: "Unauthorize"
-          404:
-            description: "Data not found"
-        x-swagger-router-controller: "transaction"
+      responses:
+        200:
+          description: "Success"
+        500:
+          description: "Internal error"
+        401:
+          description: "Unauthorize"
+        404:
+          description: "Data not found"
+      x-swagger-router-controller: "transaction"
 
   /coach/confirmPayment/{token}:
-      post:
-        tags:
+    post:
+      tags:
         - "coach"
-        summary: "Registration access"
-        description: ""
-        operationId: "coachPaymentConfirm"
-        consumes:
+      summary: "Registration access"
+      description: ""
+      operationId: "coachPaymentConfirm"
+      consumes:
         - "multipart/form-data"
         - "application/x-www-form-urlencoded"
         - "application/json"
-        produces:
+      produces:
         - "application/xml"
         - "application/json"
-        parameters:
+      parameters:
         - name: "token"
           in: "path"
           required: true
@@ -1029,42 +1040,42 @@ paths:
           required: true
           schema:
             $ref: "#/definitions/confirmPaymentCoach"
-        responses:
-          200:
-            description: "Success"
-          500:
-            description: "Internal error"
-          401:
-            description: "Unauthorize"
-          404:
-            description: "Data not found"
-        x-swagger-router-controller: "transaction"
-        
+      responses:
+        200:
+          description: "Success"
+        500:
+          description: "Internal error"
+        401:
+          description: "Unauthorize"
+        404:
+          description: "Data not found"
+      x-swagger-router-controller: "transaction"
+
   /member/confirm/payment/{token}:
     post:
       tags:
-      - "transaction"
+        - "transaction"
       summary: "Registration access"
       description: ""
       operationId: "confirmPaymentMember"
       consumes:
-      - "multipart/form-data"
-      - "application/x-www-form-urlencoded"
-      - "application/json"
+        - "multipart/form-data"
+        - "application/x-www-form-urlencoded"
+        - "application/json"
       produces:
-      - "application/xml"
-      - "application/json"
+        - "application/xml"
+        - "application/json"
       parameters:
-      - name: "token"
-        in: "path"
-        required: true
-        type: "string"
-      - in: "body"
-        name: "body"
-        description: "data credential guest"
-        required: true
-        schema:
-          $ref: "#/definitions/confirmPaymentMember"
+        - name: "token"
+          in: "path"
+          required: true
+          type: "string"
+        - in: "body"
+          name: "body"
+          description: "data credential guest"
+          required: true
+          schema:
+            $ref: "#/definitions/confirmPaymentMember"
       responses:
         200:
           description: "Success"
@@ -1079,28 +1090,28 @@ paths:
   /member/payment/{token}:
     post:
       tags:
-      - "transaction"
+        - "transaction"
       summary: "Registration access"
       description: ""
       operationId: "memberPayment"
       consumes:
-      - "multipart/form-data"
-      - "application/x-www-form-urlencoded"
-      - "application/json"
+        - "multipart/form-data"
+        - "application/x-www-form-urlencoded"
+        - "application/json"
       produces:
-      - "application/xml"
-      - "application/json"
+        - "application/xml"
+        - "application/json"
       parameters:
-      - name: "token"
-        in: "path"
-        required: true
-        type: "string"
-      - in: "body"
-        name: "body"
-        description: "data credential guest"
-        required: true
-        schema:
-          $ref: "#/definitions/paymentParam"
+        - name: "token"
+          in: "path"
+          required: true
+          type: "string"
+        - in: "body"
+          name: "body"
+          description: "data credential guest"
+          required: true
+          schema:
+            $ref: "#/definitions/paymentParam"
       responses:
         200:
           description: "Success"
@@ -1115,32 +1126,32 @@ paths:
   /upload/{concern}/{token}:
     post:
       tags:
-      - "transaction"
+        - "transaction"
       summary: "Registration access"
       description: ""
       operationId: "uploadFiles"
       consumes:
-      - "multipart/form-data"
-      - "application/x-www-form-urlencoded"
-      - "application/json"
+        - "multipart/form-data"
+        - "application/x-www-form-urlencoded"
+        - "application/json"
       produces:
-      - "application/xml"
-      - "application/json"
+        - "application/xml"
+        - "application/json"
       parameters:
-      - name: "token"
-        in: "path"
-        required: true
-        type: "string"
-      - name: "concern" # payment, profile
-        in: "path"
-        required: true
-        type: "string"
-      - in: "body"
-        name: "body"
-        description: "data credential guest"
-        required: true
-        schema:
-          $ref: "#/definitions/uploadSchema"
+        - name: "token"
+          in: "path"
+          required: true
+          type: "string"
+        - name: "concern" # payment, profile
+          in: "path"
+          required: true
+          type: "string"
+        - in: "body"
+          name: "body"
+          description: "data credential guest"
+          required: true
+          schema:
+            $ref: "#/definitions/uploadSchema"
       responses:
         200:
           description: "Success"
@@ -1151,9 +1162,6 @@ paths:
         404:
           description: "Data not found"
       x-swagger-router-controller: "upload"
-
-  
-
 
 securityDefinitions:
   petstore_auth:
@@ -1169,7 +1177,6 @@ securityDefinitions:
     in: "header"
 
 definitions:
-  
   coachUpdateParam:
     type: "object"
     properties:
@@ -1205,6 +1212,9 @@ definitions:
   createClassParam:
     type: "object"
     properties:
+      classId:
+        type: "integer"
+        format: "int32"
       className:
         type: "string"
       description:
@@ -1265,7 +1275,6 @@ definitions:
         type: "string"
       file:
         type: "string"
-      
 
   addAccountParam:
     type: "object"
@@ -1301,8 +1310,6 @@ definitions:
         type: "string"
       description:
         type: "string"
-      
-      
 
   memberActivityParam:
     type: "object"
@@ -1349,8 +1356,6 @@ definitions:
         type: "string"
       placeId:
         type: "integer"
-  
-
 
   notifSuccess:
     type: "object"

@@ -19,16 +19,16 @@ let signOptions = {
   algorithm: "RS256"
 };
 
-async function checkToken(token){
-  try{
+async function checkToken(token) {
+  try {
     let a = await jwt.verify(token, publicKEY, signOptions);
-    if (a){
-      return a ;
-    }else{
-      console.log("not valid",a)
+    if (a) {
+      return a;
+    } else {
+      console.log("not valid", a)
       return process.env.UNAUTHORIZED_RESPONSE;
     }
-  }catch(err){
+  } catch (err) {
     console.log("error check token", err);
     return process.env.ERRORINTERNAL_RESPONSE;
   }
@@ -43,12 +43,12 @@ module.exports.partnerMember = async function partnerMember(req, res, next) {
       let a = await checkToken(token);
       data.profile = a;
       data.param = param;
-      switch(a){
+      switch (a) {
         case process.env.UNAUTHORIZED_RESPONSE:
           response = {
             "responseCode": process.env.UNAUTHORIZED_RESPONSE,
             "responseMessage": process.env.UNAUTH_MESSAGE
-          } 
+          }
           break;
         case process.env.ERRORINTERNAL_RESPONSE:
           response = {
@@ -62,22 +62,55 @@ module.exports.partnerMember = async function partnerMember(req, res, next) {
       }
       utils.writeJson(res, response);
     }
-  }catch(err){
+  } catch (err) {
     console.log("error get member of partner", err);
   }
 }
-module.exports.addPlace = async function addPlace(req, res, next) {
-  var token = req.swagger.params['token'].value;
-  var data = req.swagger.params['body'].value;
-  try{
+
+
+module.exports.placeList = async function placeList(req, res, next) {
+  let token = req.swagger.params['token'].value;
+  let body = {};
+  body.token = token;
+  try {
     let a = await checkToken(token);
     data.profile = a;
-    switch(a){
+    switch (a) {
       case process.env.UNAUTHORIZED_RESPONSE:
         response = {
           "responseCode": process.env.UNAUTHORIZED_RESPONSE,
           "responseMessage": process.env.UNAUTH_MESSAGE
-        } 
+        }
+        break;
+      case process.env.ERRORINTERNAL_RESPONSE:
+        response = {
+          "responseCode": process.env.UNAUTHORIZED_RESPONSE,
+          "responseMessage": process.env.UNAUTH_MESSAGE
+        }
+        break
+      default:
+        response = await model.placeList();
+        break;
+    }
+    utils.writeJson(res, response);
+  } catch (err) {
+    console.log(err);
+    utils.writeJson(res, err);
+  }
+};
+
+module.exports.addPlace = async function addPlace(req, res, next) {
+  var token = req.swagger.params['token'].value;
+  var data = req.swagger.params['body'].value;
+  try {
+    let a = await checkToken(token);
+    data.profile = a;
+    switch (a) {
+      case process.env.UNAUTHORIZED_RESPONSE:
+        response = {
+          "responseCode": process.env.UNAUTHORIZED_RESPONSE,
+          "responseMessage": process.env.UNAUTH_MESSAGE
+        }
         break;
       case process.env.ERRORINTERNAL_RESPONSE:
         response = {
@@ -90,7 +123,7 @@ module.exports.addPlace = async function addPlace(req, res, next) {
         break;
     }
     utils.writeJson(res, response);
-  }catch(err){
+  } catch (err) {
     console.log(err);
     utils.writeJson(res, err);
   }
@@ -102,12 +135,12 @@ module.exports.partnerProfile = async function partnerProfile(req, res, next) {
   try {
     if (token !== null) {
       let a = await checkToken(token);
-      switch(a){
+      switch (a) {
         case process.env.UNAUTHORIZED_RESPONSE:
           response = {
             "responseCode": process.env.UNAUTHORIZED_RESPONSE,
             "responseMessage": process.env.UNAUTH_MESSAGE
-          } 
+          }
           break;
         case process.env.ERRORINTERNAL_RESPONSE:
           response = {

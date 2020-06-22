@@ -121,7 +121,7 @@ exports.loginAccess = function loginAccess(data) {
                         memberId: ev.data.memberId,
                         partnerId: ev.data.partnerId,
                         coachId: ev.data.coachId,
-                        specialization:ev.data.specialization,
+                        specialization: ev.data.specialization,
                         memberCode: ev.data.memberCode,
                         joinMemberDate: ev.data.joinDate,
                         endMemberDate: ev.data.endDate,
@@ -156,7 +156,7 @@ exports.loginAccess = function loginAccess(data) {
                     }
                     resolve(message)
                 }
-            }else{
+            } else {
                 // message = {
                 //     "responseCode": process.env.SUCCESS_RESPONSE,
                 //     "responseMessage": "Login success",
@@ -197,32 +197,32 @@ async function addPartner(data) {
 function addCoach(data) {
     return new Promise(async function (resolve, reject) {
         try {
-        let na = {
-            userId: data.userId,
-            placeId: data.placeId,
-            specialization:data.specialization.join(),
-            status: 0
-        };
-        query = 'insert into coach set ? ';
-        let ac = await db.query(query, na, async function (err, res) {
-            if (err) {
-                console.log("error insert user data", err);
-                message = {
-                    "responseCode": process.env.ERRORINTERNAL_RESPONSE,
-                    "responseMessage": err.sqlMessage
+            let na = {
+                userId: data.userId,
+                placeId: data.placeId,
+                specialization: data.specialization.join(),
+                status: 0
+            };
+            query = 'insert into coach set ? ';
+            let ac = await db.query(query, na, async function (err, res) {
+                if (err) {
+                    console.log("error insert user data", err);
+                    message = {
+                        "responseCode": process.env.ERRORINTERNAL_RESPONSE,
+                        "responseMessage": err.sqlMessage
+                    }
+                    resolve(message);
+                } else {
+                    if (res.affectedRows > 0) {
+                        resolve(process.env.SUCCESS_RESPONSE);
+                    }
                 }
-                resolve(message);
-            } else {
-                if (res.affectedRows > 0) {
-                    resolve(process.env.SUCCESS_RESPONSE);
-                }
-            }
-        });
-    } catch (err) {
-        console.log("error add coach =>", err);
-        return (process.env.ERRORINTERNAL_RESPONSE);
-    }
-})
+            });
+        } catch (err) {
+            console.log("error add coach =>", err);
+            return (process.env.ERRORINTERNAL_RESPONSE);
+        }
+    })
 }
 
 async function generateToken(data) {
@@ -302,7 +302,11 @@ exports.addAccount = function addAccount(data) {
                     } else {
                         if (res.affectedRows > 0) {
                             if (data.filter == 'coach') {
-                                let param = {userId:res.insertId,placeId:data.placeId,specialization:data.specialization};
+                                let param = {
+                                    userId: res.insertId,
+                                    placeId: data.placeId,
+                                    specialization: data.specialization
+                                };
                                 const ac = await addCoach(param);
                                 if (ac == process.env.SUCCESS_RESPONSE) {
                                     message = {
@@ -315,7 +319,7 @@ exports.addAccount = function addAccount(data) {
                                     }
                                     resolve(message);
                                 }
-                            }else if(data.filter == 'partner'){
+                            } else if (data.filter == 'partner') {
                                 const ac = await addPartner(res.insertId);
                                 if (ac == process.env.SUCCESS_RESPONSE) {
                                     message = {
