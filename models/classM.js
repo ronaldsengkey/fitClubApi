@@ -7,7 +7,7 @@ exports.operation = function (data) {
         let dataContent = '';
         let query = '';
         try {
-            switch (m) {
+            switch (data.m) {
                 case "post":
                     query = "INSERT INTO classlist SET ?";
                     dataContent = {
