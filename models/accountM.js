@@ -69,14 +69,26 @@ exports.confirmation = function confirmation(data) {
            WHERE verificationCode = ? AND email = ? AND phone = ?`;
             db.query(query, [1, data.otpCode, data.email, data.phone], async function (err, res) {
                 if (err) {
-                    reject(process.env.ERRORINTERNAL_RESPONSE);
+                    message = {
+                        "responseCode": process.env.ERRORINTERNAL_RESPONSE,
+                        "responseMessage": "Otp failed"
+                    }
+                    resolve(message);
                 } else {
-                    resolve(process.env.SUCCESS_RESPONSE);
+                    message = {
+                        "responseCode": process.env.SUCCESS_RESPONSE,
+                        "responseMessage": "Otp confirmed"
+                    }
+                    resolve(message);
                 }
             })
         } catch (err) {
             console.log("check error =>", err)
-            reject(process.env.ERRORINTERNAL_RESPONSE);
+            message = {
+                "responseCode": process.env.ERRORINTERNAL_RESPONSE,
+                "responseMessage": "Otp failed"
+            }
+            resolve(message);
         }
     })
 }
