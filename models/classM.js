@@ -225,7 +225,7 @@ exports.memberClassHistory = function (data) {
         let dataContent = '';
         try {
             if (data.request == "all") {
-                query = "SELECT ma.*, cs.class as classId, cs.coach as coachId, u1.name as coachName, cs.startTime, cs.endTime, cs.startDate, cs.endDate, cs.placeId, p.name as placeName, c.name as className from memberactivity ma JOIN classschedule cs ON cs.id = ma.scheduleId JOIN classlist c ON c.id = cs.class JOIN coach co ON co.id = cs.coach JOIN user u1 ON u1.id = co.userId JOIN member m ON m.id = ma.memberId JOIN user u2 On u2.id = m.userId JOIN place p ON p.id = cs.placeId";
+                query = "SELECT ma.*, cs.class as classId, cs.coach as coachId, u1.name as coachName, cs.startTime, cs.endTime, cs.startDate, cs.endDate, cs.placeId, p.name as placeName, c.name as className, u2.name as memberName from memberactivity ma JOIN classschedule cs ON cs.id = ma.scheduleId JOIN classlist c ON c.id = cs.class JOIN coach co ON co.id = cs.coach JOIN user u1 ON u1.id = co.userId JOIN member m ON m.id = ma.memberId JOIN user u2 On u2.id = m.userId JOIN place p ON p.id = cs.placeId";
                 await db.query(query, (err, result) => {
                     if (err) {
                         console.log("error get member class", err)
@@ -252,7 +252,7 @@ exports.memberClassHistory = function (data) {
                     }
                 })
             } else if (data.request == "byPlace") {
-                query = "SELECT ma.*, cs.class as classId, cs.coach as coachId, u1.name as coachName, cs.startTime, cs.endTime, cs.startDate, cs.endDate, cs.placeId, p.name as placeName, c.name as className from memberactivity ma JOIN classschedule cs ON cs.id = ma.scheduleId JOIN classlist c ON c.id = cs.class JOIN coach co ON co.id = cs.coach JOIN user u1 ON u1.id = co.userId JOIN member m ON m.id = ma.memberId JOIN user u2 On u2.id = m.userId JOIN place p ON p.id = cs.placeId JOIN partner pr ON pr.id = p.partnerId WHERE pr.id = ? AND cs.placeId = ?";
+                query = "SELECT ma.*, cs.class as classId, cs.coach as coachId, u1.name as coachName, cs.startTime, cs.endTime, cs.startDate, cs.endDate, cs.placeId, p.name as placeName, c.name as className, u2.name as memberName from memberactivity ma JOIN classschedule cs ON cs.id = ma.scheduleId JOIN classlist c ON c.id = cs.class JOIN coach co ON co.id = cs.coach JOIN user u1 ON u1.id = co.userId JOIN member m ON m.id = ma.memberId JOIN user u2 On u2.id = m.userId JOIN place p ON p.id = cs.placeId JOIN partner pr ON pr.id = p.partnerId WHERE pr.id = ? AND cs.placeId = ?";
                 await db.query(query, [data.profile.partnerId, data.placeId], (err, result) => {
                     if (err) {
                         console.log("error get member class", err)
