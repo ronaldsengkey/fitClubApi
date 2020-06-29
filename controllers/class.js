@@ -154,7 +154,7 @@ module.exports.memberClassBooked = async function memberClassBooked(req, res, ne
 module.exports.memberClassHistory = async function memberClassHistory(req, res, next) {
   let token = req.swagger.params['token'].value;
   let request = req.swagger.params['request'].value;
-
+  let placeId = req.swagger.params['placeId'].value;
   let body = {};
   body.token = token;
   if (token !== null) {
@@ -171,6 +171,9 @@ module.exports.memberClassHistory = async function memberClassHistory(req, res, 
           body.request = request;
         }
         body.profile = cek.profile;
+        if (placeId) {
+          body.placeId = placeId;
+        }
         let cch = await model.memberClassHistory(body);
         utils.writeJson(res, cch);
         break;
