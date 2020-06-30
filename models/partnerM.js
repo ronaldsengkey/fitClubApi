@@ -80,10 +80,10 @@ exports.placeList = function (data) {
         try {
             let query = "SELECT * FROM place";
             if (data.profile) {
-                query += 'WHERE partnerId =' + data.profile.partnerId;
+                query += 'WHERE partnerId = ' + data.profile.partnerId;
             }
             if (data.placeId) {
-                query += 'WHERE id =' + data.placeId;
+                query += 'WHERE id = ' + data.placeId;
             }
             await con.query(query, (err, result) => {
                 if (err) {
