@@ -75,11 +75,17 @@ exports.partnerMember = function (data) {
 }
 
 
-exports.placeList = function () {
+exports.placeList = function (data) {
     return new Promise(async function (resolve, reject) {
         try {
             let query = "SELECT * FROM place";
-            await db.query(query, (err, result) => {
+            if (data.profile) {
+                query += 'WHERE partnerId =' + data.profile.partnerId;
+            }
+            if (data.placeId) {
+                query += 'WHERE id =' + data.placeId;
+            }
+            await con.query(query, (err, result) => {
                 if (err) {
                     console.log("error get data", err)
                 } else {

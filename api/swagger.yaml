@@ -698,7 +698,7 @@ paths:
           description: "Data not found"
       x-swagger-router-controller: "transaction"
 
-  /place/{token}:
+  /place:
     get:
       tags:
         - "partner"
@@ -714,8 +714,12 @@ paths:
         - "application/json"
       parameters:
         - name: "token"
-          in: "path"
-          required: true
+          in: "header"
+          required: false
+          type: "string"
+        - name: "placeId"
+          in: "header"
+          required: false
           type: "string"
       responses:
         200:

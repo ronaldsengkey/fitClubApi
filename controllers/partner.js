@@ -70,28 +70,54 @@ module.exports.partnerMember = async function partnerMember(req, res, next) {
 
 module.exports.placeList = async function placeList(req, res, next) {
   let token = req.swagger.params['token'].value;
+  let placeId = req.swagger.params['placeId'].value;
+
   let body = {};
-  body.token = token;
   try {
-    let a = await checkToken(token);
-    data.profile = a;
-    switch (a) {
-      case process.env.UNAUTHORIZED_RESPONSE:
-        response = {
-          "responseCode": process.env.UNAUTHORIZED_RESPONSE,
-          "responseMessage": process.env.UNAUTH_MESSAGE
-        }
-        break;
-      case process.env.ERRORINTERNAL_RESPONSE:
-        response = {
-          "responseCode": process.env.UNAUTHORIZED_RESPONSE,
-          "responseMessage": process.env.UNAUTH_MESSAGE
-        }
-        break
-      default:
-        response = await model.placeList();
-        break;
+    if (token) {
+      body.token = token;
+      let a = await checkToken(token);
+      body.profile = a;
+      switch (a) {
+        case process.env.UNAUTHORIZED_RESPONSE:
+          response = {
+            "responseCode": process.env.UNAUTHORIZED_RESPONSE,
+            "responseMessage": process.env.UNAUTH_MESSAGE
+          }
+          break;
+        case process.env.ERRORINTERNAL_RESPONSE:
+          response = {
+            "responseCode": process.env.UNAUTHORIZED_RESPONSE,
+            "responseMessage": process.env.UNAUTH_MESSAGE
+          }
+          break
+        default:
+          response = await model.placeList(body);
+          break;
+      }
     }
+    if (placeId) {
+      body.placeId
+      response = await model.placeList(body);
+    }
+
+
+    // switch (a) {
+    //   case process.env.UNAUTHORIZED_RESPONSE:
+    //     response = {
+    //       "responseCode": process.env.UNAUTHORIZED_RESPONSE,
+    //       "responseMessage": process.env.UNAUTH_MESSAGE
+    //     }
+    //     break;
+    //   case process.env.ERRORINTERNAL_RESPONSE:
+    //     response = {
+    //       "responseCode": process.env.UNAUTHORIZED_RESPONSE,
+    //       "responseMessage": process.env.UNAUTH_MESSAGE
+    //     }
+    //     break
+    //   default:
+    //     break;
+    // }
     utils.writeJson(res, response);
   } catch (err) {
     console.log(err);
