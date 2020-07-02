@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.9.0.1
+-- version 4.9.1
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 28, 2020 at 09:30 AM
--- Server version: 10.4.6-MariaDB
--- PHP Version: 7.3.9
+-- Generation Time: Jul 02, 2020 at 06:33 AM
+-- Server version: 10.4.8-MariaDB
+-- PHP Version: 7.3.10
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
@@ -63,7 +63,9 @@ CREATE TABLE `classlist` (
 
 INSERT INTO `classlist` (`id`, `name`, `descript`) VALUES
 (1, 'Cardio', 'merupakan kegiatan olah tubuh yang bertujuan memperkuat jantung dan paru-paru'),
-(2, 'Yoga', 'aktivitas olah tubuh dan pikiran yang fokus pada kekuatan, fleksibilitas dan pernapasan untuk meningkatkan kualitas mental dan fisik');
+(2, 'Yoga', 'aktivitas olah tubuh dan pikiran yang fokus pada kekuatan, fleksibilitas dan pernapasan untuk meningkatkan kualitas mental dan fisik'),
+(5, 'combat', 'combat'),
+(6, 'zumba', 'zumbaa');
 
 -- --------------------------------------------------------
 
@@ -107,8 +109,21 @@ CREATE TABLE `classschedule` (
 --
 
 INSERT INTO `classschedule` (`id`, `class`, `coach`, `startTime`, `endTime`, `startDate`, `endDate`, `placeId`) VALUES
-(1, 1, 1, '10:00:00', '12:00:00', '2019-12-23', '2019-12-23', 1),
-(2, 2, 2, '09:00:00', '12:00:00', '2020-01-22', '2020-01-22', 1);
+(1, 1, 1, '10:00:00', '12:00:00', '2020-06-30', '2020-06-30', 1),
+(2, 2, 2, '09:00:00', '12:00:00', '2020-01-22', '2020-01-22', 1),
+(3, 1, 1, '13:00:00', '14:00:00', '2020-03-18', '2020-03-18', 1),
+(4, 1, 1, '04:30:00', '05:00:00', '2014-02-02', '2014-02-02', 1),
+(5, 1, 1, '05:00:00', '05:30:00', '2014-02-02', '2015-02-02', 1),
+(6, 1, 1, '05:00:00', '05:30:00', '2014-02-02', '2015-02-02', 1),
+(7, 2, 1, '08:00:00', '08:30:00', '2014-02-02', '2015-02-02', 1),
+(8, 2, 2, '05:00:00', '05:30:00', '2014-02-02', '2015-02-02', 2),
+(9, 1, 2, '09:30:00', '05:30:00', '2014-02-02', '2015-02-02', 2),
+(10, 2, 1, '06:00:00', '06:30:00', '2222-02-02', '2222-02-02', 1),
+(11, 2, 1, '01:00:00', '02:00:00', '2222-02-02', '2222-02-02', 1),
+(12, 2, 1, '05:00:00', '07:30:00', '2222-11-22', '2222-11-12', 1),
+(13, 2, 1, '17:30:00', '18:30:00', '2222-02-22', '2222-02-22', 1),
+(14, 1, 1, '09:00:00', '09:30:00', '2008-08-08', '2008-09-09', 1),
+(15, 2, 1, '14:10:00', '14:40:00', '2020-06-29', '2020-06-29', 1);
 
 -- --------------------------------------------------------
 
@@ -190,7 +205,7 @@ CREATE TABLE `member` (
 --
 
 INSERT INTO `member` (`id`, `userId`, `code`, `memberCat`, `joinDate`, `endDate`, `placeId`, `status`) VALUES
-(1, 3, '240929', 50000, '2020-02-18 09:05:34', '2020-03-19', 0, 0);
+(1, 3, '240929', 2, '2020-02-18 09:05:34', '2020-03-19', 0, 0);
 
 -- --------------------------------------------------------
 
@@ -215,7 +230,9 @@ INSERT INTO `memberactivity` (`id`, `scheduleId`, `action`, `memberId`, `dateRec
 (2, 1, 'join', 1, '2020-01-20 08:41:04'),
 (3, 1, 'join', 1, '2020-01-20 08:41:16'),
 (4, 1, 'join', 1, '2020-01-20 08:41:23'),
-(5, 1, 'join', 1, '2020-01-22 08:26:52');
+(5, 1, 'join', 1, '2020-01-22 08:26:52'),
+(6, 1, 'join', 1, '2020-03-18 08:46:39'),
+(7, 2, 'join', 1, '2020-03-20 08:42:26');
 
 -- --------------------------------------------------------
 
@@ -288,6 +305,13 @@ CREATE TABLE `partner` (
   `status` tinyint(4) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+--
+-- Dumping data for table `partner`
+--
+
+INSERT INTO `partner` (`id`, `userId`, `joinDate`, `status`) VALUES
+(1, 4, '2020-06-24 19:07:11', 1);
+
 -- --------------------------------------------------------
 
 --
@@ -312,7 +336,8 @@ INSERT INTO `personalrecord` (`id`, `memberId`, `prCat`, `value`, `date`) VALUES
 (3, 1, 2, 122, '2020-01-08 09:01:13'),
 (4, 1, 1, 222, '2020-01-08 09:01:19'),
 (5, 1, 1, 22, '2020-01-08 09:04:03'),
-(6, 1, 1, 22, '2020-01-08 09:05:26');
+(6, 1, 1, 22, '2020-01-08 09:05:26'),
+(7, 3, 1, 333, '2020-03-20 08:45:08');
 
 -- --------------------------------------------------------
 
@@ -368,8 +393,18 @@ CREATE TABLE `switchschedulerequest` (
   `toScheduleId` int(11) NOT NULL,
   `requestDate` date NOT NULL,
   `confirmDate` date NOT NULL,
-  `status` enum('yes','no') NOT NULL
+  `status` enum('','yes','no') NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `switchschedulerequest`
+--
+
+INSERT INTO `switchschedulerequest` (`id`, `fromCoachId`, `toCoachId`, `fromScheduleId`, `toScheduleId`, `requestDate`, `confirmDate`, `status`) VALUES
+(1, 1, 2, 3, 2, '2020-05-21', '0000-00-00', 'yes'),
+(2, 2, 1, 2, 1, '2020-05-21', '0000-00-00', 'yes'),
+(3, 1, 2, 1, 2, '2020-05-21', '0000-00-00', 'yes'),
+(4, 1, 1, 6, 4, '2020-05-21', '0000-00-00', 'yes');
 
 -- --------------------------------------------------------
 
@@ -510,9 +545,10 @@ CREATE TABLE `user` (
 --
 
 INSERT INTO `user` (`id`, `name`, `gender`, `phone`, `address`, `email`, `password`, `imgProfile`, `accessToken`, `onlineStatus`, `verificationCode`, `accountStatus`, `registerDate`) VALUES
-(1, 'Coach1', 1, '08388489384', 'Jl Gunung rinjani 6 lippo karawachi tangerang', 'coach1@mail.com', '$argon2i$v=19$m=4096,t=3,p=1$wKKjA/Lxf/Mjp0nY6E+WKQ$3I7ZbedhavP9z1b0tOnxVaqO/sEq4+GjveWx3AhydAo', 'none', 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwibmFtZSI6IkNvYWNoMSIsImdlbmRlciI6MSwibWVtYmVyQ2F0IjpudWxsLCJtZW1iZXJJZCI6bnVsbCwicGFydG5lcklkIjpudWxsLCJjb2FjaElkIjoxLCJqb2luTWVtYmVyRGF0ZSI6bnVsbCwiZW5kTWVtYmVyRGF0ZSI6bnVsbCwicGhvbmUiOiIwODM4ODQ4OTM4NCIsImFkZHJlc3MiOiJKbCBHdW51bmcgcmluamFuaSA2IGxpcHBvIGthcmF3YWNoaSB0YW5nZXJhbmciLCJlbWFpbCI6ImNvYWNoMUBtYWlsLmNvbSIsImlhdCI6MTU4Mjg3NjMwNCwiZXhwIjoxNTgyODk0MzA0LCJhdWQiOiJodHRwOi8vZml0Y2x1Yi5pZCIsImlzcyI6IkZpdENsdWIgTmV0d29yayIsInN1YiI6ImFnbmV0aXVzbGVlQGdtYWlsLmNvbSJ9.cyDk9Nqa0LCEc23NmrjvVnQ6t8zboAbUTxDLPnAcOf0HaETYDr2OfZ4KGM2mVR_K-Df6zdEHoAsr0C4pcfQfeA', 'online', '488495', 0, '2020-02-05 10:32:01'),
+(1, 'Coach1', 1, '08388489384', 'Jl Gunung rinjani 6 lippo karawachi tangerang', 'coach1@mail.com', '$argon2i$v=19$m=4096,t=3,p=1$wKKjA/Lxf/Mjp0nY6E+WKQ$3I7ZbedhavP9z1b0tOnxVaqO/sEq4+GjveWx3AhydAo', 'none', 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwibmFtZSI6IkNvYWNoMSIsImdlbmRlciI6MSwibWVtYmVyQ2F0IjpudWxsLCJtZW1iZXJJZCI6bnVsbCwicGFydG5lcklkIjpudWxsLCJjb2FjaElkIjoxLCJzcGVjaWFsaXphdGlvbiI6IjEsMiIsImpvaW5NZW1iZXJEYXRlIjpudWxsLCJlbmRNZW1iZXJEYXRlIjpudWxsLCJwaG9uZSI6IjA4Mzg4NDg5Mzg0IiwiYWRkcmVzcyI6IkpsIEd1bnVuZyByaW5qYW5pIDYgbGlwcG8ga2FyYXdhY2hpIHRhbmdlcmFuZyIsImVtYWlsIjoiY29hY2gxQG1haWwuY29tIiwiaWF0IjoxNTkzNTAxMTA2LCJleHAiOjE1OTM1MTkxMDYsImF1ZCI6Imh0dHA6Ly9maXRjbHViLmlkIiwiaXNzIjoiRml0Q2x1YiBOZXR3b3JrIiwic3ViIjoiYWduZXRpdXNsZWVAZ21haWwuY29tIn0.ZwugKMO_oZ-OJOvH_KmmtrJBhXgzXEg8Q0ghBn9_-_FB8QsW_2Tx_jeyK_d_lkefJXZ_RmJj22MSu3IPkljcwg', 'online', '488495', 0, '2020-02-05 10:32:01'),
 (2, 'ronald', 1, '085791334512', 'jalan ronald', 'ronald@gmail.com', '$argon2i$v=19$m=4096,t=3,p=1$3ieABvp/13XQGZmYTQSyoA$P4E4lZpg7G99Q9VW7CVQyE94NUvV78QZnohtrPeOrFI', 'none', 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwibmFtZSI6InJvbmFsZCIsImdlbmRlciI6MSwibWVtYmVyQ2F0IjpudWxsLCJtZW1iZXJJZCI6bnVsbCwicGFydG5lcklkIjpudWxsLCJjb2FjaElkIjoyLCJqb2luTWVtYmVyRGF0ZSI6bnVsbCwiZW5kTWVtYmVyRGF0ZSI6bnVsbCwicGhvbmUiOiIwODU3OTEzMzQ1MTIiLCJhZGRyZXNzIjoiamFsYW4gcm9uYWxkIiwiZW1haWwiOiJyb25hbGRAZ21haWwuY29tIiwiaWF0IjoxNTgxOTA1NTU5LCJleHAiOjE1ODE5MjM1NTksImF1ZCI6Imh0dHA6Ly9maXRjbHViLmlkIiwiaXNzIjoiRml0Q2x1YiBOZXR3b3JrIiwic3ViIjoiYWduZXRpdXNsZWVAZ21haWwuY29tIn0.JOVHEwhXRosfj9OjLyh1C2ZtQBcILi7efhERVpdkF7dLRKXW8sHi1KCnP5yOAFPyBg5hbdblJfyyQX-mLueTfQ', 'online', '537651', 1, '2020-02-06 09:25:11'),
-(3, 'member', 1, '085797478712', 'jl member', 'dbudianto9@gmail.com', '$argon2i$v=19$m=4096,t=3,p=1$QKL5KgkFYobsolZMzsCSPw$UWk+wYYwNOA0QbPy1ABDMcGzfPJ3l+XwBPElF/y89ig', 'none', 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywibmFtZSI6Im1lbWJlciIsImdlbmRlciI6MSwibWVtYmVyQ2F0IjpudWxsLCJtZW1iZXJJZCI6bnVsbCwicGFydG5lcklkIjpudWxsLCJjb2FjaElkIjpudWxsLCJqb2luTWVtYmVyRGF0ZSI6bnVsbCwiZW5kTWVtYmVyRGF0ZSI6bnVsbCwicGhvbmUiOiIwODU3OTc0Nzg3MTIiLCJhZGRyZXNzIjoiamwgbWVtYmVyIiwiZW1haWwiOiJkYnVkaWFudG85QGdtYWlsLmNvbSIsImlhdCI6MTU4MTk5MTUyMiwiZXhwIjoxNTgyMDA5NTIyLCJhdWQiOiJodHRwOi8vZml0Y2x1Yi5pZCIsImlzcyI6IkZpdENsdWIgTmV0d29yayIsInN1YiI6ImFnbmV0aXVzbGVlQGdtYWlsLmNvbSJ9.IBQDZuWyeYDOUUL2hydTSdvHlO0Wxq6M9ABrowOnlCeSOguzep2okPuv1xIWUUeWPsfTgPnkbVPoLIRLkpoWgg', 'online', '654638', 1, '2020-02-14 09:27:14');
+(3, 'Anton', 1, '085797478712', 'jl member', 'dbudianto9@gmail.com', '$argon2i$v=19$m=4096,t=3,p=1$QKL5KgkFYobsolZMzsCSPw$UWk+wYYwNOA0QbPy1ABDMcGzfPJ3l+XwBPElF/y89ig', 'none', 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywibmFtZSI6Im1lbWJlciIsImdlbmRlciI6MSwibWVtYmVyQ2F0IjoyLCJtZW1iZXJJZCI6MSwicGFydG5lcklkIjpudWxsLCJjb2FjaElkIjpudWxsLCJqb2luTWVtYmVyRGF0ZSI6IjIwMjAtMDItMThUMDk6MDU6MzQuMDAwWiIsImVuZE1lbWJlckRhdGUiOiIyMDIwLTAzLTE5VDAwOjAwOjAwLjAwMFoiLCJwaG9uZSI6IjA4NTc5NzQ3ODcxMiIsImFkZHJlc3MiOiJqbCBtZW1iZXIiLCJlbWFpbCI6ImRidWRpYW50bzlAZ21haWwuY29tIiwiaWF0IjoxNTg0NjY5MDE1LCJleHAiOjE1ODQ2ODcwMTUsImF1ZCI6Imh0dHA6Ly9maXRjbHViLmlkIiwiaXNzIjoiRml0Q2x1YiBOZXR3b3JrIiwic3ViIjoiYWduZXRpdXNsZWVAZ21haWwuY29tIn0.WeP6NS_f2x1-HprSpVou_E912nHYbSH1BBjc9XbhLZh10CrQZ3jamPzPwk98i_A2dqUCltGG2C7KqTbt4i0rww', 'online', '654638', 1, '2020-02-14 09:27:14'),
+(4, 'rekan', 1, '08123456789', 'alamat rekan', 'dickybudianto+rekan@usahakreatif.co.id', '$argon2i$v=19$m=4096,t=3,p=1$QNjQo/hln3HZV/Te7GZcww$KxbDgbdiEBXwi99s5NQFbpk1pXgaLnmptb+FiQlwqCQ', 'none', 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwibmFtZSI6InJla2FuIiwiZ2VuZGVyIjoxLCJtZW1iZXJDYXQiOm51bGwsIm1lbWJlcklkIjpudWxsLCJwYXJ0bmVySWQiOjEsImNvYWNoSWQiOm51bGwsInNwZWNpYWxpemF0aW9uIjpudWxsLCJqb2luTWVtYmVyRGF0ZSI6bnVsbCwiZW5kTWVtYmVyRGF0ZSI6bnVsbCwicGhvbmUiOiIwODEyMzQ1Njc4OSIsImFkZHJlc3MiOiJhbGFtYXQgcmVrYW4iLCJlbWFpbCI6ImRpY2t5YnVkaWFudG8rcmVrYW5AdXNhaGFrcmVhdGlmLmNvLmlkIiwiaWF0IjoxNTkzNTA0NTYwLCJleHAiOjE1OTM1MjI1NjAsImF1ZCI6Imh0dHA6Ly9maXRjbHViLmlkIiwiaXNzIjoiRml0Q2x1YiBOZXR3b3JrIiwic3ViIjoiYWduZXRpdXNsZWVAZ21haWwuY29tIn0.WeAnVXwAekLynGBM2TBdchSV1mMYkYK3OSwHjr13K1rfNi25P4sRnZgw_ohIK9VMdSDkYbBLT3htdcRlUkcZdQ', 'online', '486976', 0, '2020-06-26 08:44:56');
 
 --
 -- Indexes for dumped tables
@@ -646,7 +682,7 @@ ALTER TABLE `bank`
 -- AUTO_INCREMENT for table `classlist`
 --
 ALTER TABLE `classlist`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `classmember`
@@ -658,7 +694,7 @@ ALTER TABLE `classmember`
 -- AUTO_INCREMENT for table `classschedule`
 --
 ALTER TABLE `classschedule`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT for table `coach`
@@ -688,7 +724,7 @@ ALTER TABLE `member`
 -- AUTO_INCREMENT for table `memberactivity`
 --
 ALTER TABLE `memberactivity`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `membercategory`
@@ -712,13 +748,13 @@ ALTER TABLE `memberpayment`
 -- AUTO_INCREMENT for table `partner`
 --
 ALTER TABLE `partner`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `personalrecord`
 --
 ALTER TABLE `personalrecord`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `personalrecordcategory`
@@ -736,7 +772,7 @@ ALTER TABLE `place`
 -- AUTO_INCREMENT for table `switchschedulerequest`
 --
 ALTER TABLE `switchschedulerequest`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `temppayment`
@@ -748,7 +784,7 @@ ALTER TABLE `temppayment`
 -- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
