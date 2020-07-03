@@ -13,7 +13,7 @@ const fs = require('fs');
 function getUserByMail(param) {
     return new Promise(async function (resolve, reject) {
         try {
-            let query = "SELECT u.*, m.id as memberId, p.id as partnerId, c.id as coachId, m.code, m.memberCat, m.joinDate, m.endDate, c.specialization FROM user u LEFT JOIN member m ON m.userId = u.id LEFT JOIN partner p ON p.userId = u.id LEFT JOIN coach c ON u.id = c.userId WHERE u.email = ?";
+            let query = "SELECT u.*, m.id as memberId, p.id as partnerId, c.id as coachId, m.code, m.memberCat, m.joinDate, m.endDate, m.placeId, c.specialization FROM user u LEFT JOIN member m ON m.userId = u.id LEFT JOIN partner p ON p.userId = u.id LEFT JOIN coach c ON u.id = c.userId WHERE u.email = ?";
             db.query(query, [param.email], async function (err, res) {
                 try {
                     if (err) {
@@ -133,6 +133,7 @@ exports.loginAccess = function loginAccess(data) {
                         memberId: ev.data.memberId,
                         partnerId: ev.data.partnerId,
                         coachId: ev.data.coachId,
+                        placeId: ev.data.placeId,
                         specialization: ev.data.specialization,
                         memberCode: ev.data.memberCode,
                         joinMemberDate: ev.data.joinDate,
@@ -164,7 +165,7 @@ exports.loginAccess = function loginAccess(data) {
                 } else {
                     message = {
                         "responseCode": process.env.NOTFOUND_RESPONSE,
-                        "responseMessage": "Your password doesn't matched"
+                        "responseMessage": "Your email or password doesn't matched"
                     }
                     resolve(message)
                 }
@@ -174,7 +175,12 @@ exports.loginAccess = function loginAccess(data) {
                 //     "responseMessage": "Login success",
                 //     "data": ev.data
                 // }
-                resolve(ev);
+                // resolve(ev);
+                message = {
+                    "responseCode": process.env.ERRORINTERNAL_RESPONSE,
+                    "responseMessage": "Login failed please try again"
+                }
+                resolve(message);
             }
         } catch (err) {
             console.log(err);
@@ -182,7 +188,7 @@ exports.loginAccess = function loginAccess(data) {
                 "responseCode": process.env.ERRORINTERNAL_RESPONSE,
                 "responseMessage": "Login failed please try again"
             }
-            reject(message);
+            resolve(message);
         }
     })
 }
