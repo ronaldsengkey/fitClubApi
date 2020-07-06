@@ -95,29 +95,12 @@ module.exports.placeList = async function placeList(req, res, next) {
           response = await model.placeList(body);
           break;
       }
-    }
-    if (placeId) {
+    } else if (placeId) {
       body.placeId
       response = await model.placeList(body);
+    } else {
+      response = await model.placeList("");
     }
-
-
-    // switch (a) {
-    //   case process.env.UNAUTHORIZED_RESPONSE:
-    //     response = {
-    //       "responseCode": process.env.UNAUTHORIZED_RESPONSE,
-    //       "responseMessage": process.env.UNAUTH_MESSAGE
-    //     }
-    //     break;
-    //   case process.env.ERRORINTERNAL_RESPONSE:
-    //     response = {
-    //       "responseCode": process.env.UNAUTHORIZED_RESPONSE,
-    //       "responseMessage": process.env.UNAUTH_MESSAGE
-    //     }
-    //     break
-    //   default:
-    //     break;
-    // }
     utils.writeJson(res, response);
   } catch (err) {
     console.log(err);

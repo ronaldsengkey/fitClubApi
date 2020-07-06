@@ -222,7 +222,6 @@ module.exports.classSchedule = async function classSchedule(req, res, next) {
 module.exports.classList = function classList(req, res, next) {
   // let token = req.swagger.params['token'].value;
   // let method = req.swagger.params['method'].value;
-
   let param = {};
   if (req.swagger.params['param'].value) {
     param.param = req.swagger.params['param'].value;

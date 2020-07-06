@@ -79,12 +79,18 @@ exports.placeList = function (data) {
     return new Promise(async function (resolve, reject) {
         try {
             let query = "SELECT * FROM place";
-            if (data.profile.partnerId !== null) {
-                query += ' WHERE partnerId = ' + data.profile.partnerId;
-            } else if (data.placeId) {
-                query += ' WHERE id = ' + data.placeId;
-            } else if (data.profile.placeId !== null) {
-                query += ' WHERE id = ' + data.profile.placeId;
+            if (data == "") {
+                query = query;
+            } else {
+                if (data.profile.partnerId) {
+                    query += ' WHERE partnerId = ' + data.profile.partnerId;
+                }
+                if (data.placeId) {
+                    query += ' WHERE id = ' + data.placeId;
+                }
+                if (data.profile.placeId) {
+                    query += ' WHERE id = ' + data.profile.placeId;
+                }
             }
             await con.query(query, (err, result) => {
                 if (err) {
