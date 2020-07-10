@@ -65,39 +65,86 @@ exports.joinMember = function (data) {
     })
 }
 
+
+function checkingLimit(param) {
+    return new Promise(async function (resolve, reject) {
+        let today = new Date();
+        let dd = today.getDate();
+        let mm = today.getMonth() + 1;
+        let yyyy = today.getFullYear();
+        const fullDate = yyyy + "-" + mm + "-" + dd;
+        const query = "SELECT SUM(memberId) AS totalJoin FROM memberactivity WHERE action = 'join' AND DATE(dateRecord) = '"+ fullDate +"' AND scheduleId = "+param.scheduleId;
+        await con.query(query, async function (err, result) {
+            if (err) {
+                resolve(err);
+            } else {
+                if (result[0].totalJoin === null) {
+                    resolve(0);
+                } else {
+                    const mp = "SELECT maxPerson FROM classschedule WHERE id = " + param.scheduleId;
+                    await con.query(query, async function (error, hasil) {
+                        if (error) {
+                            resolve(error);
+                        } else {
+                            let kuota = hasil[0].maxPerson - result[0].totalJoin
+                            resolve(kuota);
+                        }
+                    })
+                }
+            }
+      });
+    });
+  }
+
+
 exports.activity = function (data) {
     return new Promise(async function (resolve, reject) {
         try {
-            console.log("DATA JOIN ACTIVITY => ", data);
-            const query = "INSERT INTO memberactivity SET ?";
-            con.query(query, {
-                "memberId": parseInt(data.profile.memberId),
-                "scheduleId": data.scheduleId,
-                "action": data.action
-            }, (err, result) => {
-                if (!err) {
-                    if (result.affectedRows > 0) {
-                        console.log('success join activity');
-                        message = {
-                            "responseCode": process.env.SUCCESS_RESPONSE,
-                            "responseMessage": process.env.SUCCESS_MESSAGE
-                        }
-                        resolve(message)
-                    } else {
-                        console.log('Something problem when join activity')
-                        message = {
-                            "responseCode": process.env.ERRORINTERNAL_RESPONSE,
-                            "responseMessage": process.env.ERRORSCHEDULE_MESSAGE
-                        }
-                        resolve(message)
-                    }
-                } else {
-                    console.log("created schedule error", err);
+            let cl = await checkingLimit(data);
+            if(cl < 5){
+                 // console.log("DATA JOIN ACTIVITY => ", data);
+                 const query = "INSERT INTO memberactivity SET ?";
+                 con.query(query, {
+                     "memberId": parseInt(data.profile.memberId),
+                     "scheduleId": data.scheduleId,
+                     "action": data.action
+                 }, (err, result) => {
+                     if (!err) {
+                         if (result.affectedRows > 0) {
+                             message = {
+                                 "responseCode": process.env.SUCCESS_RESPONSE,
+                                 "responseMessage": process.env.SUCCESS_MESSAGE
+                             }
+                             resolve(message)
+                         } else {
+                             message = {
+                                 "responseCode": process.env.ERRORINTERNAL_RESPONSE,
+                                 "responseMessage": process.env.ERRORSCHEDULE_MESSAGE
+                             }
+                             resolve(message)
+                         }
+                     } else {
+                         message = {
+                             "responseCode": process.env.ERRORINTERNAL_RESPONSE,
+                             "responseMessage": "Request failed, please try again later"
+                         }
+                         resolve(message);
+                     }
+                 })
+            }else{
+                message = {
+                    "responseCode": process.env.ERRORINTERNAL_RESPONSE,
+                    "responseMessage": "Oopss, request failed, class fulled"
                 }
-            })
+                resolve(message);
+            }
         } catch (err) {
-            console.log("error create schedule", err);
-            reject(err);
+            console.log(err)
+            message = {
+                "responseCode": process.env.ERRORINTERNAL_RESPONSE,
+                "responseMessage": "Request failed, please try again later"
+            }
+            resolve(message)
         }
     })
 }

@@ -484,6 +484,7 @@ exports.createSchedule = function (data) {
           startTime: data.startTime,
           endTime: data.endTime,
           placeId: parseInt(data.placeId),
+          maxPerson: parseInt(data.maxPerson)
         },
         (err, result) => {
           if (!err) {
