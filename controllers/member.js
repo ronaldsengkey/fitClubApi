@@ -101,13 +101,13 @@ module.exports.memberActivity = function memberActivity(req, res, next) {
   //     utils.writeJson(res, response);
   //   } else {
   //     body.profile = response.profile;
-      Member.activity(body)
-        .then(function (response) {
-          utils.writeJson(res, response);
-        })
-        .catch(function (response) {
-          utils.writeJson(res, response);
-        });
+  Member.activity(body)
+    .then(function (response) {
+      utils.writeJson(res, response);
+    })
+    .catch(function (response) {
+      utils.writeJson(res, response);
+    });
   //   }
   // }).catch(function (response) {
   //   utils.writeJson(res, response);

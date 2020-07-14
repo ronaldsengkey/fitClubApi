@@ -9,13 +9,13 @@ function generateOtp() {
 exports.joinMember = function (data) {
     return new Promise(async function (resolve, reject) {
         try {
-            console.log('data join member => ', data)
             const otp = generateOtp();
             let endDate = new Date();
             let day = new Date(endDate.setDate(endDate.getDate() + 30));
             let expDay = day.getDate();
             let expMonth = day.getMonth() + 1;
             let expYear = day.getFullYear();
+            // console.log("MEMBER JOIN >>>>>>>>>", data)
             const checkMember = "SELECT userId,status FROM member WHERE userId = ? AND memberCat = ? AND status = ?"
             con.query(checkMember, [data.profile.id, data.memberCat, 1], (err, result) => {
                 if (!err) {
@@ -33,7 +33,7 @@ exports.joinMember = function (data) {
                             "code": otp,
                             "memberCat": parseInt(data.memberCat),
                             "endDate": expYear + '-' + expMonth + '-' + expDay,
-                            "status": 1
+                            "status": 0
                         }, (err, result) => {
                             if (!err) {
                                 if (result.affectedRows > 0) {
@@ -73,7 +73,7 @@ function checkingLimit(param) {
         let mm = today.getMonth() + 1;
         let yyyy = today.getFullYear();
         const fullDate = yyyy + "-" + mm + "-" + dd;
-        const query = "SELECT SUM(memberId) AS totalJoin FROM memberactivity WHERE action = 'join' AND DATE(dateRecord) = '"+ fullDate +"' AND scheduleId = "+param.scheduleId;
+        const query = "SELECT SUM(memberId) AS totalJoin FROM memberactivity WHERE action = 'join' AND DATE(dateRecord) = '" + fullDate + "' AND scheduleId = " + param.scheduleId;
         await con.query(query, async function (err, result) {
             if (err) {
                 resolve(err);
@@ -92,46 +92,46 @@ function checkingLimit(param) {
                     })
                 }
             }
-      });
+        });
     });
-  }
+}
 
 
 exports.activity = function (data) {
     return new Promise(async function (resolve, reject) {
         try {
             let cl = await checkingLimit(data);
-            if(cl < 5){
-                 // console.log("DATA JOIN ACTIVITY => ", data);
-                 const query = "INSERT INTO memberactivity SET ?";
-                 con.query(query, {
-                     "memberId": parseInt(data.profile.memberId),
-                     "scheduleId": data.scheduleId,
-                     "action": data.action
-                 }, (err, result) => {
-                     if (!err) {
-                         if (result.affectedRows > 0) {
-                             message = {
-                                 "responseCode": process.env.SUCCESS_RESPONSE,
-                                 "responseMessage": process.env.SUCCESS_MESSAGE
-                             }
-                             resolve(message)
-                         } else {
-                             message = {
-                                 "responseCode": process.env.ERRORINTERNAL_RESPONSE,
-                                 "responseMessage": process.env.ERRORSCHEDULE_MESSAGE
-                             }
-                             resolve(message)
-                         }
-                     } else {
-                         message = {
-                             "responseCode": process.env.ERRORINTERNAL_RESPONSE,
-                             "responseMessage": "Request failed, please try again later"
-                         }
-                         resolve(message);
-                     }
-                 })
-            }else{
+            if (cl < 5) {
+                // console.log("DATA JOIN ACTIVITY => ", data);
+                const query = "INSERT INTO memberactivity SET ?";
+                con.query(query, {
+                    "memberId": parseInt(data.profile.memberId),
+                    "scheduleId": data.scheduleId,
+                    "action": data.action
+                }, (err, result) => {
+                    if (!err) {
+                        if (result.affectedRows > 0) {
+                            message = {
+                                "responseCode": process.env.SUCCESS_RESPONSE,
+                                "responseMessage": process.env.SUCCESS_MESSAGE
+                            }
+                            resolve(message)
+                        } else {
+                            message = {
+                                "responseCode": process.env.ERRORINTERNAL_RESPONSE,
+                                "responseMessage": process.env.ERRORSCHEDULE_MESSAGE
+                            }
+                            resolve(message)
+                        }
+                    } else {
+                        message = {
+                            "responseCode": process.env.ERRORINTERNAL_RESPONSE,
+                            "responseMessage": "Request failed, please try again later"
+                        }
+                        resolve(message);
+                    }
+                })
+            } else {
                 message = {
                     "responseCode": process.env.ERRORINTERNAL_RESPONSE,
                     "responseMessage": "Oopss, request failed, class fulled"

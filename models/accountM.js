@@ -14,12 +14,12 @@ function getUserByMail(param) {
     return new Promise(async function (resolve, reject) {
         try {
             let query = "SELECT u.*, ";
-            if(param.accountCat == "coach"){
+            if (param.accountCat == "coach") {
                 query += "c.id as coachId, c.specialization FROM user u JOIN coach c ON u.id = c.userId WHERE u.email = ?"
-            } else if(param.accountCat == "partner"){
+            } else if (param.accountCat == "partner") {
                 query += "p.id as partnerId FROM user u JOIN partner p ON p.userId = u.id WHERE u.email = ?"
-            } else if(param.accountCat == "member"){
-                query += "m.id as memberId, m.code, m.memberCat, m.joinDate, m.endDate, m.placeId FROM user u JOIN member m ON m.userId = u.id WHERE u.email = ?"
+            } else if (param.accountCat == "member") {
+                query += "m.id as memberId, m.code, m.memberCat, m.joinDate, m.endDate, m.placeId FROM user u JOIN member m ON m.userId = u.id WHERE u.email = ? AND m.status = 0 "
             }
             db.query(query, [param.email], async function (err, res) {
                 try {
@@ -47,14 +47,14 @@ function getUserByMail(param) {
                                             "responseMessage": "Your email doesn't match"
                                         }
                                         resolve(message);
-                                    }else{
-                                        if(hasil.length > 0){
+                                    } else {
+                                        if (hasil.length > 0) {
                                             message = {
                                                 "responseCode": process.env.SUCCESS_RESPONSE,
                                                 "data": hasil[0]
                                             };
                                             resolve(message);
-                                        }else{
+                                        } else {
                                             message = {
                                                 "responseCode": process.env.NOTACCEPT_RESPONSE,
                                                 "responseMessage": "Your email doesn't match"
@@ -62,7 +62,7 @@ function getUserByMail(param) {
                                             resolve(message);
                                         }
                                     }
-                                }catch(err){
+                                } catch (err) {
                                     message = {
                                         "responseCode": process.env.NOTACCEPT_RESPONSE,
                                         "responseMessage": "Your email doesn't match"

@@ -1250,7 +1250,15 @@ definitions:
     properties:
       token:
         type: "string"
+      memberCatName:
+        type: "string"
+      placeId:
+        type: "string"
+      memberPrice:
+        type: "string"
       memberCat:
+        type: "string"
+      requestCat:
         type: "string"
 
   paymentParam:
