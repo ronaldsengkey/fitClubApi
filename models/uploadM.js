@@ -65,7 +65,7 @@ function checkUpload(data) {
         let res = {};
         try {
             if (data.concern == "payment") {
-                let query = "SELECT * FROM file WHERE transactionId = ? AND ownerId = ? WHERE category = 'payment'";
+                let query = "SELECT * FROM file WHERE transactionId = ? AND ownerId = ? AND category = 'payment'";
                 con.query(query, [data.transactionId, data.profile.id], (err, res) => {
                     if (err) {
                         console.log('Error query check upload data => ', err)

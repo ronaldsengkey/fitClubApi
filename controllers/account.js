@@ -6,6 +6,8 @@ let data = '';
 
 module.exports.loginAccess = async function login (req, res, next) {
   var body = req.swagger.params['body'].value;
+  var accountCat = req.swagger.params['accountCat'].value;
+  body.accountCat = accountCat;
   try{
     await model.loginAccess(body)
       .then(function (response) {

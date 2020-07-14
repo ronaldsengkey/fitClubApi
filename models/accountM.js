@@ -13,7 +13,14 @@ const fs = require('fs');
 function getUserByMail(param) {
     return new Promise(async function (resolve, reject) {
         try {
-            let query = "SELECT u.*, m.id as memberId, p.id as partnerId, c.id as coachId, m.code, m.memberCat, m.joinDate, m.endDate, m.placeId, c.specialization FROM user u LEFT JOIN member m ON m.userId = u.id LEFT JOIN partner p ON p.userId = u.id LEFT JOIN coach c ON u.id = c.userId WHERE u.email = ?";
+            let query = "SELECT u.*, ";
+            if(param.accountCat == "coach"){
+                query += "c.id as coachId, c.specialization FROM user u JOIN coach c ON u.id = c.userId WHERE u.email = ?"
+            } else if(param.accountCat == "partner"){
+                query += "p.id as partnerId FROM user u JOIN partner p ON p.userId = u.id WHERE u.email = ?"
+            } else if(param.accountCat == "member"){
+                query += "m.id as memberId, m.code, m.memberCat, m.joinDate, m.endDate, m.placeId FROM user u JOIN member m ON m.userId = u.id WHERE u.email = ?"
+            }
             db.query(query, [param.email], async function (err, res) {
                 try {
                     if (err) {
@@ -31,15 +38,47 @@ function getUserByMail(param) {
                             };
                             resolve(message);
                         } else {
-                            message = {
-                                "responseCode": process.env.NOTACCEPT_RESPONSE,
-                                "responseMessage": "Your email doesn't match"
-                            }
-                            resolve(message);
+                            let userRegular = "SELECT u.* FROM user u WHERE u.email = ? ";
+                            db.query(userRegular, [param.email], async function (err, hasil) {
+                                try {
+                                    if (err) {
+                                        message = {
+                                            "responseCode": process.env.NOTACCEPT_RESPONSE,
+                                            "responseMessage": "Your email doesn't match"
+                                        }
+                                        resolve(message);
+                                    }else{
+                                        if(hasil.length > 0){
+                                            message = {
+                                                "responseCode": process.env.SUCCESS_RESPONSE,
+                                                "data": hasil[0]
+                                            };
+                                            resolve(message);
+                                        }else{
+                                            message = {
+                                                "responseCode": process.env.NOTACCEPT_RESPONSE,
+                                                "responseMessage": "Your email doesn't match"
+                                            }
+                                            resolve(message);
+                                        }
+                                    }
+                                }catch(err){
+                                    message = {
+                                        "responseCode": process.env.NOTACCEPT_RESPONSE,
+                                        "responseMessage": "Your email doesn't match"
+                                    }
+                                    resolve(message);
+                                }
+                            });
                         }
                     }
                 } catch (err) {
                     console.log("error query user", err);
+                    message = {
+                        "responseCode": process.env.NOTACCEPT_RESPONSE,
+                        "responseMessage": "Your email doesn't match"
+                    }
+                    resolve(message);
                 }
             });
         } catch (err) {
@@ -170,17 +209,7 @@ exports.loginAccess = function loginAccess(data) {
                     resolve(message)
                 }
             } else {
-                // message = {
-                //     "responseCode": process.env.SUCCESS_RESPONSE,
-                //     "responseMessage": "Login success",
-                //     "data": ev.data
-                // }
-                // resolve(ev);
-                message = {
-                    "responseCode": process.env.ERRORINTERNAL_RESPONSE,
-                    "responseMessage": "Login failed please try again"
-                }
-                resolve(message);
+                resolve(ev);
             }
         } catch (err) {
             console.log(err);

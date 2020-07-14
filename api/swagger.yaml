@@ -250,7 +250,7 @@ paths:
           description: "Invalid status value"
       x-swagger-router-controller: "partner"
 
-  /login:
+  /login/{accountCat}:
     post:
       tags:
         - "account"
@@ -265,6 +265,11 @@ paths:
         - "application/xml"
         - "application/json"
       parameters:
+        - name: "accountCat"
+          in: "path"
+          description: "token of member device"
+          required: true
+          type: "string"
         - in: "body"
           name: "body"
           description: "data credential guest"
