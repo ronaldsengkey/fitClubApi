@@ -58,9 +58,13 @@ swaggerTools.initializeMiddleware(swaggerDoc, function (middleware) {
   // Serve the Swagger documents and Swagger UI
   fastify.use(middleware.swaggerUi());
 
-  var accessLogStream = fs.createWriteStream(path.join(__dirname, 'access.log'), {flags: 'a'})
+  var accessLogStream = fs.createWriteStream(path.join(__dirname, 'access.log'), {
+    flags: 'a'
+  })
 
-  fastify.use(morgan('combined', {stream: accessLogStream}));
+  fastify.use(morgan('combined', {
+    stream: accessLogStream
+  }));
 
   // fastify.use(morgan('dev'));
 

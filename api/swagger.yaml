@@ -67,6 +67,46 @@ paths:
           description: "Invalid status value"
       x-swagger-router-controller: "partner"
 
+    post:
+      tags:
+        - "partner"
+      summary: "Add new place off partner"
+      operationId: "partnerOperation"
+      consumes:
+        - "multipart/form-data"
+        - "application/x-www-form-urlencoded"
+        - "application/json"
+      produces:
+        - "application/xml"
+        - "application/json"
+      parameters:
+        - name: "token"
+          in: "path"
+          description: "token of partner"
+          required: true
+          type: "string"
+        - name: "param"
+          in: "path"
+          description: "parameter filter"
+          required: true
+          type: "string"
+        - in: "body"
+          name: "body"
+          description: "handling operation partner activity"
+          required: true
+          schema:
+            $ref: "#/definitions/partnerOperationParam"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/notifSuccess"
+        400:
+          description: "Invalid status value"
+      x-swagger-router-controller: "partner"
+
   /partner/class/{param}/{token}:
     get:
       tags:
@@ -1186,6 +1226,36 @@ securityDefinitions:
     in: "header"
 
 definitions:
+  partnerOperationParam:
+    type: "object"
+    properties:
+      userId:
+        type: "integer"
+        format: "int32"
+      memberCode:
+        type: "integer"
+        format: "int32"
+      placeId:
+        type: "integer"
+        format: "int32"
+      status:
+        type: "integer"
+        format: "int32"
+      nominal:
+        type: "integer"
+        format: "int32"
+      memberCat:
+        type: "integer"
+        format: "int32"
+      bankId:
+        type: "integer"
+        format: "int32"
+      transactionId:
+        type: "integer"
+        format: "int32"
+      paymentMethod:
+        type: "string"
+
   coachUpdateParam:
     type: "object"
     properties:

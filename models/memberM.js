@@ -50,6 +50,11 @@ exports.joinMember = function (data) {
                                     resolve(message)
                                 }
                             } else {
+                                message = {
+                                    "responseCode": process.env.ERRORINTERNAL_RESPONSE,
+                                    "responseMessage": process.env.ERRORSCHEDULE_MESSAGE
+                                }
+                                resolve(message)
                                 console.log("Join member something error => ", err);
                             }
                         })
@@ -73,7 +78,8 @@ function checkingLimit(param) {
         let mm = today.getMonth() + 1;
         let yyyy = today.getFullYear();
         const fullDate = yyyy + "-" + mm + "-" + dd;
-        const query = "SELECT SUM(memberId) AS totalJoin FROM memberactivity WHERE action = 'join' AND DATE(dateRecord) = '" + fullDate + "' AND scheduleId = " + param.scheduleId;
+        const query = "SELECT COUNT(memberId) AS totalJoin FROM memberactivity WHERE action = 'join' AND DATE(dateRecord) = '" + fullDate + "' AND scheduleId = " + param.scheduleId;
+
         await con.query(query, async function (err, result) {
             if (err) {
                 resolve(err);
@@ -82,11 +88,12 @@ function checkingLimit(param) {
                     resolve(0);
                 } else {
                     const mp = "SELECT maxPerson FROM classschedule WHERE id = " + param.scheduleId;
-                    await con.query(query, async function (error, hasil) {
+                    await con.query(mp, async function (error, hasil) {
                         if (error) {
-                            resolve(error);
+                            resolve(process.env.ERRORINTERNAL_RESPONSE);
                         } else {
                             let kuota = hasil[0].maxPerson - result[0].totalJoin
+                            console.log("===========", kuota, hasil[0].maxPerson, result[0].totalJoin)
                             resolve(kuota);
                         }
                     })
@@ -101,11 +108,12 @@ exports.activity = function (data) {
     return new Promise(async function (resolve, reject) {
         try {
             let cl = await checkingLimit(data);
-            if (cl < 5) {
-                // console.log("DATA JOIN ACTIVITY => ", data);
+            console.log("LIMITNYA", cl)
+            if (cl > 0) {
+                console.log("DATA JOIN ACTIVITY => ", data);
                 const query = "INSERT INTO memberactivity SET ?";
                 con.query(query, {
-                    "memberId": parseInt(data.profile.memberId),
+                    "memberId": parseInt(data.memberId),
                     "scheduleId": data.scheduleId,
                     "action": data.action
                 }, (err, result) => {
@@ -133,7 +141,7 @@ exports.activity = function (data) {
                 })
             } else {
                 message = {
-                    "responseCode": process.env.ERRORINTERNAL_RESPONSE,
+                    "responseCode": process.env.NOTACCEPT_RESPONSE,
                     "responseMessage": "Oopss, request failed, class fulled"
                 }
                 resolve(message);

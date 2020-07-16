@@ -19,7 +19,7 @@ function getUserByMail(param) {
             } else if (param.accountCat == "partner") {
                 query += "p.id as partnerId FROM user u JOIN partner p ON p.userId = u.id WHERE u.email = ?"
             } else if (param.accountCat == "member") {
-                query += "m.id as memberId, m.code, m.memberCat, m.joinDate, m.endDate, m.placeId FROM user u JOIN member m ON m.userId = u.id WHERE u.email = ? AND m.status = 0 "
+                query += "m.id as memberId, m.code, m.memberCat, m.joinDate, m.endDate, m.placeId FROM user u JOIN member m ON m.userId = u.id WHERE u.email = ? AND m.status = 1 "
             }
             db.query(query, [param.email], async function (err, res) {
                 try {
