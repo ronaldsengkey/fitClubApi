@@ -38,13 +38,13 @@ function getUserByMail(param) {
                             };
                             resolve(message);
                         } else {
-                            let userRegular = "SELECT u.* FROM user u WHERE u.email = ? ";
-                            db.query(userRegular, [param.email], async function (err, hasil) {
+                            let userRegular = "SELECT u.* FROM user u WHERE u.email = ? AND accountStatus = ? ";
+                            db.query(userRegular, [param.email, 1], async function (err, hasil) {
                                 try {
                                     if (err) {
                                         message = {
                                             "responseCode": process.env.NOTACCEPT_RESPONSE,
-                                            "responseMessage": "Your email doesn't match"
+                                            "responseMessage": "Your email or password dosen't match"
                                         }
                                         resolve(message);
                                     } else {
@@ -57,7 +57,7 @@ function getUserByMail(param) {
                                         } else {
                                             message = {
                                                 "responseCode": process.env.NOTACCEPT_RESPONSE,
-                                                "responseMessage": "Your email doesn't match"
+                                                "responseMessage": "Your email or password dosen't match"
                                             }
                                             resolve(message);
                                         }
@@ -65,7 +65,7 @@ function getUserByMail(param) {
                                 } catch (err) {
                                     message = {
                                         "responseCode": process.env.NOTACCEPT_RESPONSE,
-                                        "responseMessage": "Your email doesn't match"
+                                        "responseMessage": "Your email or password dosen't match"
                                     }
                                     resolve(message);
                                 }
@@ -76,7 +76,7 @@ function getUserByMail(param) {
                     console.log("error query user", err);
                     message = {
                         "responseCode": process.env.NOTACCEPT_RESPONSE,
-                        "responseMessage": "Your email doesn't match"
+                        "responseMessage": "Your email or password dosen't match"
                     }
                     resolve(message);
                 }
