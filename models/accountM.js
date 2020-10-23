@@ -14,11 +14,11 @@ function getUserByMail(param) {
     return new Promise(async function (resolve, reject) {
         try {
             let query = "SELECT u.*, ";
-            if (param.accountCat == "coach") {
+            if (param.filter == "coach") {
                 query += "c.id as coachId, c.specialization FROM user u JOIN coach c ON u.id = c.userId WHERE u.email = ?"
-            } else if (param.accountCat == "partner") {
+            } else if (param.filter == "partner") {
                 query += "p.id as partnerId FROM user u JOIN partner p ON p.userId = u.id WHERE u.email = ?"
-            } else if (param.accountCat == "member") {
+            } else if (param.filter == "member") {
                 query += "m.id as memberId, m.code, m.memberCat, m.joinDate, m.endDate, m.placeId FROM user u JOIN member m ON m.userId = u.id WHERE u.email = ? AND m.status = 1 "
             }
             db.query(query, [param.email], async function (err, res) {
@@ -114,9 +114,16 @@ exports.confirmation = function confirmation(data) {
                     }
                     resolve(message);
                 } else {
-                    message = {
-                        "responseCode": process.env.SUCCESS_RESPONSE,
-                        "responseMessage": "Otp confirmed"
+                    if(res.affectedRows > 0){
+                        message = {
+                            "responseCode": process.env.SUCCESS_RESPONSE,
+                            "responseMessage": "Otp confirmed"
+                        }
+                    }else{
+                        message = {
+                            "responseCode": process.env.ERRORINTERNAL_RESPONSE,
+                            "responseMessage": "Something went wrong !, Try again !"
+                        }
                     }
                     resolve(message);
                 }
@@ -356,26 +363,70 @@ exports.addAccount = function addAccount(data) {
                                 };
                                 const ac = await addCoach(param);
                                 if (ac == process.env.SUCCESS_RESPONSE) {
-                                    message = {
-                                        "responseCode": process.env.SUCCESS_RESPONSE,
-                                        "responseMessage": "Registration Success Please Verify Your Email Adress",
-                                        data: {
-                                            phone: newAccount.phone,
-                                            email: newAccount.email
-                                        }
+                                    // message = {
+                                    //     "responseCode": process.env.SUCCESS_RESPONSE,
+                                    //     "responseMessage": "Registration Success Please Verify Your Email Adress",
+                                    //     data: {
+                                    //         phone: newAccount.phone,
+                                    //         email: newAccount.email
+                                    //     }
+                                    // }
+                                    // resolve(message);
+                                    let a = await sm.sendSms(data);
+                                    switch (a) {
+                                        case process.env.ERRORINTERNAL_RESPONSE:
+                                            console.log('Register Success, but we canot send otp to your email', err);
+                                            message = {
+                                                "responseCode": process.env.ERRORINTERNAL_RESPONSE,
+                                                "responseMessage": process.env.INTERNALERROR_MESSAGE + "Register Success, but we canot send otp to your email"
+                                            }
+                                            break;
+                                        default:
+                                            console.log('send email success', a);
+                                            message = {
+                                                "responseCode": process.env.SUCCESS_RESPONSE,
+                                                "responseMessage": "Registration Success Please Verify Your Email Adress"
+                                            }
+                                            resolve(message);
+                                            break;
                                     }
-                                    resolve(message);
                                 }
                             } else if (data.filter == 'partner') {
                                 const ac = await addPartner(res.insertId);
                                 if (ac == process.env.SUCCESS_RESPONSE) {
+                                    // message = {
+                                    //     "responseCode": process.env.SUCCESS_RESPONSE,
+                                    //     "responseMessage": "Registration Success Please Verify Your Email Adress",
+                                    //     data: {
+                                    //         phone: newAccount.phone,
+                                    //         email: newAccount.email
+                                    //     }
+                                    // }
+                                    // resolve(message);
+
+                                    let a = await sm.sendSms(data);
+                                    switch (a) {
+                                        case process.env.ERRORINTERNAL_RESPONSE:
+                                            console.log('Register Success, but we canot send otp to your email', err);
+                                            message = {
+                                                "responseCode": process.env.ERRORINTERNAL_RESPONSE,
+                                                "responseMessage": process.env.INTERNALERROR_MESSAGE + "Register Success, but we canot send otp to your email"
+                                            }
+                                            break;
+                                        default:
+                                            console.log('send email success', a);
+                                            message = {
+                                                "responseCode": process.env.SUCCESS_RESPONSE,
+                                                "responseMessage": "Registration Success Please Verify Your Email Adress"
+                                            }
+                                            resolve(message);
+                                            break;
+                                    }
+                                    
+                                }else{
                                     message = {
-                                        "responseCode": process.env.SUCCESS_RESPONSE,
-                                        "responseMessage": "Registration Success Please Verify Your Email Adress",
-                                        data: {
-                                            phone: newAccount.phone,
-                                            email: newAccount.email
-                                        }
+                                        "responseCode": process.env.ERRORINTERNAL_RESPONSE,
+                                        "responseMessage": process.env.INTERNALERROR_MESSAGE
                                     }
                                     resolve(message);
                                 }

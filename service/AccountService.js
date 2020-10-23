@@ -5,6 +5,7 @@ smtpTransport = require('nodemailer-smtp-transport');
 exports.sendSms = function sendSms(data) {
 	return new Promise(async function (resolve, reject) {
 		try{
+			console.log("called pak eko", data)
 			let transporter = nodeMail.createTransport(smtpTransport({
 				service: 'gmail',
 				// host: 'srv63.niagahoster.com',
