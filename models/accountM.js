@@ -19,7 +19,7 @@ function getUserByMail(param) {
             } else if (param.filter == "partner") {
                 query += "p.id as partnerId FROM user u JOIN partner p ON p.userId = u.id WHERE u.email = ?"
             } else if (param.filter == "member") {
-                query += "m.id as memberId, m.code, m.memberCat, m.joinDate, m.endDate, m.placeId FROM user u JOIN member m ON m.userId = u.id WHERE u.email = ? AND m.status = 1 "
+                query += "m.id as memberId, m.code, m.memberCat, mc.categoryName as memberCategoryName, m.joinDate, m.endDate, m.placeId FROM user u JOIN member m ON m.userId = u.id JOIN membercategory mc ON mc.id = m.memberCat WHERE u.email = ? AND m.status = 1 "
             }
             db.query(query, [param.email], async function (err, res) {
                 try {
@@ -48,6 +48,7 @@ function getUserByMail(param) {
                                         }
                                         resolve(message);
                                     } else {
+                                        console.log("hhhhhhhhhh", hasil);
                                         if (hasil.length > 0) {
                                             message = {
                                                 "responseCode": process.env.SUCCESS_RESPONSE,
