@@ -554,6 +554,82 @@ paths:
             - "read:pets"
       x-swagger-router-controller: "member"
 
+    post:
+      tags:
+        - "member"
+      summary: "Personal record category"
+      description: ""
+      operationId: "createPersonalRecordCategory"
+      consumes:
+        - "multipart/form-data"
+        - "application/x-www-form-urlencoded"
+        - "application/json"
+      produces:
+        - "application/xml"
+        - "application/json"
+      parameters:
+        - name: "token"
+          in: "path"
+          description: "token of member device"
+          required: true
+          type: "string"
+        - in: "body"
+          name: "body"
+          description: "data credential guest"
+          required: true
+          schema:
+            $ref: "#/definitions/personalRecordCategory"
+      responses:
+        200:
+          description: "Success"
+        500:
+          description: "Internal error"
+        401:
+          description: "Unauthorize"
+      security:
+        - petstore_auth:
+            - "write:pets"
+            - "read:pets"
+      x-swagger-router-controller: "member"
+
+    delete:
+      tags:
+        - "member"
+      summary: "Personal record category"
+      description: ""
+      operationId: "deletePersonalRecordCategory"
+      consumes:
+        - "multipart/form-data"
+        - "application/x-www-form-urlencoded"
+        - "application/json"
+      produces:
+        - "application/xml"
+        - "application/json"
+      parameters:
+        - name: "token"
+          in: "path"
+          description: "token of member device"
+          required: true
+          type: "string"
+        - in: "body"
+          name: "body"
+          description: "data credential guest"
+          required: true
+          schema:
+            $ref: "#/definitions/updatePersonalRecordCategory"
+      responses:
+        200:
+          description: "Success"
+        500:
+          description: "Internal error"
+        401:
+          description: "Unauthorize"
+      security:
+        - petstore_auth:
+            - "write:pets"
+            - "read:pets"
+      x-swagger-router-controller: "member"
+
   /member/personalRecord/{token}:
     get:
       tags:
@@ -1416,6 +1492,18 @@ definitions:
       email:
         type: "string"
       password:
+        type: "string"
+
+  updatePersonalRecordCategory:
+    type: "object"
+    properties:
+      idCategory:
+        type: "integer"
+
+  personalRecordCategory:
+    type: "object"
+    properties:
+      categoryName:
         type: "string"
 
   personalRecordParam:

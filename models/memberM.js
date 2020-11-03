@@ -309,6 +309,72 @@ exports.getPersonalRecord = function (data) {
     })
 }
 
+exports.deletePersonalRecordCategory = function (data) {
+    return new Promise(async function (resolve, reject) {
+        try {
+            const query = "DELETE FROM `personalrecordcategory` WHERE `id` = ? ";
+            con.query(query, data.idCategory,(err, result) => {
+                if (!err) {
+                    if (result.affectedRows > 0) {
+                        message = {
+                            "responseCode": process.env.SUCCESS_RESPONSE,
+                            "responseMessage": process.env.SUCCESS_MESSAGE
+                        }
+                        resolve(message)
+                    } else {
+                        message = {
+                            "responseCode": process.env.ERRORINTERNAL_RESPONSE,
+                            "responseMessage": process.env.INTERNALERROR_MESSAGE
+                        }
+                        resolve(message)
+                    }
+                } else {
+                    message = {
+                        "responseCode": process.env.ERRORINTERNAL_RESPONSE,
+                        "responseMessage": process.env.INTERNALERROR_MESSAGE
+                    }
+                    resolve(message);
+                }
+            })
+        }catch(err){
+            console.log(err)
+        }
+    })
+}
+
+exports.createPersonalRecordCategory = function (data) {
+    return new Promise(async function (resolve, reject) {
+        try {
+            const pc = "INSERT INTO personalrecordcategory SET ?";
+            con.query(pc, {"categoryName":data.categoryName},(err, result) => {
+                if (!err) {
+                    if (result.affectedRows > 0) {
+                        message = {
+                            "responseCode": process.env.SUCCESS_RESPONSE,
+                            "responseMessage": process.env.SUCCESS_MESSAGE
+                        }
+                        resolve(message)
+                    } else {
+                        message = {
+                            "responseCode": process.env.ERRORINTERNAL_RESPONSE,
+                            "responseMessage": process.env.INTERNALERROR_MESSAGE
+                        }
+                        resolve(message)
+                    }
+                } else {
+                    message = {
+                        "responseCode": process.env.ERRORINTERNAL_RESPONSE,
+                        "responseMessage": process.env.INTERNALERROR_MESSAGE
+                    }
+                    resolve(message);
+                }
+            })
+        }catch(err){
+            console.log(err)
+        }
+    })
+}
+
 exports.getPersonalRecordCategory = function (data) {
     return new Promise(async function (resolve, reject) {
         try {

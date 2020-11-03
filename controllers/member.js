@@ -41,6 +41,27 @@ module.exports.joinMember = function joinMember(req, res, next) {
   });
 };
 
+module.exports.deletePersonalRecordCategory = async function deletePersonalRecordCategory(req, res, next) {
+  console.log(req.swagger.params['body'].value);
+  Member.deletePersonalRecordCategory(req.swagger.params['body'].value)
+    .then(function (response) {
+      utils.writeJson(res, response);
+    })
+    .catch(function (response) {
+      utils.writeJson(res, response);
+  });
+}
+
+module.exports.createPersonalRecordCategory = async function createPersonalRecordCategory(req, res, next) {
+  Member.createPersonalRecordCategory(req.swagger.params['body'].value)
+    .then(function (response) {
+      utils.writeJson(res, response);
+    })
+    .catch(function (response) {
+      utils.writeJson(res, response);
+  });
+}
+
 module.exports.getPersonalRecord = async function getPersonalRecord(req, res, next) {
   var token = req.swagger.params['token'].value;
   var param = req.swagger.params['param'].value;
