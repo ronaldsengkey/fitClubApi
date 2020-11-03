@@ -42,23 +42,47 @@ module.exports.joinMember = function joinMember(req, res, next) {
 };
 
 module.exports.deletePersonalRecordCategory = async function deletePersonalRecordCategory(req, res, next) {
-  console.log(req.swagger.params['body'].value);
-  Member.deletePersonalRecordCategory(req.swagger.params['body'].value)
-    .then(function (response) {
+  let token = req.swagger.params['token'].value;
+  await jwt.verify(token, publicKEY, signOptions, function (err, callback) {
+    if (err) {
+      console.log("not valid", err);
+      response = {
+        "responseCode": process.env.UNAUTHORIZED_RESPONSE,
+        "responseMessage": process.env.UNAUTH_MESSAGE
+      }
       utils.writeJson(res, response);
-    })
-    .catch(function (response) {
-      utils.writeJson(res, response);
+    } else {
+      console.log(req.swagger.params['body'].value);
+      Member.deletePersonalRecordCategory(req.swagger.params['body'].value)
+        .then(function (response) {
+          utils.writeJson(res, response);
+        })
+        .catch(function (response) {
+          utils.writeJson(res, response);
+      });
+    }
   });
 }
 
 module.exports.createPersonalRecordCategory = async function createPersonalRecordCategory(req, res, next) {
-  Member.createPersonalRecordCategory(req.swagger.params['body'].value)
-    .then(function (response) {
+  let token = req.swagger.params['token'].value;
+  await jwt.verify(token, publicKEY, signOptions, function (err, callback) {
+    if (err) {
+      console.log("not valid", err);
+      response = {
+        "responseCode": process.env.UNAUTHORIZED_RESPONSE,
+        "responseMessage": process.env.UNAUTH_MESSAGE
+      }
       utils.writeJson(res, response);
-    })
-    .catch(function (response) {
-      utils.writeJson(res, response);
+    } else {
+      Member.createPersonalRecordCategory(req.swagger.params['body'].value)
+        .then(function (response) {
+          utils.writeJson(res, response);
+        })
+        .catch(function (response) {
+          utils.writeJson(res, response);
+      });
+    }
   });
 }
 
