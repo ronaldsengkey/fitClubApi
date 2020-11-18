@@ -70,6 +70,38 @@ exports.joinMember = function (data) {
     })
 }
 
+function membershipValidation(param) {
+    return new Promise(async function (resolve, reject) {
+        let today = new Date();
+        let dd = today.getDate();
+        let mm = today.getMonth() + 1;
+        let yyyy = today.getFullYear();
+        const fullDate = yyyy + "-" + mm + "-" + dd;
+        const query = "SELECT m.endDate FROM member m WHERE m.id = "+param.profile.memberId +"";
+        await con.query(query, async function (err, result) {
+            if (err) {
+                resolve(500);
+            } else {
+                let ed = new Date(result[0].endDate);
+                let d = ed.getDate();
+                let m = ed.getMonth() + 1;
+                let y = ed.getFullYear();
+                const exp = y + "-" + m + "-" + d;
+                // if (result[0].endDate === null) {
+                //     resolve(500);
+                // } else {
+                    if(fullDate == exp){
+                        resolve(false);
+                    }else{
+                        resolve(true);
+                    }
+                // }
+            }
+        });
+    });
+}
+
+
 
 function checkingLimit(param) {
     return new Promise(async function (resolve, reject) {
@@ -108,43 +140,57 @@ exports.activity = function (data) {
     return new Promise(async function (resolve, reject) {
         try {
             let cl = await checkingLimit(data);
-            console.log("LIMITNYA", cl)
-            if (cl > 0) {
-                console.log("DATA JOIN ACTIVITY => ", data);
-                const query = "INSERT INTO memberactivity SET ?";
-                con.query(query, {
-                    "memberId": parseInt(data.memberId),
-                    "scheduleId": data.scheduleId,
-                    "action": data.action
-                }, (err, result) => {
-                    if (!err) {
-                        if (result.affectedRows > 0) {
-                            message = {
-                                "responseCode": process.env.SUCCESS_RESPONSE,
-                                "responseMessage": process.env.SUCCESS_MESSAGE
+            let mv = await membershipValidation(data);
+            if(mv){
+                message = {
+                    "responseCode": process.env.ERRORINTERNAL_RESPONSE,
+                    "responseMessage": "Sorry, Your Membership Has Expired"
+                }
+                resolve(message);
+            }else if (mv == 500){
+                message = {
+                    "responseCode": process.env.ERRORINTERNAL_RESPONSE,
+                    "responseMessage": "Request failed, please try again later"
+                }
+                resolve(message);
+            }else{
+                if (cl > 0) {
+                    console.log("DATA JOIN ACTIVITY => ", data);
+                    const query = "INSERT INTO memberactivity SET ?";
+                    con.query(query, {
+                        "memberId": parseInt(data.memberId),
+                        "scheduleId": data.scheduleId,
+                        "action": data.action
+                    }, (err, result) => {
+                        if (!err) {
+                            if (result.affectedRows > 0) {
+                                message = {
+                                    "responseCode": process.env.SUCCESS_RESPONSE,
+                                    "responseMessage": process.env.SUCCESS_MESSAGE
+                                }
+                                resolve(message)
+                            } else {
+                                message = {
+                                    "responseCode": process.env.ERRORINTERNAL_RESPONSE,
+                                    "responseMessage": process.env.ERRORSCHEDULE_MESSAGE
+                                }
+                                resolve(message)
                             }
-                            resolve(message)
                         } else {
                             message = {
                                 "responseCode": process.env.ERRORINTERNAL_RESPONSE,
-                                "responseMessage": process.env.ERRORSCHEDULE_MESSAGE
+                                "responseMessage": "Request failed, please try again later"
                             }
-                            resolve(message)
+                            resolve(message);
                         }
-                    } else {
-                        message = {
-                            "responseCode": process.env.ERRORINTERNAL_RESPONSE,
-                            "responseMessage": "Request failed, please try again later"
-                        }
-                        resolve(message);
+                    })
+                } else {
+                    message = {
+                        "responseCode": process.env.NOTACCEPT_RESPONSE,
+                        "responseMessage": "Oopss, request failed, class fulled"
                     }
-                })
-            } else {
-                message = {
-                    "responseCode": process.env.NOTACCEPT_RESPONSE,
-                    "responseMessage": "Oopss, request failed, class fulled"
+                    resolve(message);
                 }
-                resolve(message);
             }
         } catch (err) {
             console.log(err)

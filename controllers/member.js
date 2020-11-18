@@ -141,22 +141,22 @@ module.exports.getPersonalRecordCategory = async function getPersonalRecordCateg
 
 module.exports.memberActivity = function memberActivity(req, res, next) {
   var body = req.swagger.params['body'].value;
-  // ct.checkToken(body.token).then(function (response) {
-  //   if (response.responseCode == process.env.UNAUTHORIZED_RESPONSE) {
-  //     utils.writeJson(res, response);
-  //   } else {
-  //     body.profile = response.profile;
-  Member.activity(body)
-    .then(function (response) {
+  ct.checkToken(body.token).then(function (response) {
+    if (response.responseCode == process.env.UNAUTHORIZED_RESPONSE) {
       utils.writeJson(res, response);
-    })
-    .catch(function (response) {
-      utils.writeJson(res, response);
-    });
-  //   }
-  // }).catch(function (response) {
-  //   utils.writeJson(res, response);
-  // });
+    } else {
+      body.profile = response.profile;
+      Member.activity(body)
+      .then(function (response) {
+        utils.writeJson(res, response);
+      })
+      .catch(function (response) {
+        utils.writeJson(res, response);
+      });
+    }
+  }).catch(function (response) {
+    utils.writeJson(res, response);
+  });
 };
 
 module.exports.memberFee = function memberFee(req, res, next) {
