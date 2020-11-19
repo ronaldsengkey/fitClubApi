@@ -475,8 +475,7 @@ exports.createSchedule = function (data) {
   return new Promise(async function (resolve, reject) {
     try {
       const otp = "INSERT INTO classschedule SET ?";
-      con.query(
-        otp, {
+      let dataSchedule = {
           class: parseInt(data.classId),
           coach: parseInt(data.coachId),
           startDate: data.startDate,
@@ -484,7 +483,15 @@ exports.createSchedule = function (data) {
           startTime: data.startTime,
           endTime: data.endTime,
           placeId: parseInt(data.placeId),
-          maxPerson: parseInt(data.maxPerson)
+          maxPerson: parseInt(data.maxPerson),
+          classCategory: data.classCategory
+      }
+      if(data.linkClass != undefined || data.linkClass != '' && data.classCategory == "online"){
+        dataSchedule.linkClass = data.linkClass
+      }
+      con.query(
+        otp, {
+          dataSchedule
         },
         (err, result) => {
           if (!err) {

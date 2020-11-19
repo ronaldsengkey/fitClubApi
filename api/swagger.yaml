@@ -1533,6 +1533,10 @@ definitions:
         type: "integer"
       maxPerson:
         type: "integer"
+      linkClass:
+        type: "string"
+      classCategory:
+        type: "string" #offline / online
 
   notifSuccess:
     type: "object"
